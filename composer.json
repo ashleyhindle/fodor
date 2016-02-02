@@ -1,12 +1,16 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "ashleyhindle/fodor",
+    "description": "One* click DigitalOcean server provisioning for open source projects",
+    "keywords": ["provision", "ssh", "digitalocean", "droplet"],
     "license": "MIT",
     "type": "project",
     "require": {
         "php": ">=5.5.9",
-        "laravel/framework": "5.2.*"
+        "laravel/framework": "5.2.*",
+        "lib-openssl": "1.0.*",
+        "phpseclib/phpseclib": "~2.0",
+        "league/oauth2-client": "~1.2",
+        "toin0u/digitalocean-v2": "~2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
