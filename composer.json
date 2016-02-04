@@ -4,13 +4,36 @@
     "keywords": ["provision", "ssh", "digitalocean", "droplet"],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/ashleyhindle/cloudflare"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "ashleyhindle/borrowedhaikunator",
+                "version": "master",
+                "source": {
+                    "url": "https://github.com/ashleyhindle/borrowedhaikunator",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        }
+    ],
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "lib-openssl": "1.0.*",
         "phpseclib/phpseclib": "~2.0",
         "league/oauth2-client": "~1.2",
-        "toin0u/digitalocean-v2": "~2.0"
+        "toin0u/digitalocean-v2": "~2.0",
+        "jamesryanbell/cloudflare": "dev-master",
+        "ashleyhindle/borrowedhaikunator": "dev-master",
+        "laravel/socialite": "~2.0",
+        "knplabs/github-api": "~1.5",
+        "ramsey/uuid": "~3.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
