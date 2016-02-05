@@ -43,16 +43,16 @@ class ProvisionController extends Controller
         $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
         $digitalocean = new DigitalOceanV2($adapter);
 
-        $uuid1 = Uuid::uuid1();
+        $uuid1 = Uuid::uuid1()->toString();
 
-        $publicKey = (new \App\Fodor\Ssh\Keys())->getPublic($uuid1->toString());
+        $publicKey = (new \App\Fodor\Ssh\Keys($uuid1))->getPublic();
 
         $droplet = $digitalocean->droplet();
         $key = $digitalocean->key();
 
         $keyCreated = $key->create('fodor-' . $uuid1, $publicKey); // TODO: Check result
 
-        $created = $droplet->create($name . '-' . $uuid1, $region, $size, $distro, false, false, false, [$keyCreated->id]);
+        $created = $droplet->create('fodor/' . $name . '/' . $uuid1, $region, $size, $distro, false, false, false, [$keyCreated->id]);
 
         if (empty($created)) {
            return redirect(url('/?createdDroplet=false'));
@@ -61,10 +61,10 @@ class ProvisionController extends Controller
         $dropletId = $created->id;
         // It doesn't have a network straight away - we need to wait for it to be created
 
-        return redirect(url('/provision/waiting/' . $dropletId));
+        return redirect(url('/provision/waiting/' . $dropletId . '/' . $uuid1));
     }
 
-    public function waiting(Request $request, $id)
+    public function waiting(Request $request, $id, $uuid)
     {
         $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
         $digitalocean = new DigitalOceanV2($adapter);
@@ -89,6 +89,8 @@ class ProvisionController extends Controller
                     if (empty($result)) {
                         die('Failed to create subdomain, but we created a droplet.  You shoud probably delete it, or setup your own subdomain, mmmkay? IP: ' . $ip);
                     }
+
+                    (new \App\Fodor\Ssh\Keys($uuid))->remove(); // uuid is the name of the file
 
                     return view('provision.complete', [
                         'domain' => $result->name,

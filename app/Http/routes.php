@@ -25,7 +25,7 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::post('/provision/start', 'ProvisionController@start');
     Route::post('/provision/doit', 'ProvisionController@doit');
-    Route::get('/provision/waiting/{id}', 'ProvisionController@waiting');
+    Route::get('/provision/waiting/{id}/{uuid}', 'ProvisionController@waiting');
 
 
     Route::get('/do/start', function (Request $request) {

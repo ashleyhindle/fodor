@@ -1,11 +1,11 @@
 #!/bin/bash
-apt-get update
-apt-get install git
-mkdir -p {{ $installpath }}
-
 export INSTALLPATH="{{ $installpath }}"
 export NAME="{{ $name }}"
 export GITURL="https://github.com/${NAME}.git"
 
-cd {{ $installpath }}
-git clone $GITURL .
+apt-get update
+apt-get install -y git
+
+mkdir -p $INSTALLPATH
+cd $INSTALLPATH
+git clone --depth 1 $GITURL .

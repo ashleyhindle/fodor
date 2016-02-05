@@ -7,22 +7,42 @@ use phpseclib\Crypt\RSA;
 
 class Keys
 {
-    public function getPublic($name=false)
+    private $name;
+
+    public function __construct($name=false)
     {
-        $keys = $this->getPair($name);
+        $this->name = $name;
+    }
+
+    public function getPublicKeyPath()
+    {
+        return 'publickeys/' . $this->name . '.pub';
+    }
+
+    public function getPrivateKeyPath()
+    {
+        return 'privatekeys/' . $this->name . '.key';
+    }
+
+    public function getPublic()
+    {
+        $keys = $this->getPair();
 
         return Storage::get($keys['public']);
     }
 
-    public function getPair($name=false)
-    {
-        if (empty($name)) {
-            return false;
-        }
+    public function remove() {
+        return Storage::disk('local')->delete(
+            $this->getPublicKeyPath(),
+            $this->getPrivateKeyPath()
+        );
+    }
 
-        $installationUuid = $name;
-        $publicKeyName = 'publickeys/' . $installationUuid . '.pub';
-        $privateKeyName = 'privatekeys/' . $installationUuid . '.key';
+    public function getPair()
+    {
+        $installationUuid = $this->name;
+        $publicKeyName = $this->getPublicKeyPath();
+        $privateKeyName = $this->getPrivateKeyPath();
 
         if (Storage::exists($publicKeyName) === false || Storage::exists($privateKeyName) === false) {
             $rsa = new RSA();
