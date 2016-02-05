@@ -22,7 +22,7 @@ class ProvisionController extends Controller
         }
 
         if ($request->session()->has('digitalocean') === false) {
-            return redirect(url('/?loginToDigitalOceanFirstSilly'));
+            return redirect(url('/do/start'));
         }
 
         $invalidFormat = false; // if it's not username/repo
