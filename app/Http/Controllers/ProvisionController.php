@@ -15,19 +15,23 @@ use Ramsey\Uuid\Uuid;
 class ProvisionController extends Controller
 {
 
-    public function start(Request $request)
+    public function start(Request $request, $repo=false)
     {
+        if (!empty($request->input('repo'))) {
+            $repo = $request->input('repo');
+        }
+
         if ($request->session()->has('digitalocean') === false) {
             return redirect(url('/?loginToDigitalOceanFirstSilly'));
         }
 
         $invalidFormat = false; // if it's not username/repo
-        if (!$request->input('repo') || $invalidFormat) {
+        if (empty($repo) || $invalidFormat) {
             return redirect(url('/?sorryItMessedUpSomehowWrongRepoFormat'));
         }
 
         $branch = 'master';
-        list($username, $repo) = explode('/', $request->input('repo'));
+        list($username, $repo) = explode('/', $repo);
 
         $client = new \Github\Client();
         $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
