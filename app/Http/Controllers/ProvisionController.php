@@ -14,6 +14,77 @@ use Ramsey\Uuid\Uuid;
 
 class ProvisionController extends Controller
 {
+
+    public function start(Request $request)
+    {
+        if ($request->session()->has('digitalocean') === false) {
+            return redirect(url('/?loginToDigitalOceanFirstSilly'));
+        }
+
+        $invalidFormat = false; // if it's not username/repo
+        if (!$request->input('repo') || $invalidFormat) {
+            return redirect(url('/?sorryItMessedUpSomehowWrongRepoFormat'));
+        }
+
+        $branch = 'master';
+        list($username, $repo) = explode('/', $request->input('repo'));
+
+        $client = new \Github\Client();
+        $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
+        $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
+        $fodorJson = base64_decode($fodorJson['content']);
+
+        $fodorJson = json_decode($fodorJson, true);
+
+        if (is_null($fodorJson) || $fodorJson === false) {
+            return redirect(url('/?invalidFodorJsonFileSorryCouldNotDecode'));
+        }
+
+        if (empty($fodorJson['provisioner'])) {
+            return redirect(url('/?noProvisionerSet'));
+        }
+
+        // Has to be less than 1mb
+        $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
+
+        if (empty($provisioner)) {
+            return redirect(url('/?provisionerEmptyPartOne'));
+        }
+
+        $provisioner = base64_decode($provisioner['content']);
+
+        if (empty($provisioner)) {
+            return redirect(url('/?provisionerEmptyPartTwo'));
+        }
+
+        // We have a valid provisioner
+
+        // TODO: Check provided size is valid
+        $size = '512mb'; // TODO: Config variable for default size
+
+        if (array_key_exists('required', $fodorJson['size']) === true) {
+            $size = $fodorJson['size']['required'];
+        } elseif (array_key_exists('suggested', $fodorJson['size']) === true) {
+            $size = $fodorJson['size']['suggested'];
+        }
+
+        if (array_key_exists($size, config('digitalocean.sizes')) === false) { // Invalid size
+            $size = '512mb'; // TODO: Config variable for default size
+        }
+
+        $distroInvalid = false;
+
+        if (empty($fodorJson['distro']) || $distroInvalid) {
+            $fodorJson['distro'] = 'ubuntu-14-04-x64';
+        }
+
+        return view('provision.start', [
+            'repo' => $repo,
+            'size' => $size,
+            'distro' => $fodorJson['distro'],
+        ]);
+    }
+
     public function doit(Request $request)
     {
         if ($request->session()->has('digitalocean') === false) {
@@ -102,76 +173,6 @@ class ProvisionController extends Controller
 
         return view('provision.waiting', [
             'status' => $status
-        ]);
-    }
-
-    public function start(Request $request)
-    {
-        if ($request->session()->has('digitalocean') === false) {
-            return redirect(url('/?loginToDigitalOceanFirstSilly'));
-        }
-
-        $invalidFormat = false; // if it's not username/repo
-        if (!$request->input('repo') || $invalidFormat) {
-            return redirect(url('/?sorryItMessedUpSomehowWrongRepoFormat'));
-        }
-
-        $branch = 'master';
-        list($username, $repo) = explode('/', $request->input('repo'));
-
-        $client = new \Github\Client();
-        $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
-        $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
-        $fodorJson = base64_decode($fodorJson['content']);
-
-        $fodorJson = json_decode($fodorJson, true);
-
-        if (is_null($fodorJson) || $fodorJson === false) {
-            return redirect(url('/?invalidFodorJsonFileSorryCouldNotDecode'));
-        }
-
-        if (empty($fodorJson['provisioner'])) {
-            return redirect(url('/?noProvisionerSet'));
-        }
-
-        // Has to be less than 1mb
-        $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
-
-        if (empty($provisioner)) {
-            return redirect(url('/?provisionerEmptyPartOne'));
-        }
-
-        $provisioner = base64_decode($provisioner['content']);
-
-        if (empty($provisioner)) {
-            return redirect(url('/?provisionerEmptyPartTwo'));
-        }
-
-        // We have a valid provisioner
-
-        // TODO: Check provided size is valid
-        $size = '512mb'; // TODO: Config variable for default size
-
-        if (array_key_exists('required', $fodorJson['size']) === true) {
-            $size = $fodorJson['size']['required'];
-        } elseif (array_key_exists('suggested', $fodorJson['size']) === true) {
-            $size = $fodorJson['size']['suggested'];
-        }
-
-        if (array_key_exists($size, config('digitalocean.sizes')) === false) { // Invalid size
-            $size = '512mb'; // TODO: Config variable for default size
-        }
-
-        $distroInvalid = false;
-
-        if (empty($fodorJson['distro']) || $distroInvalid) {
-            $fodorJson['distro'] = 'ubuntu-14-04-x64';
-        }
-
-        return view('provision.start', [
-            'repo' => $repo,
-            'size' => $size,
-            'distro' => $fodorJson['distro'],
         ]);
     }
 }

@@ -23,6 +23,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/github/start', 'GitHubController@start');
     Route::get('/github/callback', 'GitHubController@callback');
 
+    Route::get('/provision/{repo}', 'ProvisionController@start')->where('repo', '[A-Za-z/0-9\-]+');
     Route::post('/provision/start', 'ProvisionController@start');
     Route::post('/provision/doit', 'ProvisionController@doit');
     Route::get('/provision/waiting/{id}/{uuid}', 'ProvisionController@waiting');
