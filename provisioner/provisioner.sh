@@ -37,8 +37,9 @@ mkdir storage/privatekeys
 chmod g+wr storage/publickeys
 chmod g+wr storage/privatekeys
 
-/usr/local/bin/composer install
-./artisan migrate
+/usr/local/bin/composer install --prefer-source --no-interaction
+
+./artisan migrate --force
 
 sudo php5enmod mcrypt
 
