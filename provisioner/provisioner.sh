@@ -17,6 +17,9 @@ useradd -m -s /bin/bash fodor
 apt-get -y update
 apt-get install -y sudo git nginx php5-curl php5-fpm php5-cli mysql-server libssh2-php beanstalkd php5-mysqlnd php5-mcrypt beanstalkd
 
+# Secure SSL
+openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
+
 git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
 cat << EOF > /usr/local/etc/le-renew-webroot.ini
 rsa-key-size = 4096
