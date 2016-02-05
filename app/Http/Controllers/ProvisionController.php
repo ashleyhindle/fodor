@@ -52,7 +52,7 @@ class ProvisionController extends Controller
 
         $keyCreated = $key->create('fodor-' . $uuid1, $publicKey); // TODO: Check result
 
-        $created = $droplet->create('fodor/' . $name . '/' . $uuid1, $region, $size, $distro, false, false, false, [$keyCreated->id]);
+        $created = $droplet->create('fodor-' . $name . '-' . $uuid1, $region, $size, $distro, false, false, false, [$keyCreated->id]);
 
         if (empty($created)) {
            return redirect(url('/?createdDroplet=false'));
