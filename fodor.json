@@ -1,0 +1,21 @@
+{
+	"name": "ashleyhindle/fodor",
+	"installpath": "/var/www/fodor/",
+	"provisioner": "provisioner/provisioner.sh",
+	"size": {
+		"suggested": "1gb"
+	},
+	"distro": "ubuntu-14-04-x64",
+	"description": "Fodor",
+	"keywords": ["fodor"],
+	"homepage": "https://github.com/ashleyhindle/fodor",
+	"inputs": [
+		{
+			"title": "Fake API Key",
+			"name": "fakeapikey",
+			"placeholder": "xxxx-xxxx-xxxx-xxxx",
+			"type": "regex",
+			"regex": "[a-zA-Z\\-0-9]+"
+		}
+	]
+}
