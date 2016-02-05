@@ -17,6 +17,20 @@ useradd -m -s /bin/bash fodor
 apt-get -y update
 apt-get install -y sudo git nginx php5-curl php5-fpm php5-cli mysql-server libssh2-php beanstalkd php5-mysqlnd php5-mcrypt beanstalkd
 
+git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt
+cat << EOF > /usr/local/etc/le-renew-webroot.ini
+rsa-key-size = 4096
+email = ashley@fodor.xyz
+domains = fodor.xyz
+webroot-path = /var/www/fodor.xyz/public/
+EOF
+curl -L -o /usr/local/sbin/le-renew-webroot https://gist.githubusercontent.com/thisismitch/e1b603165523df66d5cc/raw/fbffbf358e96110d5566f13677d9bd5f4f65794c/le-renew-webroot
+chmod +x /usr/local/sbin/le-renew-webroot
+echo "30 2 * * 1 /usr/local/sbin/le-renew-webroot >> /var/log/le-renewal.log
+" > /etc/cron.d/letsencrypt
+
+
+
 debconf-set-selections <<< "mysql-server mysql-server/root_password password $MYSQL_ROOT_PASSWORD"
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD"
 
