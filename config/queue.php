@@ -39,7 +39,7 @@ return [
             'driver' => 'database',
             'table'  => 'jobs',
             'queue'  => 'default',
-            'expire' => 60,
+            'expire' => 3600,
         ],
 
         'beanstalkd' => [
