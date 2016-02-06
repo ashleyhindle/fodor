@@ -27,7 +27,7 @@ class HomeController extends Controller
         if ($request->session()->has('intendedRepo')) {
             return redirect(url('/provision/' . $request->session()->get('intendedRepo')));
         }
-        
+
         return view('home');
     }
 }

@@ -184,6 +184,8 @@ class ProvisionController extends Controller
 runcmd:
   - echo "UseDNS no" >> /etc/ssh/sshd_config
   - service ssh restart
+  - apt-get -y install arping
+  - /sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print "arping -c 4 -i eth0 -S "$1" -B"}' | bash
 USERDATA;
 
         $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys, $userData);
