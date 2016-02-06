@@ -10,7 +10,7 @@
                 <div class="panel-body">
                     <h1>Well howdy!</h1>
 
-                    <img src="/images/deploy-with-fodor-450x140.png"/>
+                    <img src="/images/deploy-with-fodor-225x70.png"/>
                     {{--
                     <form action="{{ url('/provision/start') }}" method="POST">
                         {{ csrf_field() }}
