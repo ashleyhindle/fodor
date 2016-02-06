@@ -3,8 +3,8 @@ export INSTALLPATH="{{ $installpath }}"
 export NAME="{{ $name }}"
 export GITURL="https://github.com/${NAME}.git"
 
-apt-get update
-apt-get install -y git
+apt-get -y update
+apt-get -y install git
 
 mkdir -p $INSTALLPATH
 cd $INSTALLPATH

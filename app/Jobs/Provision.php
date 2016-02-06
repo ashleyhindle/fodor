@@ -58,13 +58,13 @@ class Provision extends Job implements ShouldQueue
         $fodorJson = base64_decode($fodorJson['content']);
         $fodorJson = json_decode($fodorJson, true);
 
-        $bashScript = \View::make('provision-base.ubuntu-14-04-x64',[
+        $baseScript = \View::make('provision-base.ubuntu-14-04-x64',[
             'installpath' => $fodorJson['installpath'],
             'name' => $this->provision->repo,
         ])->render();
 
         $provisionerScript = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
-        $bashScript .= base64_decode($provisionerScript['content']);
+        $providedScript = base64_decode($provisionerScript['content']);
 
         $key = new RSA();
         $key->loadKey((new \App\Fodor\Ssh\Keys($this->provision->uuid))->getPrivate());
@@ -75,7 +75,8 @@ class Provision extends Job implements ShouldQueue
         }
 
         $remoteProvisionScriptPath = '/tmp/fodor-provision-script-' . $this->provision->uuid;
-        $sftp->put($remoteProvisionScriptPath, $bashScript);
+        $sftp->put($remoteProvisionScriptPath . '-base', $baseScript);
+        $sftp->put($remoteProvisionScriptPath, $providedScript);
 
         $ssh = new SSH2($this->provision->ipv4);
         if (!$ssh->login('root', $key)) {
@@ -83,10 +84,15 @@ class Provision extends Job implements ShouldQueue
         }
 
         echo "Successfully connected to the server via SSH" . PHP_EOL;
-        echo "Running: /bin/bash '{$remoteProvisionScriptPath}'" . PHP_EOL;
+        echo "Running: /bin/bash '{$remoteProvisionScriptPath}-base'" . PHP_EOL;
 
         $ssh->enablePTY();
-        $ssh->exec("/bin/bash '{$remoteProvisionScriptPath}'");
+        $ssh->exec("/bin/bash '{$remoteProvisionScriptPath}-base'", function($output) { echo $output; });
+        $ssh->setTimeout(3600); // Max execution time for the provisioning script
+        echo $ssh->read();
+
+        echo "Running: /bin/bash '{$remoteProvisionScriptPath}'" . PHP_EOL;
+        $ssh->exec("/bin/bash '{$remoteProvisionScriptPath}'", function($output) { echo $output; });
         $ssh->setTimeout(3600); // Max execution time for the provisioning script
         echo $ssh->read();
 
