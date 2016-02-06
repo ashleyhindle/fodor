@@ -88,12 +88,12 @@ class Provision extends Job implements ShouldQueue
 
         $ssh->enablePTY();
         $ssh->exec("/bin/bash '{$remoteProvisionScriptPath}-base'", function($output) { echo $output; });
-        $ssh->setTimeout(3600); // Max execution time for the provisioning script
+        //$ssh->setTimeout(3600); // Max execution time for the provisioning script
         echo $ssh->read();
 
         echo "Running: /bin/bash '{$remoteProvisionScriptPath}'" . PHP_EOL;
         $ssh->exec("/bin/bash '{$remoteProvisionScriptPath}'", function($output) { echo $output; });
-        $ssh->setTimeout(3600); // Max execution time for the provisioning script
+        //$ssh->setTimeout(3600); // Max execution time for the provisioning script
         echo $ssh->read();
 
         // ## REMOVE SSH KEYS FROM DIGITALOCEAN AND OUR LOCAL FILESYSTEM ##
