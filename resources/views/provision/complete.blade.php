@@ -16,7 +16,7 @@
                         <h3>Links</h3>
                         @forelse ($links as $link)
                             <strong>{{ $link['title'] }}: </strong><a target="_blank" href="{{ $link['url'] }}">{{ $link['url'] }}</a><br />
-                        @else
+                        @empty
                             No links provided
                         @endforlse
                     </div>
