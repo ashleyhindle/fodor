@@ -33,7 +33,8 @@
         "ashleyhindle/borrowedhaikunator": "dev-master",
         "laravel/socialite": "~2.0",
         "knplabs/github-api": "~1.5",
-        "ramsey/uuid": "~3.1"
+        "ramsey/uuid": "~3.1",
+        "pda/pheanstalk": "~3.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

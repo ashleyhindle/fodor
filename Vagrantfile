@@ -19,7 +19,7 @@ Vagrant.configure(2) do |config|
     sudo apt-get update
     sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password mysqlsecretpassword'
     sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password mysqlsecretpassword'
-    sudo apt-get install -y nginx php5-curl php5-fpm php5-cli mysql-server libssh2-php beanstalkd php5-mysqlnd php5-mcrypt
+    sudo apt-get install -y nginx php5-curl php5-fpm php5-cli mysql-server libssh2-php beanstalkd php5-mysqlnd php5-mcrypt beanstalkd
 
     mysql -uroot -pmysqlsecretpassword -e 'CREATE DATABASE IF NOT EXISTS fodor;'
     mysql -uroot -pmysqlsecretpassword -e 'GRANT ALL ON fodor.* to "fodor"@"localhost" IDENTIFIED BY "fodorsecret";'

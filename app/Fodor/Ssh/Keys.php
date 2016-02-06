@@ -31,6 +31,13 @@ class Keys
         return Storage::get($keys['public']);
     }
 
+    public function getPrivate()
+    {
+        $keys = $this->getPair();
+
+        return Storage::get($keys['private']);
+    }
+
     public function remove() {
         return Storage::disk('local')->delete(
             $this->getPublicKeyPath(),

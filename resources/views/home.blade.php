@@ -5,9 +5,11 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">We're nearly there..</div>
 
                 <div class="panel-body">
+                    <h1>Well howdy!</h1>
+                    {{--
                     <form action="{{ url('/provision/start') }}" method="POST">
                         {{ csrf_field() }}
                         <input type="text" name="repo" value="ashleyhindle/fodor-example">
@@ -19,6 +21,7 @@
                         <a class="btn btn-large btn-primary" href="{{ url('/do/start') }}">Login with DigitalOcean</a>
                         <a class="btn btn-large btn-success" href="{{ url('/github/start') }}">Login with GitHub</a>
                     </div>
+                    --}}
                 </div>
             </div>
         </div>

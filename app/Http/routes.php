@@ -23,9 +23,13 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/github/start', 'GitHubController@start');
     Route::get('/github/callback', 'GitHubController@callback');
 
-    Route::post('/provision/start', 'ProvisionController@start');
-    Route::post('/provision/doit', 'ProvisionController@doit');
+    Route::post('/provision/start', 'ProvisionController@start'); // Check logged into DO, check repo valid, show ssh key options
+    Route::post('/provision/doit', 'ProvisionController@doit'); // Create SSH key, ask DO to create droplet
+
+    // Check DO status to see when it's considered 'active' (and not new)
     Route::get('/provision/waiting/{id}/{uuid}', 'ProvisionController@waiting')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
+
+    Route::get('/provision/provision/{id}/{uuid}', 'ProvisionController@provision')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
 
     Route::get('/provision/{repo}', 'ProvisionController@start')->where('repo', '(.*)');
 
@@ -38,6 +42,7 @@ Route::group(['middleware' => ['web']], function () {
 
         return redirect($authorizationUrl);
     });
+
     Route::get('/do/callback', function (Request $request) {
         if (empty($request->input('state'))) {
             die('Invalid');

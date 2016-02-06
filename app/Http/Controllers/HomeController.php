@@ -24,14 +24,6 @@ class HomeController extends Controller
      */
     public function index()
     {
-/*        $sshConnection = ssh2_connect('mycloud.smellynose.com', 22, array('hostkey'=>'ssh-rsa'));
-        $sshSuccess = ssh2_auth_pubkey_file(
-            $sshConnection,
-            'ahindle',
-            storage_path('app/' . $publicKeyName),
-            storage_path('app/' . $privateKeyName)
-        );*/
-
         return view('home');
     }
 }

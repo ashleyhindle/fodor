@@ -35,12 +35,14 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/') }}">Home</a></li>
+                    {{-- <li><a href="{{ url('/') }}">Home</a></li> --}}
                 </ul>
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
+                    <li><a href="mailto:ashley@fodor.xyz">Get in touch</a></li>
+                    {{--
                     @if (Auth::guest())
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Register</a></li>
@@ -55,6 +57,7 @@
                             </ul>
                         </li>
                     @endif
+                    --}}
                 </ul>
             </div>
         </div>
