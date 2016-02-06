@@ -139,7 +139,7 @@ class Provision extends Job implements ShouldQueue
             }
         }
 
-        $this->provision->dateready = (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s');
+        $this->provision->dateready = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
         $this->provision->status = 'ready';
         $this->provision->save();
 

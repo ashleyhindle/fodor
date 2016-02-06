@@ -36,7 +36,7 @@ class CreateProvisionsTable extends Migration
             $table->string('subdomain');
             $table->string('status')->default('new'); // new, active, provision, ready, off, archived
 
-            $table->timestamp('datestarted');
+            $table->timestamp('datestarted')->nullable();
             $table->timestamp('dateready')->nullable(); // Provision ready for use
             $table->timestamp('datedeleted')->nullable();
         });

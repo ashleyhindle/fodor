@@ -118,7 +118,7 @@ class ProvisionController extends Controller
         $provision->size = $size; // Default, can be overriden in next step
         $provision->distro = $fodorJson['distro'];
         $provision->region = 'nyc3'; // Default, can be overriden in next step
-        $provision->datestarted = (new \DateTime('now', new \DateTimeZone('UTC')))->format('Y-m-d H:i:s');
+        $provision->datestarted = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
 
         $saved = $provision->save();
         if (empty($saved)) { // Failed to save
@@ -166,6 +166,7 @@ class ProvisionController extends Controller
 
         // For now do it the absolutely dreadful way
         // TODO: Tidy up with service provider/facade/something
+        // If we did have a users table it could be stored in there
         $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
         $digitalocean = new DigitalOceanV2($adapter);
 
