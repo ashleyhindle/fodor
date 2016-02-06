@@ -13,7 +13,7 @@
                             <input type="hidden" name="provisionid" value="{{ $provisionid }}" />
                             <input type="hidden" name="name" value="{{ $repo }}" />
                             <input type="hidden" name="size" value="{{ $size }}" /> {{-- TODO: Give option --}}
-                            <input type="hidden" name="region" value="ams2" /> {{-- TODO: Give option --}}
+                            <input type="hidden" name="region" value="lon1" /> {{-- TODO: Give option --}}
                             <input type="hidden" name="distro" value="{{ $distro }}" />
 
                             @forelse ($keys as $keyId => $keyName)

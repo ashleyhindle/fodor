@@ -12,8 +12,13 @@
 
                         <strong>IP: </strong> {{ $ip }}<br />
                         <strong>Domain: </strong> {{ $domain }}<br />
-                        <strong>SSH: </strong><a href="ssh://root{{ '@' . $domain }}">ssh root{{ '@' . $domain }}</a><br />
-                        <strong>HTTP: </strong><a target="_blank" href="http://{{ $domain }}">{{ $domain }}</a><br />
+
+                        <h3>Links</h3>
+                        @forelse ($links as $link)
+                            <strong>{{ $link['title'] }}: </strong><a target="_blank" href="{{ $link['url'] }}">{{ $link['url'] }}</a><br />
+                        @else
+                            No links provided
+                        @endforlse
                     </div>
                 </div>
             </div>

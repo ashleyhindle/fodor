@@ -257,7 +257,8 @@ class ProvisionController extends Controller
         $provision->digitalocean_token = $request->session()->get('digitalocean')['token'];
         $provision->save();
 
-        $this->dispatch(new \App\Jobs\Provision($provision));
+        $job = (new \App\Jobs\Provision($provision))->delay(5); // It doesn't accept SSH connections for a bit after being available
+        $this->dispatch($job);
 
         return redirect(url('/provision/provisioning/' . $provision->id . '/' . $provision->uuid));
     }
@@ -276,7 +277,29 @@ class ProvisionController extends Controller
     public function ready(Request $request, $id, $uuid)
     {
         $provision = \App\Provision::find($id); // TODO: Check ownership
+
+        $branch = 'master';
+        list($username, $repo) = explode('/', $provision->repo);
+
+        $client = new \Github\Client(); // TODO: DRY
+        $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
+        $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json and branch should be a config variable
+        $fodorJson = base64_decode($fodorJson['content']);
+        $fodorJson = json_decode($fodorJson, true);
+
+        $links = [];
+
+        if (array_key_exists('links', $fodorJson)) {
+            foreach($fodorJson['links'] as $link) {
+                $links[] = [
+                    'title' => $link['title'],
+                    'url' => str_replace('{{DOMAIN}}', $provision->subdomain . '.fodor.xyz', $link['url'])
+                ];
+            }
+        }
+
         return view('provision.complete', [
+            'links' => $links,
             'domain' => $provision->subdomain . '.fodor.xyz',
             'ip' => $provision->ipv4
         ]);
