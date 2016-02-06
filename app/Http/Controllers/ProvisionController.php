@@ -22,9 +22,13 @@ class ProvisionController extends Controller
             $repo = $request->input('repo');
         }
 
+        $request->session()->set('intendedRepo', $repo);
+
         if ($request->session()->has('digitalocean') === false) {
             return redirect(url('/do/start'));
         }
+
+        $request->session()->forget('intendedRepo');
 
         $invalidFormat = false; // if it's not username/repo
         if (empty($repo) || $invalidFormat) {
