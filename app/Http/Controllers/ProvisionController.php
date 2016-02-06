@@ -257,7 +257,7 @@ class ProvisionController extends Controller
         $provision->digitalocean_token = $request->session()->get('digitalocean')['token'];
         $provision->save();
 
-        $job = (new \App\Jobs\Provision($provision))->delay(5); // It doesn't accept SSH connections for a bit after being available
+        $job = (new \App\Jobs\Provision($provision))->delay(1); // It doesn't accept SSH connections for a bit after being available
         $this->dispatch($job);
 
         return redirect(url('/provision/provisioning/' . $provision->id . '/' . $provision->uuid));
