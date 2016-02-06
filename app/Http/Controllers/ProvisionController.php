@@ -173,7 +173,16 @@ class ProvisionController extends Controller
         $keyCreated = $key->create('fodor-' . $provision->uuid, $publicKey); // TODO: Check result
         $keys[] = $keyCreated->id;
 
-        $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys);
+        // TODO: Multi distro support
+        $userData = <<<USERDATA
+#cloud-config
+
+runcmd:
+  - echo "UseDNS no" >> /etc/ssh/sshd_config
+  - service ssh restart
+USERDATA;
+
+        $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys, $userData);
 
         if (empty($created)) {
            return redirect(url('/?createdDroplet=false'));
