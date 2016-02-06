@@ -188,6 +188,19 @@ class ProvisionController extends Controller
         return redirect(url('/provision/waiting/' . $provisionid . '/' . $provision->uuid));
     }
 
+    public function waitingJson(Request $request, $id, $uuid)
+    {
+        $provision = \App\Provision::find($id); // TODO: Check they own it
+
+        $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
+        $digitalocean = new DigitalOceanV2($adapter);
+        $droplet = $digitalocean->droplet();
+
+        $status = $droplet->getById($provision->dropletid)->status;
+
+        return response()->json(['status' => $status]);
+    }
+
     public function waiting(Request $request, $id, $uuid)
     {
         $provision = \App\Provision::find($id); // TODO: Check they own it
@@ -229,13 +242,14 @@ class ProvisionController extends Controller
         }
 
         return view('provision.waiting', [
-            'status' => $status
+            'status' => $status,
+            'id' => $id,
+            'uuid' => $uuid
         ]);
     }
 
     public function provision(Request $request, $id, $uuid)
     {
-
         $provision = \App\Provision::find($id);
         // We add it here so it's not in the database for a long time.  Though potentially if this is secure enough (maybe we should encrypt it)
         //  then we can use this in future for allowing people to manage the Fodor droplets from Fodor? Delete/update
@@ -245,10 +259,54 @@ class ProvisionController extends Controller
 
         $this->dispatch(new \App\Jobs\Provision($provision));
 
+        return redirect(url('/provision/provisioning/' . $provision->id . '/' . $provision->uuid));
+    }
+
+    public function provisioning(Request $request, $id, $uuid)
+    {
+        //$provision = \App\Provision::find($id); // TODO: Check ownership
+        $request->session()->set('log-' . $uuid, 0);
+
+        return view('provision.provisioning', [
+            'id' => $id,
+            'uuid' => $uuid
+        ]);
+    }
+
+    public function ready(Request $request, $id, $uuid)
+    {
+        $provision = \App\Provision::find($id); // TODO: Check ownership
         return view('provision.complete', [
             'domain' => $provision->subdomain . '.fodor.xyz',
             'ip' => $provision->ipv4
         ]);
+    }
 
+    public function log(Request $request, $id, $uuid) // TODO: Check user owns, all throughout this class
+    {
+        $provision = \App\Provision::find($id); // TODO: Check ownership
+
+        if ($provision->status == 'ready') { // We have finished provisioning
+            return response()->json(['status' => 'ready']);
+        }
+
+        $logPath = storage_path('logs/provision/' . $uuid . '.output');
+
+        // Storage::exists checks if it's a real file with 'is_file' which fails on vagrant for some reason
+        // So we have to do it old style
+        if (file_exists(storage_path('logs/provision/' . $uuid . '.output')) === false) {
+            return response()->json(['error' => 'FILE_NONEXISTENT'.storage_path('logs/provision/' . $uuid . '.output')]);
+        }
+
+        $lines = [];
+        $fp = fopen($logPath, 'r');
+        fseek($fp, $request->session()->get('log-' . $uuid));
+        while (($line = fgets($fp, 4096)) !== false) {
+            preg_match('/^\[[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\] OUTPUT.INFO: (.+)$/', $line, $match);
+            $lines[] = $match[1];
+        }
+
+        $request->session()->set('log-' . $uuid, filesize($logPath));
+        return response()->json(['lines' => $lines]);
     }
 }

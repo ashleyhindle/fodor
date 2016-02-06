@@ -27,9 +27,16 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('/provision/doit', 'ProvisionController@doit'); // Create SSH key, ask DO to create droplet
 
     // Check DO status to see when it's considered 'active' (and not new)
+    Route::get('/provision/waiting/{id}/{uuid}.json', 'ProvisionController@waitingJson')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
+
     Route::get('/provision/waiting/{id}/{uuid}', 'ProvisionController@waiting')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
 
     Route::get('/provision/provision/{id}/{uuid}', 'ProvisionController@provision')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
+    Route::get('/provision/provisioning/{id}/{uuid}', 'ProvisionController@provisioning')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
+
+    Route::get('/provision/log/{id}/{uuid}', 'ProvisionController@log')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
+
+    Route::get('/provision/ready/{id}/{uuid}', 'ProvisionController@ready')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
 
     Route::get('/provision/{repo}', 'ProvisionController@start')->where('repo', '(.*)');
 
