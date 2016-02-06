@@ -18,7 +18,7 @@
                             <strong>{{ $link['title'] }}: </strong><a target="_blank" href="{{ $link['url'] }}">{{ $link['url'] }}</a><br />
                         @empty
                             No links provided
-                        @endforlse
+                        @endforelse
                     </div>
                 </div>
             </div>
