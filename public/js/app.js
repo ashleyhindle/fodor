@@ -16,13 +16,7 @@ function updateProvisionLog(provisioningLog) {
                 if (logInfo.length > 1) {
                     $('<div />').text(logInfo).appendTo(provisioningLog);
 
-                    var scrollTo = $('#provisioningLog tr:last');
-                    console.log(scrollTo);
-                    //scrollTo.offset().top
-                    provisioningLog.parent().animate({
-                        scrollTop: 10 -
-                        provisioningLog.parent().offset().top + provisioningLog.parent().scrollTop()
-                    });
+                    $("#provisioningLog").animate({ scrollTop: $('#provisioningLog').prop("scrollHeight")}, 1000);
                 }
             });
         }
