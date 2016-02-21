@@ -11,19 +11,6 @@
                     <h1>Well howdy!</h1>
 
                     <img src="/images/deploy-with-fodor-225x70.png"/>
-                    {{--
-                    <form action="{{ url('/provision/start') }}" method="POST">
-                        {{ csrf_field() }}
-                        <input type="text" name="repo" value="ashleyhindle/fodor-example">
-                        <input type="submit">
-                    </form>
-                    <hr />
-
-                    <div class="btn-group" role="group">
-                        <a class="btn btn-large btn-primary" href="{{ url('/do/start') }}">Login with DigitalOcean</a>
-                        <a class="btn btn-large btn-success" href="{{ url('/github/start') }}">Login with GitHub</a>
-                    </div>
-                    --}}
                 </div>
             </div>
         </div>

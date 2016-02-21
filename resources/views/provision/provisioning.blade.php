@@ -10,10 +10,8 @@
                     <div class="panel-body">
                         <h2>Running scripts on the fresh server...</h2>
 
-                        <div style="font-size:0.9em;height:400px;overflow:scroll;overflow-x:hidden;">
-                            <div id="provisioningLog" data-id={{ $id }} data-uuid="{{ $uuid }}">
+                        <div id="provisioningLog" data-id={{ $id }} data-uuid="{{ $uuid }}" style="font-size:0.9em;height:400px;overflow:scroll;overflow-x:hidden;">
 
-                            </div>
                         </div>
                     </div>
                 </div>
