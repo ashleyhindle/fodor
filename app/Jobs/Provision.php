@@ -13,6 +13,8 @@ use DigitalOceanV2\DigitalOceanV2;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+ini_set("auto_detect_line_endings", true);
+
 class Provision extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
