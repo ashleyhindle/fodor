@@ -67,7 +67,12 @@ class ProvisionController extends Controller
         }
 
         // Has to be less than 1mb
-        $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
+        try {
+            $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
+        } catch (\Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
+            return redirect(url('/'));
+        }
 
         if (empty($provisioner)) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
@@ -118,9 +123,15 @@ class ProvisionController extends Controller
 
         $client = new \Github\Client();
         $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
-        $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
-        $fodorJson = base64_decode($fodorJson['content']);
 
+        try {
+            $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
+        } catch (\Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo or repo\'s fodor.json is non-existent']);
+            return redirect(url('/'));
+        }
+
+        $fodorJson = base64_decode($fodorJson['content']);
         $fodorJson = json_decode($fodorJson, true);
 
 
@@ -141,7 +152,12 @@ class ProvisionController extends Controller
 
 
         // Has to be less than 1mb
-        $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
+        try {
+            $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
+        } catch (\Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
+            return redirect(url('/'));
+        }
 
         if (empty($provisioner)) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
