@@ -15,20 +15,22 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">IP</h4>
-                                <p class="list-group-item-text">{{ $ip }}</p>
+                                <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $ip }}">{{ $ip }}</p>
                             </li>
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">Domain</h4>
-                                <p class="list-group-item-text">{{ $domain }}</p>
+                                <p class="list-group-item-text btn-copy">{{ $domain }}</p>
                             </li>
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">SSH</h4>
-                                <p class="list-group-item-text">ssh root{{ '@'.$domain }}</p>
+                                <p class="list-group-item-text btn-copy">ssh root{{ '@'.$domain }}</p>
                             </li>
-                            <li class="list-group-item">
-                                <h4 class="list-group-item-heading">Root Password</h4>
-                                <p class="list-group-item-text">{{ $provision['rootPassword'] }}}}</p>
-                            </li>
+                            @if (strlen($provision['rootPassword']) > 0)
+                                <li class="list-group-item">
+                                    <h4 class="list-group-item-heading">Root Password</h4>
+                                    <p class="list-group-item-text btn-copy">{{ $provision['rootPassword'] }}</p>
+                                </li>
+                            @endif
                         </ul>
                         <span class="label label-warning">The root password has been deleted from our database - we can't show you this again, don't lose it!</span><br />
 

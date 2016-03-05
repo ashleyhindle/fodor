@@ -44,6 +44,15 @@ function updateWaitingProgress(waitingProgress) {
 }
 
 $(document).ready(function() {
+    ZeroClipboard.config( { moviePatih: "https://fodor.xyz/swf/ZeroClipboard.swf" } );
+    var client = new ZeroClipboard($(".btn-copy"));
+
+    client.on("ready", function(readyEvent) {
+        client.on("aftercopy", function (event) {
+            alert('The copied value is: ' + event.data["text/plain"]);
+        });
+    });
+
     var waitingProgress = $('#waitingProgress');
     if (waitingProgress.length > 0) {
         setTimeout(updateWaitingProgress, getRandomInt(3000, 4500), waitingProgress);
