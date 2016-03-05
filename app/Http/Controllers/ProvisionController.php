@@ -16,10 +16,76 @@ use Ramsey\Uuid\Uuid;
 class ProvisionController extends Controller
 {
 
+    public function view(Request $request, $repo=false)
+    {
+        if (empty($repo)) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'No repo provided']);
+            return redirect('/?ohno');
+        }
+
+        $fullRepo = $repo;
+        $request->session()->set('intendedRepo', $repo);
+
+        $invalidFormat = false; // TODO: check format if it's not username/repo
+        if (empty($repo) || $invalidFormat) {
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid']);
+            return redirect(url('/provision/'.$repo));
+        }
+
+        $branch = 'master';
+        list($username, $repo) = explode('/', $repo);
+
+        $client = new \Github\Client();
+        $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
+        $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
+        $fodorJson = base64_decode($fodorJson['content']);
+        $fodorJsonUndecoded = $fodorJson;
+
+        $fodorJson = json_decode($fodorJson, true);
+
+        if (is_null($fodorJson) || $fodorJson === false) {
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
+            return redirect(url('/provision/'.$repo));
+        }
+
+        if (empty($fodorJson['provisioner'])) {
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
+            return redirect(url('/provision/'.$repo));
+        }
+
+        if (empty($fodorJson['description'])) {
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
+            return redirect(url('/provision/'.$repo));
+        }
+
+        // Has to be less than 1mb
+        $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
+
+        if (empty($provisioner)) {
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
+            return redirect(url('/provision/'.$repo));
+        }
+
+        $provisioner = base64_decode($provisioner['content']);
+
+        if (empty($provisioner)) {
+            $request->session()->flash('status', 'This repo\'s provisioner was in the wrong format or too large');
+            return redirect(url('/provision/'.$repo));
+        }
+
+        return view('provision.view', [
+            'repo' => $fullRepo,
+            'description' => $fodorJson['description'],
+            'fodorJson' => $fodorJsonUndecoded,
+            'provisionerScript' => $provisioner
+        ]);
+    }
+
     public function start(Request $request, $repo=false)
     {
-        if (!empty($request->input('repo'))) {
-            $repo = $request->input('repo');
+        if (empty($repo)) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'No repo provided']);
+            return redirect('/?ohno');
         }
 
         $request->session()->set('intendedRepo', $repo);
@@ -32,7 +98,8 @@ class ProvisionController extends Controller
 
         $invalidFormat = false; // if it's not username/repo
         if (empty($repo) || $invalidFormat) {
-            return redirect(url('/?sorryItMessedUpSomehowWrongRepoFormat'));
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid']);
+            return redirect(url('/provision/'.$repo));
         }
 
         $provision = new Provision();
@@ -48,29 +115,36 @@ class ProvisionController extends Controller
 
         $fodorJson = json_decode($fodorJson, true);
 
+
         if (is_null($fodorJson) || $fodorJson === false) {
-            return redirect(url('/?invalidFodorJsonFileSorryCouldNotDecode'));
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
+            return redirect(url('/provision/'.$repo));
         }
 
         if (empty($fodorJson['provisioner'])) {
-            return redirect(url('/?noProvisionerSet'));
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
+            return redirect(url('/provision/'.$repo));
         }
 
         if (empty($fodorJson['description'])) {
-            return redirect(url('/?noDescriptionSet'));
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
+            return redirect(url('/provision/'.$repo));
         }
+
 
         // Has to be less than 1mb
         $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
 
         if (empty($provisioner)) {
-            return redirect(url('/?provisionerEmptyPartOne'));
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
+            return redirect(url('/provision/'.$repo));
         }
 
         $provisioner = base64_decode($provisioner['content']);
 
         if (empty($provisioner)) {
-            return redirect(url('/?provisionerEmptyPartTwo'));
+            $request->session()->flash('status', 'This repo\'s provisioner was in the wrong format or too large');
+            return redirect(url('/provision/'.$repo));
         }
 
         // We have a valid provisioner
@@ -132,7 +206,8 @@ class ProvisionController extends Controller
 
         $saved = $provision->save();
         if (empty($saved)) { // Failed to save
-            die('Failed to save the provision, cannot continue'); // TODO: Nice error page, alerting
+            $request->session()->flash('status', ['type' => 'danger', 'message' => 'Failed to save the provision data to the database, please destroy your droplet']);
+            return redirect(url('/provision/'.$repo));
         }
 
         return view('provision.start', [

@@ -53,6 +53,17 @@ $(document).ready(function() {
         });
     });
 
+    $('#provisionerScript').toggle();
+    $('#fodorJson').toggle();
+
+    $('#view-provisionerScript').click(function(event) {
+        $('#provisionerScript').toggle();
+    });
+
+    $('#view-fodorJson').click(function(event) {
+        $('#fodorJson').toggle();
+    });
+
     var waitingProgress = $('#waitingProgress');
     if (waitingProgress.length > 0) {
         setTimeout(updateWaitingProgress, getRandomInt(3000, 4500), waitingProgress);
