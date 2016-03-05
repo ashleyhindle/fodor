@@ -14,7 +14,7 @@
 
                         <strong>IP: </strong> {{ $ip }}<br />
                         <strong>Domain: </strong> {{ $domain }}<br />
-                        <strong>SSH: </strong> ssh root@{{ $domain }} / <i>Password:</i>{{ $provision['rootPassword'] }}<br />
+                        <strong>SSH: </strong> ssh root{{ '@' . $domain }} / <i>Password: </i>{{ $provision['rootPassword'] }}<br />
 
                         <h3>Links</h3>
                         @forelse ($links as $link)
