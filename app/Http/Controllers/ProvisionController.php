@@ -23,7 +23,7 @@ class ProvisionController extends Controller
             return redirect('/?ohno');
         }
 
-        $request->session()->forget('intendedRepo');
+        $request->session()->set('intendedRepo', $repo);
 
         $fullRepo = $repo;
 

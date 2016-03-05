@@ -81,7 +81,7 @@ Route::group(['middleware' => ['web']], function () {
 
         if ($request->session()->has('intendedRepo')) {
             $request->session()->forget('intendedRepo');
-            return redirect(url('/provision/' . $request->session()->get('intendedRepo')));
+            return redirect(url('/provision/start/' . $request->session()->get('intendedRepo')));
         }
 
         return redirect(url('/'));

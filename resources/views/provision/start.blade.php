@@ -15,14 +15,25 @@
                             <h2>Region</h2>
                             <div class="toggle-btn-grp">
                                 @foreach (config('digitalocean.regions') as $regionCode => $region)
-                                    <label onclick="" class="toggle-btn btn btn-default"><input type="radio" name="region" value="{{ $regionCode }}" @if ($regionCode == 'ams2') checked="checked" @endif/>{{ $region['name'] }}</label>
+                                    <label onclick="" class="toggle-btn btn btn-default">
+                                        <input type="radio" name="region" value="{{ $regionCode }}" @if ($regionCode == 'ams2') checked="checked" @endif/>
+                                        {{ $region['name'] }}
+                                    </label>
                                 @endforeach
                             </div>
 
                             <h2>Size</h2>
                             <div class="toggle-btn-grp">
                                 @foreach (config('digitalocean.sizes') as $sizeSlug => $doSize)
-                                    <label onclick="" class="toggle-btn btn btn-default"><input type="radio" name="size" value="{{ $doSize['slug'] }}" @if ($doSize['slug'] == $size['default']) checked="checked" @endif/>{{ $doSize['slug'] }} / ${{ $doSize['priceMonthly'] }}</label>
+                                    <label onclick="" class="toggle-btn btn btn-default">
+                                        <input type="radio" name="size" value="{{ $doSize['slug'] }}" @if ($doSize['slug'] == $size['default']) checked="checked" @endif/>
+                                        {{ $doSize['slug'] }} / ${{ $doSize['priceMonthly'] }}
+                                        @if ($size['required'] == $doSize['slug'])
+                                            <hr>Required
+                                        @elseif($size['suggested'] == $doSize['slug'])
+                                            <hr>Suggested
+                                        @endif
+                                    </label>
                                 @endforeach
                             </div>
 
