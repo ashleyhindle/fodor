@@ -13,13 +13,13 @@
                             <p>{{ $description }}</p>
                         </blockquote>
 
-                        <pre id="provisionerScript">{{ $provisionerScript }}</pre>
-                        <pre id="fodorJson">{{ $fodorJson }}</pre>
-
                         <a href="#" class="btn btn-default btn-small" id="view-provisionerScript">View provisioner script</a>
                         <a href="#" class="btn btn-default btn-small" id="view-fodorJson">View fodor.json</a>
 
                         <a href="/provision/start/{{ $repo }}" class="btn btn-success">Let's do this</a>
+
+                        <pre id="provisionerScript" class="hidden">{{ $provisionerScript }}</pre>
+                        <pre id="fodorJson" class="hidden">{{ $fodorJson }}</pre>
                     </div>
                 </div>
             </div>

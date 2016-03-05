@@ -107,6 +107,7 @@ class Provision extends Job implements ShouldQueue
                     $logProvisionerOutput->addInfo($string);
                     echo $string;
                 }
+                //TODO: Get exit code and tell the user what happened.  In some cases this will definitely die/fail
 
                 fclose($stream);
             } else {
@@ -124,8 +125,7 @@ class Provision extends Job implements ShouldQueue
 
         if (!empty($keysFromDo)) {
             foreach ($keysFromDo as $key) {
-                if (strpos($key->name, 'fodor-') === 0) {
-                    // TODO: Only remove the ones for this Droplet, based on uuid no doubt
+                if ($key->name == $this->provision->uuid) {
                     $digitalocean->key()->delete($key->id); // Remove our fodor key(s) - this removes them all though so if they're provisioning two at once it could mess it up
                     $log->addInfo("Removed SSH key: {$key->name}: {$key->id} from DigitalOcean");
                 }

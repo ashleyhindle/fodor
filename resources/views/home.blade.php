@@ -10,6 +10,8 @@
                 <div class="panel-body">
                     <h1>Well howdy!</h1>
 
+                    So we provide the environment variables: $INSTALLPATH (from fodor.json), $NAME (repo name - ashleyhindle/fodor-graylog2), $GITURL (https://github.com/${NAME}.git - TODO: Support gitlab.com, very important)
+
                     <img src="/images/deploy-with-fodor-225x70.png"/>
                 </div>
             </div>

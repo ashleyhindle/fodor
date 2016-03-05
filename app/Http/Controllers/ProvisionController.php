@@ -23,8 +23,9 @@ class ProvisionController extends Controller
             return redirect('/?ohno');
         }
 
+        $request->session()->forget('intendedRepo');
+
         $fullRepo = $repo;
-        $request->session()->set('intendedRepo', $repo);
 
         $invalidFormat = false; // TODO: check format if it's not username/repo
         if (empty($repo) || $invalidFormat) {

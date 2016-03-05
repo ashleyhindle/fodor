@@ -53,15 +53,12 @@ $(document).ready(function() {
         });
     });
 
-    $('#provisionerScript').toggle();
-    $('#fodorJson').toggle();
-
     $('#view-provisionerScript').click(function(event) {
-        $('#provisionerScript').toggle();
+        $('#provisionerScript').toggleClass('hidden');
     });
 
     $('#view-fodorJson').click(function(event) {
-        $('#fodorJson').toggle();
+        $('#fodorJson').toggleClass('hidden');
     });
 
     var waitingProgress = $('#waitingProgress');

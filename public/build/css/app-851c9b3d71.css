@@ -5778,4 +5778,10 @@ button.close {
   position: static;
   width: auto; }
 
+#provisionerScript {
+  margin-top: 5px; }
+
+#fodorJson {
+  margin-top: 5px; }
+
 /*# sourceMappingURL=app.css.map */
