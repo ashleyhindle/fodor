@@ -12,10 +12,24 @@
                             We have installed <strong>{{ $provision['repo'] }}</strong> on a <strong>{{ $provision['size'] }}</strong> droplet in <strong>{{ $provision['region'] }}</strong>
                         </p>
 
-                        <strong>IP: </strong> {{ $ip }}<br />
-                        <strong>Domain: </strong> {{ $domain }}<br />
-                        <strong>SSH: </strong> ssh root{{ '@' . $domain }}<br />
-                        <strong>Root password:</strong>{{ $provision['rootPassword'] }}<br/>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <h4 class="list-group-item-heading">IP</h4>
+                                <p class="list-group-item-text">{{ $ip }}</p>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="list-group-item-heading">Domain</h4>
+                                <p class="list-group-item-text">{{ $domain }}</p>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="list-group-item-heading">SSH</h4>
+                                <p class="list-group-item-text">ssh root{{ '@'.$domain }}</p>
+                            </li>
+                            <li class="list-group-item">
+                                <h4 class="list-group-item-heading">Root Password</h4>
+                                <p class="list-group-item-text">{{ $provision['rootPassword'] }}}}</p>
+                            </li>
+                        </ul>
                         <span class="label label-warning">The root password has been deleted from our database - we can't show you this again, don't lose it!</span><br />
 
                         <h3>Links</h3>
