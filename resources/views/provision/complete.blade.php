@@ -19,16 +19,16 @@
                             </li>
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">Domain</h4>
-                                <p class="list-group-item-text btn-copy">{{ $domain }}</p>
+                                <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $domain }}">{{ $domain }}</p>
                             </li>
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">SSH</h4>
-                                <p class="list-group-item-text btn-copy">ssh root{{ '@'.$domain }}</p>
+                                <p class="list-group-item-text btn-copy" data-clipboard-text="ssh root{{ '@'.$domain }}">ssh root{{ '@'.$domain }}</p>
                             </li>
                             @if (strlen($provision['rootPassword']) > 0)
                                 <li class="list-group-item">
                                     <h4 class="list-group-item-heading">Root Password</h4>
-                                    <p class="list-group-item-text btn-copy">{{ $provision['rootPassword'] }}</p>
+                                    <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $provision['rootPassword'] }}">{{ $provision['rootPassword'] }}</p>
                                 </li>
                             @endif
                         </ul>

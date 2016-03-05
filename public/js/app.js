@@ -49,7 +49,7 @@ $(document).ready(function() {
 
     client.on("ready", function(readyEvent) {
         client.on("aftercopy", function (event) {
-            alert('The copied value is: ' + event.data["text/plain"]);
+            alert('Copied to clipboard');
         });
     });
 
