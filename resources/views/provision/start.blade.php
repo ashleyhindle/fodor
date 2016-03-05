@@ -25,15 +25,17 @@
                             <h2>Size</h2>
                             <div class="toggle-btn-grp">
                                 @foreach (config('digitalocean.sizes') as $sizeSlug => $doSize)
-                                    <label onclick="" class="toggle-btn btn btn-default">
-                                        <input type="radio" name="size" value="{{ $doSize['slug'] }}" @if ($doSize['slug'] == $size['default']) checked="checked" @endif/>
-                                        {{ $doSize['slug'] }} / ${{ $doSize['priceMonthly'] }}
-                                        @if ($size['required'] == $doSize['slug'])
-                                            <hr>Required
-                                        @elseif($size['suggested'] == $doSize['slug'])
-                                            <hr>Suggested
-                                        @endif
-                                    </label>
+                                    @if ($doSize['memory'] >= $requiredMemory)
+                                        <label onclick="" class="toggle-btn btn btn-default">
+                                            <input type="radio" name="size" value="{{ $doSize['slug'] }}" @if ($doSize['slug'] == $size['default']) checked="checked" @endif/>
+                                            {{ $doSize['slug'] }} / ${{ $doSize['priceMonthly'] }}
+                                            @if ($size['required'] == $doSize['slug'])
+                                                <hr>Required
+                                            @elseif($size['suggested'] == $doSize['slug'])
+                                                <hr>Suggested
+                                            @endif
+                                        </label>
+                                    @endif
                                 @endforeach
                             </div>
 

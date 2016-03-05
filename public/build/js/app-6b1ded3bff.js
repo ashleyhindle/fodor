@@ -71,10 +71,10 @@ $(document).ready(function() {
         setTimeout(updateProvisionLog, 1500, provisioningLog);
     }
 
-    $(".toggle-btn:not('.noscript') input[type=radio]").addClass("visuallyhidden");
-    $(".toggle-btn:not('.noscript') input[type=radio]:checked").parent().addClass("success");
+    $(".toggle-btn:not('.noscript'):not('.disabled') input[type=radio]").addClass("visuallyhidden");
+    $(".toggle-btn:not('.noscript'):not('.disabled') input[type=radio]:checked").parent().addClass("success");
 
-    $(".toggle-btn:not('.noscript') input[type=radio]").change(function() {
+    $(".toggle-btn:not('.noscript'):not('.disabled') input[type=radio]").change(function() {
         if( $(this).attr("name") ) {
             $(this).parent().addClass("success").siblings().removeClass("success")
         } else {
@@ -82,9 +82,9 @@ $(document).ready(function() {
         }
     });
 
-    $(".toggle-btn:not('.noscript') input[type=checkbox]").addClass("visuallyhidden");
-    $(".toggle-btn:not('.noscript') input[type=checkbox]:checked").parent().addClass("success");
-    $(".toggle-btn:not('.noscript') input[type=checkbox]").change(function() {
+    $(".toggle-btn:not('.noscript'):not('.disabled') input[type=checkbox]").addClass("visuallyhidden");
+    $(".toggle-btn:not('.noscript'):not('.disabled') input[type=checkbox]:checked").parent().addClass("success");
+    $(".toggle-btn:not('.noscript'):not('.disabled') input[type=checkbox]").change(function() {
         $(this).parent().toggleClass("success");
     });
 });

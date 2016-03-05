@@ -234,6 +234,11 @@ class ProvisionController extends Controller
             return redirect(url('/provision/'.$repo));
         }
 
+        $requiredMemory = 0;
+        if (!empty($requiredSize)) {
+            $requiredMemory = (array_key_exists($requiredSize, config('digitalocean.sizes'))) ? config('digitalocean.sizes')[$requiredSize]['memory'] : 0;
+        }
+
         return view('provision.start', [
             'repo' => $repo,
             'size' => [
@@ -241,6 +246,7 @@ class ProvisionController extends Controller
                 'suggested' => $suggestedSize,
                 'required' => $requiredSize
             ],
+            'requiredMemory' => $requiredMemory,
             'description' => $fodorJson['description'],
             'distro' => $fodorJson['distro'],
             'keys' => $keys,
