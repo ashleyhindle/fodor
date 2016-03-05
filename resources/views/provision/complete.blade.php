@@ -14,7 +14,9 @@
 
                         <strong>IP: </strong> {{ $ip }}<br />
                         <strong>Domain: </strong> {{ $domain }}<br />
-                        <strong>SSH: </strong> ssh root{{ '@' . $domain }} / <i>Password: </i>{{ $provision['rootPassword'] }}<br />
+                        <strong>SSH: </strong> ssh root{{ '@' . $domain }}<br />
+                        <strong>Root password:</strong>{{ $provision['rootPassword'] }}<br/>
+                        <span class="label label-warning">The root password has been deleted from our database - we can't show you this again, don't lose it!</span><br />
 
                         <h3>Links</h3>
                         @forelse ($links as $link)
