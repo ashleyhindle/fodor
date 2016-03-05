@@ -323,6 +323,7 @@ USERDATA;
         $provisionCloned = clone $provision;
 
         $provision->rootPassword = ''; // Delete root password, so if we get hacked we don't give out access to people's servers
+        $provision->save();
 
         $branch = 'master';
         list($username, $repo) = explode('/', $provision->repo);
