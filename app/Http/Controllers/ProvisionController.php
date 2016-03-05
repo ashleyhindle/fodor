@@ -291,7 +291,7 @@ USERDATA;
     {
         $provision = \App\Provision::find($id);
         // We add it here so it's not in the database for a long time.  Though potentially if this is secure enough (maybe we should encrypt it)
-        //  then we can use this in future for allowing people to manage the Fodor droplets from Fodor? Delete/update
+        //  then we can use this in future for allowing people to manage the Fodor droplets from Fodor? Delete/update TODO/CONSIDER
 
         $provision->digitalocean_token = $request->session()->get('digitalocean')['token'];
         $provision->save();

@@ -1,81 +1,4 @@
 @charset "UTF-8";
-.logRow {
-  padding: 3px; }
-
-label {
-  padding: 0.4em 2em 0.4em 0; }
-
-.toggle-btn-grp {
-  margin: 3px 0; }
-
-.toggle-btn {
-  text-align: centre;
-  margin: 5px 2px;
-  padding: 0.4em 3em;
-  color: #000;
-  background-color: #FFF;
-  border-radius: 10px;
-  display: inline-block;
-  border: solid 1px #CCC;
-  cursor: pointer; }
-
-.toggle-btn:hover {
-  border: solid 1px #a0d5dc !important;
-  background: #f1fdfe; }
-
-.toggle-btn.success {
-  background: lightgreen;
-  border: solid 1px green !important; }
-
-.visuallyhidden {
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px; }
-
-.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus {
-  clip: auto;
-  height: auto;
-  margin: 0;
-  overflow: visible;
-  position: static;
-  width: auto; }
-
-/* CSS only version */
-.toggle-btn-grp.cssonly * {
-  width: 140px;
-  height: 30px;
-  line-height: 30px; }
-
-.toggle-btn-grp.cssonly div {
-  display: inline-block;
-  position: relative;
-  margin: 5px 2px; }
-
-.toggle-btn-grp.cssonly div label {
-  position: absolute;
-  z-index: 0;
-  padding: 0;
-  text-align: center; }
-
-.toggle-btn-grp.cssonly div input {
-  position: absolute;
-  z-index: 1;
-  cursor: pointer;
-  opacity: 0; }
-
-.toggle-btn-grp.cssonly div:hover label {
-  border: solid 1px #a0d5dc !important;
-  background: #f1fdfe; }
-
-.toggle-btn-grp.cssonly div input:checked + label {
-  background: lightgreen;
-  border: solid 1px green !important; }
-
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -5825,5 +5748,34 @@ button.close {
 @media print {
   .hidden-print {
     display: none !important; } }
+
+.logRow {
+  padding: 3px; }
+
+.toggle-btn {
+  margin: 5px 2px; }
+
+.toggle-btn.success {
+  background: #5cb85c;
+  border: solid 1px #4cae4c !important;
+  color: #fff; }
+
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
+
+.visuallyhidden.focusable:active, .visuallyhidden.focusable:focus {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static;
+  width: auto; }
 
 /*# sourceMappingURL=app.css.map */

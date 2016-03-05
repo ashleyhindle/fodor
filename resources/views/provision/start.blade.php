@@ -15,14 +15,14 @@
                             <h2>Region</h2>
                             <div class="toggle-btn-grp">
                                 @foreach (config('digitalocean.regions') as $regionCode => $region)
-                                    <label onclick="" class="toggle-btn"><input type="radio" name="region" value="{{ $regionCode }}" @if ($regionCode == 'ams2') checked="checked" @endif/>{{ $region['name'] }}</label>
+                                    <label onclick="" class="toggle-btn btn btn-default"><input type="radio" name="region" value="{{ $regionCode }}" @if ($regionCode == 'ams2') checked="checked" @endif/>{{ $region['name'] }}</label>
                                 @endforeach
                             </div>
 
                             <h2>Size</h2>
                             <div class="toggle-btn-grp">
                                 @foreach (config('digitalocean.sizes') as $sizeSlug => $doSize)
-                                    <label onclick="" class="toggle-btn"><input type="radio" name="size" value="{{ $doSize['slug'] }}" @if ($doSize['slug'] == $size['default']) checked="checked" @endif/>{{ $doSize['slug'] }} / ${{ $doSize['priceMonthly'] }}</label>
+                                    <label onclick="" class="toggle-btn btn btn-default"><input type="radio" name="size" value="{{ $doSize['slug'] }}" @if ($doSize['slug'] == $size['default']) checked="checked" @endif/>{{ $doSize['slug'] }} / ${{ $doSize['priceMonthly'] }}</label>
                                 @endforeach
                             </div>
 
@@ -34,7 +34,7 @@
 
                             <div class="toggle-btn-grp">
                             @forelse ($keys as $keyId => $keyName)
-                                    <label onclick="" class="toggle-btn">
+                                    <label onclick="" class="toggle-btn btn btn-default">
                                         <input type="checkbox" name="keys[{{$keyId}}]" value="{{$keyId}}" checked="checked"/>{{$keyName}}
                                     </label>
                             @empty

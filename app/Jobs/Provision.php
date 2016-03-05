@@ -141,6 +141,7 @@ class Provision extends Job implements ShouldQueue
             }
         }
 
+        $this->provision->digitalocean_token = ''; // We don't want to store tokens that can be used for nefarious purposes
         $this->provision->dateready = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
         $this->provision->status = 'ready';
         $this->provision->save();
