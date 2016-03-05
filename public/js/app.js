@@ -12,13 +12,15 @@ function updateProvisionLog(provisioningLog) {
         } else if ('status' in data && data['status'] == 'ready') {
             window.location.replace("/provision/ready/" + id + "/" + uuid);
         } else {
-            $.each(data, function (key, logInfo) {
+            $.each(data.lines, function (key, logInfo) {
                 if (logInfo.length > 1) {
-                    $('<div />').text(logInfo).appendTo(provisioningLog);
-
-                    $("#provisioningLog").animate({ scrollTop: $('#provisioningLog').prop("scrollHeight")}, 1000);
+                    $('<div />').addClass('text-muted').addClass('logRow').text(logInfo).appendTo(provisioningLog);
                 }
             });
+
+            provisioningLog.animate({
+                scrollTop: provisioningLog.prop("scrollHeight")
+            }, 1000);
         }
 
         setTimeout(updateProvisionLog, 2000, provisioningLog);
@@ -37,7 +39,7 @@ function updateWaitingProgress(waitingProgress) {
         }
 
         waitingProgress.css('width', (width + getRandomInt(4, 8)) + '%');
-        setTimeout(updateWaitingProgress, getRandomInt(3000, 4500), waitingProgress);
+        setTimeout(updateWaitingProgress, getRandomInt(1500, 2500), waitingProgress);
     });
 }
 
@@ -49,6 +51,23 @@ $(document).ready(function() {
 
     var provisioningLog = $('#provisioningLog');
     if (provisioningLog.length > 0) {
-        setTimeout(updateProvisionLog, 2000, provisioningLog);
+        setTimeout(updateProvisionLog, 1500, provisioningLog);
     }
+
+    $(".toggle-btn:not('.noscript') input[type=radio]").addClass("visuallyhidden");
+    $(".toggle-btn:not('.noscript') input[type=radio]:checked").parent().addClass("success");
+
+    $(".toggle-btn:not('.noscript') input[type=radio]").change(function() {
+        if( $(this).attr("name") ) {
+            $(this).parent().addClass("success").siblings().removeClass("success")
+        } else {
+            $(this).parent().toggleClass("success");
+        }
+    });
+
+    $(".toggle-btn:not('.noscript') input[type=checkbox]").addClass("visuallyhidden");
+    $(".toggle-btn:not('.noscript') input[type=checkbox]:checked").parent().addClass("success");
+    $(".toggle-btn:not('.noscript') input[type=checkbox]").change(function() {
+        $(this).parent().toggleClass("success");
+    });
 });

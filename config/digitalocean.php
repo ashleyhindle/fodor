@@ -1,7 +1,39 @@
 <?php
 
 return [
-  'sizes' => [
+    'regions' => [
+      'ams2' => [
+          'name' => 'Amsterdam 2'
+      ],
+      'ams3' => [
+          'name' => 'Amsterdam 3'
+      ],
+      'nyc1' => [
+          'name' => 'New York 1'
+      ],
+      'nyc2' => [
+          'name' => 'New York 2'
+      ],
+      'nyc3' => [
+          'name' => 'New York 3'
+      ],
+      'sgp1' => [
+          'name' => 'Singapore 1'
+      ],
+      'sfo1' => [
+          'name' => 'San Francisco 1'
+      ],
+      'lon1' => [
+          'name' => 'London 1'
+      ],
+      'fra1' => [
+          'name' => 'Frankfurt 1'
+      ],
+      'tor1' => [
+          'name' => 'Toronto 1'
+      ],
+    ],
+    'sizes' => [
       '512mb' => [
           'slug' => '512mb',
           'available' => 1,

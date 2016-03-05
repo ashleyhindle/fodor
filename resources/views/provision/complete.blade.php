@@ -8,7 +8,9 @@
                     <div class="panel-heading">Drum roll please! It's done. Finished. Complete...</div>
 
                     <div class="panel-body">
-                        <h2>All done! Phew! Details below:</h2>
+                        <p>
+                            We have installed <strong>{{ $provision['repo'] }}</strong> on a <strong>{{ $provision['size'] }}</strong> droplet in <strong>{{ $provision['region'] }}</strong>
+                        </p>
 
                         <strong>IP: </strong> {{ $ip }}<br />
                         <strong>Domain: </strong> {{ $domain }}<br />

@@ -38,7 +38,6 @@ class ProvisionController extends Controller
         $provision = new Provision();
         $provision->repo = $repo; // Before it gets contaminated
 
-
         $branch = 'master';
         list($username, $repo) = explode('/', $repo);
 
@@ -55,6 +54,10 @@ class ProvisionController extends Controller
 
         if (empty($fodorJson['provisioner'])) {
             return redirect(url('/?noProvisionerSet'));
+        }
+
+        if (empty($fodorJson['description'])) {
+            return redirect(url('/?noDescriptionSet'));
         }
 
         // Has to be less than 1mb
@@ -74,11 +77,19 @@ class ProvisionController extends Controller
 
         // TODO: Check provided size is valid
         $size = '512mb'; // TODO: Config variable for default size
+        $suggestedSize = false;
+        $requiredSize = false;
 
         if (array_key_exists('required', $fodorJson['size']) === true) {
             $size = $fodorJson['size']['required'];
-        } elseif (array_key_exists('suggested', $fodorJson['size']) === true) {
+            $requiredSize = $size;
+        }
+
+        // Suggested size overrides the default and required size
+
+        if (array_key_exists('suggested', $fodorJson['size']) === true) {
             $size = $fodorJson['size']['suggested'];
+            $suggestedSize = $size;
         }
 
         if (array_key_exists($size, config('digitalocean.sizes')) === false) { // Invalid size
@@ -107,7 +118,6 @@ class ProvisionController extends Controller
 
         $account = $digitalocean->account()->getUserInformation();
 
-
         //get account email, and digitalocean_uuid
         //generate our own uuid
         //store in DB
@@ -117,7 +127,7 @@ class ProvisionController extends Controller
         $provision->digitalocean_uuid = $account->uuid;
         $provision->size = $size; // Default, can be overriden in next step
         $provision->distro = $fodorJson['distro'];
-        $provision->region = 'nyc3'; // Default, can be overriden in next step
+        $provision->region = 'xxx'; // Default, can be overriden in next step
         $provision->datestarted = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
 
         $saved = $provision->save();
@@ -127,7 +137,12 @@ class ProvisionController extends Controller
 
         return view('provision.start', [
             'repo' => $repo,
-            'size' => $size,
+            'size' => [
+                'default' => $size,
+                'suggested' => $suggestedSize,
+                'required' => $requiredSize
+            ],
+            'description' => $fodorJson['description'],
             'distro' => $fodorJson['distro'],
             'keys' => $keys,
             'provisionid' => $provision->id
@@ -164,6 +179,13 @@ class ProvisionController extends Controller
             return redirect(url('/?sizeNotInConfigMustBeInvalidOrIAmOutOfDateLikeSausagesUsually'));
         }
 
+        if (array_key_exists($region, config('digitalocean.regions')) === false) { // Invalid region
+            return redirect(url('/?sizeNotInConfigMustBeInvalidOrIAmOutOfDateLikeSausagesUsuallyREGION'));
+        }
+
+        // TODO: If there aren't any SSH keys provided, other than ours, we need to set a root password
+        // DigitalOcean won't send a root password as we added fodor's ssh key
+
         // For now do it the absolutely dreadful way
         // TODO: Tidy up with service provider/facade/something
         // If we did have a users table it could be stored in there
@@ -185,7 +207,7 @@ class ProvisionController extends Controller
 runcmd:
   - echo "UseDNS no" >> /etc/ssh/sshd_config
   - service ssh restart
-  - ping -c4 google.com
+  - echo 'root:cheeseburger' | chpasswd
 USERDATA;
 
         $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys, $userData);
@@ -196,6 +218,8 @@ USERDATA;
 
         $dropletId = $created->id;
 
+        $provision->region = $region;
+        $provision->size = $size;
         $provision->dropletid = $dropletId;
         $provision->save();
         // It doesn't have a network straight away - we need to wait for it to be created
@@ -219,7 +243,6 @@ USERDATA;
     public function waiting(Request $request, $id, $uuid)
     {
         $provision = \App\Provision::find($id); // TODO: Check they own it
-
         $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
         $digitalocean = new DigitalOceanV2($adapter);
         $droplet = $digitalocean->droplet();
@@ -259,7 +282,8 @@ USERDATA;
         return view('provision.waiting', [
             'status' => $status,
             'id' => $id,
-            'uuid' => $uuid
+            'uuid' => $uuid,
+            'provision' => $provision
         ]);
     }
 
@@ -280,12 +304,13 @@ USERDATA;
 
     public function provisioning(Request $request, $id, $uuid)
     {
-        //$provision = \App\Provision::find($id); // TODO: Check ownership
+        $provision = \App\Provision::find($id); // TODO: Check ownership
         $request->session()->set('log-' . $uuid, 0);
 
         return view('provision.provisioning', [
             'id' => $id,
-            'uuid' => $uuid
+            'uuid' => $uuid,
+            'provision' => $provision
         ]);
     }
 
@@ -316,7 +341,8 @@ USERDATA;
         return view('provision.complete', [
             'links' => $links,
             'domain' => $provision->subdomain . '.fodor.xyz',
-            'ip' => $provision->ipv4
+            'ip' => $provision->ipv4,
+            'provision' => $provision
         ]);
     }
 
