@@ -201,13 +201,15 @@ class ProvisionController extends Controller
         $keys[] = $keyCreated->id;
 
         // TODO: Multi distro support
+        $rootPassword = str_random(32);
+        $rootPasswordEscaped = addslashes($rootPassword);
         $userData = <<<USERDATA
 #cloud-config
 
 runcmd:
   - echo "UseDNS no" >> /etc/ssh/sshd_config
   - service ssh restart
-  - echo 'root:cheeseburger' | chpasswd
+  - echo 'root:{$rootPasswordEscaped}' | chpasswd
 USERDATA;
 
         $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys, $userData);
@@ -218,6 +220,7 @@ USERDATA;
 
         $dropletId = $created->id;
 
+        $provision->rootPassword = $rootPassword;
         $provision->region = $region;
         $provision->size = $size;
         $provision->dropletid = $dropletId;
@@ -317,6 +320,9 @@ USERDATA;
     public function ready(Request $request, $id, $uuid)
     {
         $provision = \App\Provision::find($id); // TODO: Check ownership
+        $provisionCloned = clone $provision;
+
+        $provision->rootPassword = ''; // Delete root password, so if we get hacked we don't give out access to people's servers
 
         $branch = 'master';
         list($username, $repo) = explode('/', $provision->repo);
@@ -340,9 +346,9 @@ USERDATA;
 
         return view('provision.complete', [
             'links' => $links,
-            'domain' => $provision->subdomain . '.fodor.xyz',
-            'ip' => $provision->ipv4,
-            'provision' => $provision
+            'domain' => $provisionCloned->subdomain . '.fodor.xyz',
+            'ip' => $provisionCloned->ipv4,
+            'provision' => $provisionCloned
         ]);
     }
 
