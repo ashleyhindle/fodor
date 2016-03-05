@@ -201,7 +201,7 @@ class ProvisionController extends Controller
         $keys[] = $keyCreated->id;
 
         // TODO: Multi distro support
-        $rootPassword = str_random(32);
+        $rootPassword = str_random(32); // TODO: Should we delete all rootPasswords every X hours for old (1hour?) droplets?
         $rootPasswordEscaped = addslashes($rootPassword);
         $userData = <<<USERDATA
 #cloud-config
