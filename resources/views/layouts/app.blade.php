@@ -72,6 +72,15 @@
                 </p>
             @endforeach
         @endif
+
+        @if(Session::has('flash.old'))
+            @foreach (Session::get('flash.old') as $flashKey)
+                <p class="alert alert-{{ Session::get($flashKey)['type'] }}">
+                    {{ Session::get($flashKey)['message'] }}
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                </p>
+            @endforeach
+        @endif
     </div> <!-- end .flash-message -->
 
     @yield('content')

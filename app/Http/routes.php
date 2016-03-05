@@ -79,6 +79,11 @@ Route::group(['middleware' => ['web']], function () {
             exit($e->getMessage()); // TODO: Show nice error page here using proper view/template
         }
 
+        if ($request->session()->has('intendedRepo')) {
+            $request->session()->forget('intendedRepo');
+            return redirect(url('/provision/' . $request->session()->get('intendedRepo')));
+        }
+
         return redirect(url('/'));
     });
 

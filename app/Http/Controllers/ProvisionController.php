@@ -27,10 +27,11 @@ class ProvisionController extends Controller
 
         $fullRepo = $repo;
 
-        $invalidFormat = false; // TODO: check format if it's not username/repo
+        $invalidFormat = (strpos($repo, '/') === false);
+
         if (empty($repo) || $invalidFormat) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid']);
-            return redirect(url('/provision/'.$repo));
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'The repo name "' . $repo . '" is invalid']);
+            return redirect(url('/'));
         }
 
         $branch = 'master';
@@ -38,24 +39,30 @@ class ProvisionController extends Controller
 
         $client = new \Github\Client();
         $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
-        $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
+        try {
+            $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
+        } catch (\Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo or repo\'s fodor.json is non-existent']);
+            return redirect(url('/'));
+        }
+
         $fodorJson = base64_decode($fodorJson['content']);
         $fodorJsonUndecoded = $fodorJson;
 
         $fodorJson = json_decode($fodorJson, true);
 
         if (is_null($fodorJson) || $fodorJson === false) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
             return redirect(url('/provision/'.$repo));
         }
 
         if (empty($fodorJson['provisioner'])) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
             return redirect(url('/provision/'.$repo));
         }
 
         if (empty($fodorJson['description'])) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
             return redirect(url('/provision/'.$repo));
         }
 
@@ -63,14 +70,14 @@ class ProvisionController extends Controller
         $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
 
         if (empty($provisioner)) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
             return redirect(url('/provision/'.$repo));
         }
 
         $provisioner = base64_decode($provisioner['content']);
 
         if (empty($provisioner)) {
-            $request->session()->flash('status', 'This repo\'s provisioner was in the wrong format or too large');
+            $request->session()->flash(str_random(4), 'This repo\'s provisioner was in the wrong format or too large');
             return redirect(url('/provision/'.$repo));
         }
 
@@ -97,7 +104,7 @@ class ProvisionController extends Controller
 
         $request->session()->forget('intendedRepo');
 
-        $invalidFormat = false; // if it's not username/repo
+        $invalidFormat = (strpos($repo, '/') === false);
         if (empty($repo) || $invalidFormat) {
             $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid']);
             return redirect(url('/provision/'.$repo));
@@ -118,17 +125,17 @@ class ProvisionController extends Controller
 
 
         if (is_null($fodorJson) || $fodorJson === false) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
             return redirect(url('/provision/'.$repo));
         }
 
         if (empty($fodorJson['provisioner'])) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
             return redirect(url('/provision/'.$repo));
         }
 
         if (empty($fodorJson['description'])) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
             return redirect(url('/provision/'.$repo));
         }
 
@@ -137,14 +144,14 @@ class ProvisionController extends Controller
         $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
 
         if (empty($provisioner)) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
             return redirect(url('/provision/'.$repo));
         }
 
         $provisioner = base64_decode($provisioner['content']);
 
         if (empty($provisioner)) {
-            $request->session()->flash('status', 'This repo\'s provisioner was in the wrong format or too large');
+            $request->session()->flash(str_random(4), 'This repo\'s provisioner was in the wrong format or too large');
             return redirect(url('/provision/'.$repo));
         }
 
@@ -207,7 +214,7 @@ class ProvisionController extends Controller
 
         $saved = $provision->save();
         if (empty($saved)) { // Failed to save
-            $request->session()->flash('status', ['type' => 'danger', 'message' => 'Failed to save the provision data to the database, please destroy your droplet']);
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Failed to save the provision data to the database, please destroy your droplet']);
             return redirect(url('/provision/'.$repo));
         }
 

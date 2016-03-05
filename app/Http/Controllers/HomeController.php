@@ -24,10 +24,6 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->session()->has('intendedRepo')) {
-            return redirect(url('/provision/' . $request->session()->get('intendedRepo')));
-        }
-
         return view('home');
     }
 }
