@@ -10,6 +10,7 @@ use DigitalOceanV2\DigitalOceanV2;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Providers\CloudflareApiServiceProvider;
+use Mockery\CountValidator\Exception;
 use Ramsey\Uuid\Uuid;
 
 
@@ -23,8 +24,6 @@ class ProvisionController extends Controller
             return redirect('/?ohno');
         }
 
-        $request->session()->set('intendedRepo', $repo);
-
         $fullRepo = $repo;
 
         $invalidFormat = (strpos($repo, '/') === false);
@@ -33,6 +32,8 @@ class ProvisionController extends Controller
             $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'The repo name "' . $repo . '" is invalid']);
             return redirect(url('/'));
         }
+
+        $request->session()->set('intendedRepo', $repo);
 
         $branch = 'master';
         list($username, $repo) = explode('/', $repo);
@@ -53,17 +54,17 @@ class ProvisionController extends Controller
 
         if (is_null($fodorJson) || $fodorJson === false) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         if (empty($fodorJson['provisioner'])) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         if (empty($fodorJson['description'])) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         // Has to be less than 1mb
@@ -76,14 +77,14 @@ class ProvisionController extends Controller
 
         if (empty($provisioner)) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         $provisioner = base64_decode($provisioner['content']);
 
         if (empty($provisioner)) {
             $request->session()->flash(str_random(4), 'This repo\'s provisioner was in the wrong format or too large');
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         return view('provision.view', [
@@ -101,6 +102,12 @@ class ProvisionController extends Controller
             return redirect('/?ohno');
         }
 
+        $invalidFormat = (strpos($repo, '/') === false);
+        if (empty($repo) || $invalidFormat) {
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid']);
+            return redirect(url('/'));
+        }
+
         $request->session()->set('intendedRepo', $repo);
 
         if ($request->session()->has('digitalocean') === false) {
@@ -108,12 +115,6 @@ class ProvisionController extends Controller
         }
 
         $request->session()->forget('intendedRepo');
-
-        $invalidFormat = (strpos($repo, '/') === false);
-        if (empty($repo) || $invalidFormat) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid']);
-            return redirect(url('/provision/'.$repo));
-        }
 
         $provision = new Provision();
         $provision->repo = $repo; // Before it gets contaminated
@@ -137,17 +138,17 @@ class ProvisionController extends Controller
 
         if (is_null($fodorJson) || $fodorJson === false) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         if (empty($fodorJson['provisioner'])) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         if (empty($fodorJson['description'])) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
 
@@ -161,14 +162,14 @@ class ProvisionController extends Controller
 
         if (empty($provisioner)) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         $provisioner = base64_decode($provisioner['content']);
 
         if (empty($provisioner)) {
             $request->session()->flash(str_random(4), 'This repo\'s provisioner was in the wrong format or too large');
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/'));
         }
 
         // We have a valid provisioner
@@ -228,10 +229,15 @@ class ProvisionController extends Controller
         $provision->region = 'xxx'; // Default, can be overriden in next step
         $provision->datestarted = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
 
-        $saved = $provision->save();
+        try {
+            $saved = $provision->save();
+        } catch(Exception $e) {
+            $saved = false;
+        }
+
         if (empty($saved)) { // Failed to save
             $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Failed to save the provision data to the database, please destroy your droplet']);
-            return redirect(url('/provision/'.$repo));
+            return redirect(url('/provision/'.$provision->repo));
         }
 
         $requiredMemory = 0;

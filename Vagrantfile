@@ -33,7 +33,7 @@ Vagrant.configure(2) do |config|
     chmod g+wr storage/privatekeys
 
     /usr/local/bin/composer install
-    ./artisan migrate
+    php artisan migrate
 
     sudo php5enmod mcrypt
 
@@ -46,21 +46,21 @@ server {
 
         location / {
             # URLs to attempt, including pretty ones.
-            try_files $uri $uri/ /index.php?$query_string;
+            try_files \$uri \$uri/ /index.php?\$query_string;
         }
 
         # Remove trailing slash to please routing system.
-        if (!-d $request_filename) {
-            rewrite     ^/(.+)/$ /$1 permanent;
+        if (!-d \$request_filename) {
+            rewrite     ^/(.+)/\$ /\$1 permanent;
         }
 
         # PHP FPM configuration.
-        location ~* \.php$ {
+        location ~* \.php\$ {
                 fastcgi_pass                    unix:/var/run/php5-fpm.sock;
                 fastcgi_index                   index.php;
                 fastcgi_split_path_info         ^(.+\.php)(.*)$;
                 include                         /etc/nginx/fastcgi_params;
-                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
         }
 
         # We don't need .ht files with nginx.
