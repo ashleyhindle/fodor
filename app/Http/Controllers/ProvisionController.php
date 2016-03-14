@@ -314,16 +314,8 @@ class ProvisionController extends Controller
         // TODO: Multi distro support
         $rootPassword = str_random(32); // TODO: Should we delete all rootPasswords every X hours for old (1hour?) droplets?
         $rootPasswordEscaped = addslashes($rootPassword);
-        $userData = <<<USERDATA
-#cloud-config
 
-runcmd:
-  - echo "UseDNS no" >> /etc/ssh/sshd_config
-  - service ssh restart
-  - echo 'root:{$rootPasswordEscaped}' | chpasswd
-USERDATA;
-
-        $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys, $userData);
+        $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys);
 
         if (empty($created)) {
            return redirect(url('/?createdDroplet=false'));

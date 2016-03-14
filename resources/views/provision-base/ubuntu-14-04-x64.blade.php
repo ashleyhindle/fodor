@@ -1,4 +1,8 @@
 #!/bin/bash
+export DEBIAN_FRONTEND=noninteractive
+
+echo 'root:{{ $rootPasswordEscaped }}' | chpasswd
+
 export INSTALLPATH="{{ $installpath }}"
 export NAME="{{ $name }}"
 export GITURL="https://github.com/${NAME}.git"
