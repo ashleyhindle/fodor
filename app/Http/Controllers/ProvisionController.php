@@ -477,7 +477,8 @@ class ProvisionController extends Controller
             'links' => $links,
             'domain' => $provisionCloned->subdomain . '.fodor.xyz',
             'ip' => $provisionCloned->ipv4,
-            'provision' => $provisionCloned
+            'provision' => $provisionCloned,
+            'successText' => (isset($fodorJson['text']['complete'])) ? $fodorJson['text']['complete'] : ''
         ]);
     }
 

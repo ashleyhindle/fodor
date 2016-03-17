@@ -80,7 +80,8 @@ class Provision extends Job implements ShouldQueue
         $baseScript = \View::make('provision-base.ubuntu-14-04-x64',[
             'installpath' => $fodorJson['installpath'],
             'name' => $this->provision->repo,
-	        'rootPasswordEscaped' => addslashes($this->provision->rootPassword)
+	        'rootPasswordEscaped' => addslashes($this->provision->rootPassword),
+            'domain' => $this->provision->subdomain
         ])->render();
 
         $provisionerScript = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
