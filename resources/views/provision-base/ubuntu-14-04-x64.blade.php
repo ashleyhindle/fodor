@@ -1,8 +1,7 @@
 #!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
 
-echo 'root:{{ $rootPasswordEscaped }}' \
-    | chpasswd
+echo 'root:{{ $rootPasswordEscaped }}' | chpasswd
 
 export INSTALLPATH="{{ $installpath }}"
 export NAME="{{ $name }}"
