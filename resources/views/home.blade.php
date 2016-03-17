@@ -11,6 +11,9 @@
             <h3>Example repositories</h3>
             <ul class="list-unstyled">
                 <li>
+                    <a href="https://github.com/fodorxyz/owncloud">fodorxyz/owncloud</a> &bull; Latest OwnCloud personal cloud system
+                </li>
+                <li>
                     <a href="https://github.com/ashleyhindle/fodor-example">ashleyhindle/fodor-example</a> &bull; Simple nginx setup example
                 </li>
                 <li>
