@@ -31,7 +31,7 @@
                             @if (!empty($successText))
                                 <li class="list-group-item">
                                     <h4 class="list-group-item-heading">Extra information:</h4>
-                                    <p class="list-group-item-text">{{ $successText] }}</p>
+                                    <p class="list-group-item-text">{{ $successText }}</p>
                                 </li>
                             @endif
                         </ul>
