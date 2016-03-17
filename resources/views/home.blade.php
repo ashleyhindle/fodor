@@ -6,7 +6,7 @@
         <div class="col-md-6">
             <h2>What is Fodor?</h2>
             <hr/>
-            Fodor make it easy for you to setup open source projects on a new DigitalOcean droplet.
+            Auto setup and provision GitHub repositories on a new DigitalOcean droplet
 
             <h3>Example repositories</h3>
             <ul class="list-unstyled">
