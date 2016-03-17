@@ -9,7 +9,7 @@
 
     <meta property="og:site_name" content="https://fodor.xyz" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Fodor.xyz @if(isset($description))- auto provision {{ $repo or 'GitHub repositories' }} on a new DigitalOcean {{'droplet'}}@endif" />
+    <meta property="og:title" content="@if(isset($description))Auto provision {{ $repo or 'GitHub repositories' }} on a new DigitalOcean {{'droplet'}}@else{{'Fodor.xyz'}}@endif" />
     <meta property="og:description" content="@if(!isset($description))Auto setup and provision {{ $repo or 'GitHub repositories' }} on a new DigitalOcean droplet @else{{$description}}@endif" />
     <meta property="og:url" content="https://fodor.xyz" />
     <meta property="og:image" content="https://fodor.xyz/images/fodor-square-logo.png" />
@@ -17,7 +17,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@ashleyhindle" />
     <meta name="twitter:creator" content="@ashleyhindle" />
-    <meta name="twitter:title" content="Fodor.xyz @if(isset($description))- auto provision {{ $repo or 'GitHub repositories' }} on a new DigitalOcean {{'droplet'}}@endif" />
+    <meta name="twitter:title" content="@if(isset($description))Auto provision {{ $repo or 'GitHub repositories' }} on a new DigitalOcean {{'droplet'}}@else{{'Fodor.xyz'}}@endif" />
     <meta name="twitter:description" content="@if(!isset($description))Auto setup and provision {{ $repo or 'GitHub repositories' }} on a new DigitalOcean droplet @else{{$description}}@endif" />
     <meta name="twitter:url" content="https://fodor.xyz" />
     <meta name="twitter:image:src" content="https://fodor.xyz/images/fodor-square-logo.png" />
