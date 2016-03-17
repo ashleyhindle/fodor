@@ -499,7 +499,7 @@ class ProvisionController extends Controller
         // Storage::exists checks if it's a real file with 'is_file' which fails on vagrant for some reason
         // So we have to do it old style
         if (file_exists(storage_path('logs/provision/' . $uuid . '.output')) === false) {
-            return response()->json(['error' => 'FILE_NONEXISTENT'.storage_path('logs/provision/' . $uuid . '.output')]);
+            return response()->json(['error' => 'FILE_NONEXISTENT']);
         }
 
         $lines = [];
