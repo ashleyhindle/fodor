@@ -7,6 +7,21 @@
 
     <title>Fodor.xyz</title>
 
+    <meta property="og:site_name" content="https://fodor.xyz" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Fodor.xyz" />
+    <meta property="og:description" content="Open source conference call system built with Twilio, PHP and Javascript, with a web based soft phone" />
+    <meta property="og:url" content="https://fodor.xyz" />
+    <meta property="og:image" content="https://fodor.xyz/images/fodor-square-logo.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@ashleyhindle" />
+    <meta name="twitter:creator" content="@ashleyhindle" />
+    <meta name="twitter:title" content="Fodor.xyz" />
+    <meta name="twitter:description" content="Open source conference call system built with Twilio, PHP and Javascript, with a web based soft phone" />
+    <meta name="twitter:url" content="https://fodor.xyz" />
+    <meta name="twitter:image:src" content="https://fodor.xyz/images/fodor-square-logo.png" />
+    
     <!-- Fonts -->
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
     <!-- Styles -->
