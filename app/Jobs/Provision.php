@@ -127,7 +127,7 @@ class Provision extends Job implements ShouldQueue
 
         if (!empty($keysFromDo)) {
             foreach ($keysFromDo as $key) {
-                if ($key->name == $this->provision->uuid) {
+                if ($key->name == 'fodor-' . $this->provision->uuid) {
                     $digitalocean->key()->delete($key->id); // Remove our fodor key(s) - this removes them all though so if they're provisioning two at once it could mess it up
                     $log->addInfo("Removed SSH key: {$key->name}: {$key->id} from DigitalOcean");
                 }
