@@ -15,6 +15,9 @@
                 <li>
                     <a href="https://github.com/ashleyhindle/fodor-graylog2">ashleyhindle/fodor-graylog2</a> &bull; Graylog central logging system
                 </li>
+                <li>
+                    <a href="https://github.com/fodorxyz/pritunl">ashleyhindle/fodor-graylog2</a> &bull; Enterprise vpn server based on OpenVPN
+                </li>
             </ul>
 
             <h2>How does it work?</h2>
