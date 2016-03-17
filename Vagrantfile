@@ -40,7 +40,7 @@ Vagrant.configure(2) do |config|
     cat << EOF > /etc/supervisor/conf.d/fodor-provisioner-worker.conf 
 	[program:fodor-provision-worker]
 	process_name=%(program_name)s_%(process_num)02d
-	command=php /vagrant/artisan queue:listen --timeout=3600 --sleep=1 --tries=15 --delay=0 --queue=default --daemon
+	command=php /vagrant/artisan queue:listen --timeout=3600 --sleep=1 --tries=15 --delay=0 --queue=default
 	autostart=true
 	autorestart=true
 	user=vagrant
