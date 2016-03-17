@@ -8,7 +8,7 @@ function updateProvisionLog(provisioningLog) {
 
     $.getJSON("/provision/log/" + id + "/" + uuid, function(data) {
         if ('error' in data) {
-            provisioningLog.html('Awaiting connection...');
+            provisioningLog.html('Awaiting SSH connection...');
         } else if ('status' in data && data['status'] == 'ready') {
             window.location.replace("/provision/ready/" + id + "/" + uuid);
         } else {
