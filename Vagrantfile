@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
     owner: "www-data",
     group: "www-data",
-    mount_options: ["dmode=775,fmode=664"]
+    mount_options: ["dmode=777,fmode=777"]
 
   config.vm.provision "shell", inline: <<-SHELL
     export DEBIAN_FRONTEND=noninteractive
@@ -36,6 +36,18 @@ Vagrant.configure(2) do |config|
     php artisan migrate
 
     sudo php5enmod mcrypt
+
+    cat << EOF > /etc/supervisor/conf.d/fodor-provisioner-worker.conf 
+	[program:fodor-provision-worker]
+	process_name=%(program_name)s_%(process_num)02d
+	command=php /vagrant/artisan queue:work --sleep=1 --tries=10 --delay=0 --daemon
+	autostart=true
+	autorestart=true
+	user=vagrant
+	numprocs=4
+	redirect_stderr=true
+	stdout_logfile=/vagrant/storage/logs/%(program_name)s_%(process_num)02d.log
+EOF
 
     cat << EOF > /etc/nginx/sites-enabled/fodor.conf
 server {

@@ -5,3 +5,5 @@ Homestead.json
 .env
 .idea
 .vagrant
+storage/logs/*.log
+storage/logs/provision/
