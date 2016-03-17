@@ -10,7 +10,7 @@
     <meta property="og:site_name" content="https://fodor.xyz" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Fodor.xyz" />
-    <meta property="og:description" content="Auto setup and provision GitHub repositories on a new DigitalOcean droplet" />
+    <meta property="og:description" content="Auto setup and provision {{ $repo or 'GitHub repositories' }} on a new DigitalOcean droplet" />
     <meta property="og:url" content="https://fodor.xyz" />
     <meta property="og:image" content="https://fodor.xyz/images/fodor-square-logo.png" />
 
@@ -18,7 +18,7 @@
     <meta name="twitter:site" content="@ashleyhindle" />
     <meta name="twitter:creator" content="@ashleyhindle" />
     <meta name="twitter:title" content="Fodor.xyz" />
-    <meta name="twitter:description" content="Auto setup and provision GitHub repositories on a new DigitalOcean droplet" />
+    <meta name="twitter:description" content="Auto setup and provision {{ $repo or 'GitHub repositories' }} on a new DigitalOcean droplet" />
     <meta name="twitter:url" content="https://fodor.xyz" />
     <meta name="twitter:image:src" content="https://fodor.xyz/images/fodor-square-logo.png" />
 
