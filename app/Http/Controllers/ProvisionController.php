@@ -335,7 +335,11 @@ class ProvisionController extends Controller
 
     public function waitingJson(Request $request, $id, $uuid)
     {
-        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid); // TODO: Check they own it
+        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first(); // TODO: Check they own it
+
+        if ($provision === null) {
+            return response()->json(['status' => 'broken']);
+        }
 
         $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
         $digitalocean = new DigitalOceanV2($adapter);
@@ -348,7 +352,13 @@ class ProvisionController extends Controller
 
     public function waiting(Request $request, $id, $uuid)
     {
-        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid); // TODO: Check they own it
+        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first(); // TODO: Check they own it
+        if ($provision === null) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not find id/uuid combo']);
+            return redirect('/?ohno');
+        }
+
+
         $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
         $digitalocean = new DigitalOceanV2($adapter);
         $droplet = $digitalocean->droplet();
@@ -395,7 +405,12 @@ class ProvisionController extends Controller
 
     public function provision(Request $request, $id, $uuid)
     {
-        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid);
+        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first();
+        if ($provision === null) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not find id/uuid combo']);
+            return redirect('/?ohno');
+        }
+
         // We add it here so it's not in the database for a long time.  Though potentially if this is secure enough (maybe we should encrypt it)
         //  then we can use this in future for allowing people to manage the Fodor droplets from Fodor? Delete/update TODO/CONSIDER
 
@@ -410,7 +425,12 @@ class ProvisionController extends Controller
 
     public function provisioning(Request $request, $id, $uuid)
     {
-        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid); // TODO: Check ownership
+        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first(); // TODO: Check ownership
+        if ($provision === null) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not find id/uuid combo']);
+            return redirect('/?ohno');
+        }
+
         $request->session()->set('log-' . $uuid, 0);
 
         return view('provision.provisioning', [
@@ -422,7 +442,12 @@ class ProvisionController extends Controller
 
     public function ready(Request $request, $id, $uuid)
     {
-        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid); // TODO: Check ownership
+        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first(); // TODO: Check ownership
+        if ($provision === null) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not find id/uuid combo']);
+            return redirect('/?ohno');
+        }
+
         $provisionCloned = clone $provision;
 
         $provision->rootPassword = ''; // Delete root password, so if we get hacked we don't give out access to people's servers
@@ -458,7 +483,12 @@ class ProvisionController extends Controller
 
     public function log(Request $request, $id, $uuid) // TODO: Check user owns, all throughout this class
     {
-        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid);
+        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first();
+        if ($provision === null) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not find id/uuid combo']);
+            return response()->json(['status' => 'broken']);
+        }
+
 
         if ($provision->status == 'ready') { // We have finished provisioning
             return response()->json(['status' => 'ready']);
