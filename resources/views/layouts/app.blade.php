@@ -113,6 +113,15 @@
 
     @yield('content')
 
+        <ul id="footer" class="nav nav-pills list-inline" style="border-top: 1px solid #CCC;">
+            <li class="pull-right">
+                <a href="https://twitter.com/ashleyhindle">Made by @ashleyhindle</a>
+            </li>
+            <li class="pull-right">
+                <a href="https://github.com/ashleyhindle/fodor">GitHub</a>
+            </li>
+        </ul>
+
     <!-- JavaScripts -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
