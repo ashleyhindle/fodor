@@ -5784,4 +5784,8 @@ button.close {
 #fodorJson {
   margin-top: 5px; }
 
+div.commented-code {
+  font-family: "Courier New", monospace;
+  white-space: pre; }
+
 /*# sourceMappingURL=app.css.map */

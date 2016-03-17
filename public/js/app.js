@@ -53,6 +53,10 @@ $(document).ready(function() {
         });
     });
 
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
     $('#view-provisionerScript').click(function(event) {
         $('#provisionerScript').toggleClass('hidden');
     });

@@ -3,17 +3,127 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">We're nearly there..</div>
+        <div class="col-md-6">
+            <h2>What is Fodor?</h2>
+            Fodor make it easy for you to setup open source projects on a new DigitalOcean droplet.
 
-                <div class="panel-body">
-                    <h1>Well howdy!</h1>
+            <h3>Example repositories</h3>
+            <ul class="list-unstyled">
+                <li>
+                    <a href="https://github.com/ashleyhindle/fodor-example">ashleyhindle/fodor-example</a> - &bull; Simple nginx setup example
+                </li>
+                <li>
+                    <a href="https://github.com/ashleyhindle/fodor-graylog2">ashleyhindle/fodor-graylog2</a> &bull; Graylog central logging system
+                </li>
+            </ul>
 
-                    So we provide the environment variables: $INSTALLPATH (from fodor.json), $NAME (repo name - ashleyhindle/fodor-graylog2), $GITURL (https://github.com/${NAME}.git - TODO: Support gitlab.com, very important)
+            <h2>How does it work?</h2>
+            <ol>
+                <li>Using the DigitalOcean API we setup a new droplet with a new secure SSH key</li>
+                <li>Our systems SSH in to your server and automatically provision based on the provided provisioner script</li>
+                <li>Once provisioning is complete, we delete our SSH key from your account</li>
+            </ol>
 
-                    <img src="/images/deploy-with-fodor-225x70.png"/>
+            We then provide you with a Fodor subdomain pointing to the Droplet, and all needed links/information to get started with your new system.
+
+            <h2>Our base provisioniner script</h2>
+            This is run on every new Droplet, before the repositories provisioner is run:
+            <div class="commented-code">
+#!/bin/bash
+export DEBIAN_FRONTEND=noninteractive
+
+echo 'root:@{{ $rootPasswordEscaped }}' | chpasswd
+
+export INSTALLPATH="@{{ $installpath }}"
+export NAME="@{{ $name }}"
+export GITURL="https://github.com/${NAME}.git"
+
+apt-get -y update
+apt-get -y install git
+
+mkdir -p $INSTALLPATH
+cd $INSTALLPATH
+git clone --depth 1 $GITURL .
+            </div>
+        </div>
+
+
+
+        <div class="col-md-6">
+            <h2>Making your repo Fodor friendly...</h2>
+
+            Add a <code>fodor.json</code> file to the root of your repo
+
+            <div class="commented-code">
+{
+  <span data-toggle="tooltip" data-placement="left" title="This should be your repo name, we'll prepend https://github.com/ to it for cloning">"name": "ashleyhindle/fodor-example",</span>
+  <span data-toggle="tooltip" data-placement="left" title="Where on the server we'll git clone to">"installpath": "/var/www/fodor-example/",</span>
+  <span data-toggle="tooltip" data-placement="left" title="Where is your bash provisioner file? Relative to repo root">"provisioner": "fodor/provisioner.sh"</span>
+  <span data-toggle="tooltip" data-placement="left" title="Which links shall we show to the user after successful install?  Replacements: @{{DOMAIN}} => e.g.'clean-clouds-5829.fodor.xyz'">"links": [</span>
+    {
+      "title": "HTTP",
+      <span data-toggle="tooltip" data-placement="left" title="Replacements: @{{DOMAIN}} => e.g.'clean-clouds-5829.fodor.xyz'">"url": "http://@{{DOMAIN}}/"</span>
+    }
+  ],
+  "size": {
+    <span data-toggle="tooltip" data-placement="left" title="Optional - which size Droplet is suggested?">"suggested": "512mb",</span>
+    <span data-toggle="tooltip" data-placement="left" title="Optional - which size Droplet is required? All lower Droplet sizes will be disabled">"required": "512mb"</span>
+  },
+  <span data-toggle="tooltip" data-placement="left" title="ubuntu-14-04-x64 is currently the only supported distro">"distro": "ubuntu-14-04-x64",</span>
+  <span data-toggle="tooltip" data-placement="left" title="This is shown on the provision page to the user">"description": "Example Fodor setup which setups a Droplet with Ubuntu 14.04 and nginx",</span>
+  <span data-toggle="tooltip" data-placement="left" title="For discovery within Fodor.xyz">"keywords": ["fodor", "example", "nginx"],</span>
+  "homepage": "https://github.com/ashleyhindle/fodor-example",
+  <span data-toggle="tooltip" data-placement="left" title="If you need information from users, use these inputs.  They'll be made available as environment variables to your provisioner. e.g. fakeapikey will be available as $FAKEAPIKEY">"inputs": [</span>
+    {
+      "title": "Fake API Key",
+      <span data-toggle="tooltip" data-placement="left" title="This will be available as $FAKEAPIKEY to your provisioner script">"name": "fakeapikey",</span>
+      "placeholder": "xxxx-xxxx-xxxx-xxxx",
+      "type": "regex",
+      "regex": "[a-zA-Z\\-0-9]+"
+    }
+  ]
+}
                 </div>
+
+            We also provide the following environment variables to your provisioner script:
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <td>
+                        Variable
+                    </td>
+                    <td>
+                        Description
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <code>$INSTALLPATH</code>
+                        </td>
+                        <td>
+                            This is taken from fodor.json
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <code>$NAME</code>
+                        </td>
+                        <td>
+                            This is taken from fodor.json
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <code>$GITURL</code>
+                        </td>
+                        <td>
+                            https://github.com/${NAME}.git
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             </div>
         </div>
     </div>
