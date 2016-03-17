@@ -5,18 +5,19 @@
     <div class="row">
         <div class="col-md-6">
             <h2>What is Fodor?</h2>
+            <hr/>
             Fodor make it easy for you to setup open source projects on a new DigitalOcean droplet.
 
             <h3>Example repositories</h3>
             <ul class="list-unstyled">
                 <li>
-                    <a href="https://github.com/ashleyhindle/fodor-example">ashleyhindle/fodor-example</a> - &bull; Simple nginx setup example
+                    <a href="https://github.com/ashleyhindle/fodor-example">ashleyhindle/fodor-example</a> &bull; Simple nginx setup example
                 </li>
                 <li>
                     <a href="https://github.com/ashleyhindle/fodor-graylog2">ashleyhindle/fodor-graylog2</a> &bull; Graylog central logging system
                 </li>
                 <li>
-                    <a href="https://github.com/fodorxyz/pritunl">ashleyhindle/fodor-graylog2</a> &bull; Enterprise vpn server based on OpenVPN
+                    <a href="https://github.com/fodorxyz/pritunl">fodorxyz/pritunl</a> &bull; Enterprise vpn server based on OpenVPN
                 </li>
             </ul>
 
@@ -53,13 +54,22 @@ git clone --depth 1 $GITURL .
 
 
         <div class="col-md-6">
-            <h2>Making your repo Fodor friendly...</h2>
+            <h2>Publishing Repositories</h2>
+            <hr/>
 
-            Add a <code>fodor.json</code> file to the root of your repo
+            <ul>
+            <li>
+                Your provision URL (to share or add to README.md) will be: https://fodor.xyz/provision/<code>username/reponame</code>
+            </li>
+            <li>
+                We currently only support the <code>master</code> branch
+            </li>
+            </ul>
 
+            Add a <code>fodor.json</code> file to the root of your repo:</li>
             <div class="commented-code">
 {
-  <span data-toggle="tooltip" data-placement="left" title="This should be your repo name, we'll prepend https://github.com/ to it for cloning">"name": "ashleyhindle/fodor-example",</span>
+  <span data-toggle="tooltip" data-placement="left" title="This should be your repo name, we'll prepend https://github.com/ to it for cloning">"name": "username/reponame",</span>
   <span data-toggle="tooltip" data-placement="left" title="Where on the server we'll git clone to">"installpath": "/var/www/fodor-example/",</span>
   <span data-toggle="tooltip" data-placement="left" title="Where is your bash provisioner file? Relative to repo root">"provisioner": "fodor/provisioner.sh"</span>
   <span data-toggle="tooltip" data-placement="left" title="Which links shall we show to the user after successful install?  Replacements: @{{DOMAIN}} => e.g.'clean-clouds-5829.fodor.xyz'">"links": [</span>
@@ -73,7 +83,7 @@ git clone --depth 1 $GITURL .
     <span data-toggle="tooltip" data-placement="left" title="Optional - which size Droplet is required? All lower Droplet sizes will be disabled">"required": "512mb"</span>
   },
   <span data-toggle="tooltip" data-placement="left" title="ubuntu-14-04-x64 is currently the only supported distro">"distro": "ubuntu-14-04-x64",</span>
-  <span data-toggle="tooltip" data-placement="left" title="This is shown on the provision page to the user">"description": "Example Fodor setup which setups a Droplet with Ubuntu 14.04 and nginx",</span>
+  <span data-toggle="tooltip" data-placement="left" title="This is shown on the provision page to the user">"description": "Describe what the user will get",</span>
   <span data-toggle="tooltip" data-placement="left" title="For discovery within Fodor.xyz">"keywords": ["fodor", "example", "nginx"],</span>
   "homepage": "https://github.com/ashleyhindle/fodor-example",
   <span data-toggle="tooltip" data-placement="left" title="If you need information from users, use these inputs.  They'll be made available as environment variables to your provisioner. e.g. fakeapikey will be available as $FAKEAPIKEY">"inputs": [</span>
