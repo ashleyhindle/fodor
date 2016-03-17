@@ -19,7 +19,7 @@ debconf-set-selections <<< "mysql-server mysql-server/root_password password $MY
 debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASSWORD"
 
 apt-get -y update
-apt-get install -y sudo git nginx php5-curl php5-fpm php5-cli mysql-server libssh2-php beanstalkd php5-mysqlnd php5-mcrypt beanstalkd
+apt-get install -y sudo git nginx php5-curl php5-fpm php5-cli mysql-server libssh2-php beanstalkd php5-mysqlnd php5-mcrypt beanstalkd supervisor
 
 # Secure SSL
 openssl dhparam -out /etc/nginx/ssl/dhparam.pem 2048
@@ -36,6 +36,18 @@ chmod +x /usr/local/sbin/le-renew-webroot
 echo "30 2 * * 1 /usr/local/sbin/le-renew-webroot >> /var/log/le-renewal.log
 " > /etc/cron.d/letsencrypt
 
+
+    cat << EOF > /etc/supervisor/conf.d/fodor-provisioner-worker.conf
+        [program:fodor-provision-worker]
+        process_name=%(program_name)s_%(process_num)02d
+        command=php /vagrant/artisan queue:listen --timeout=3600 --sleep=1 --tries=15 --delay=0 --queue=default
+        autostart=true
+        autorestart=true
+        user=vagrant
+        numprocs=4
+        redirect_stderr=true
+        stdout_logfile=/vagrant/storage/logs/%(program_name)s_%(process_num)02d.log
+EOF
 
 
 
