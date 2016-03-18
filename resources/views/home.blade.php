@@ -77,7 +77,7 @@ git clone --depth 1 $GITURL .
   <span data-toggle="tooltip" data-placement="left" title="Where on the server we'll git clone to">"installpath": "/var/www/fodor-example/",</span>
   <span data-toggle="tooltip" data-placement="left" title="Where is your bash provisioner file? Relative to repo root">"provisioner": "fodor/provisioner.sh"</span>
   "text":
-    "complete": "Username: fodor / Password: fodor"
+    "complete": "User/Pass: fodor/fodor :)"
   },
   <span data-toggle="tooltip" data-placement="left" title="Which links shall we show to the user after successful install?  Replacements: @{{DOMAIN}} => e.g.'clean-clouds-5829.fodor.xyz'">"links": [</span>
     {
