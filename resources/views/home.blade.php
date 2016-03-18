@@ -81,7 +81,7 @@ git clone --depth 1 $GITURL .
   },
   <span data-toggle="tooltip" data-placement="left" title="Which links shall we show to the user after successful install?  Replacements: @{{DOMAIN}} => e.g.'clean-clouds-5829.fodor.xyz'">"links": [</span>
     {
-      "title": "HTTP",
+      "title": "Documentation",
       <span data-toggle="tooltip" data-placement="left" title="Replacements: @{{DOMAIN}} => e.g.'clean-clouds-5829.fodor.xyz'">"url": "http://@{{DOMAIN}}/"</span>
     }
   ],
