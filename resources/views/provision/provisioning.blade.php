@@ -16,7 +16,7 @@
                             <h3>Options</h3>
                             <div class="btn-group" role="group">
                                 <a href="{{ url("/provision/logDownload/{$id}/{$uuid}") }}" type="button" class="btn btn-default">Download provisioning log</a>
-                                <a href="https://github.com/{{ $provision['repo'] }}/issues/new" target="_blank" type="button" class="btn btn-primary">Add GitHub issue</a>
+                                <a href="https://github.com/{{ $provision['repo'] }}/issues/new?title=Fodor+provisioning+failed&body=Here+is+my+log+file" target="_blank" type="button" class="btn btn-primary">Add GitHub issue</a>
                                 <a href="{{ url("/provision/ready/{$id}/{$uuid}") }}" type="button" class="btn btn-warning" data-toggle="tooltip" title="I know better than a stinkin' computer!">Ignore failure</a>
                                 <a href="https://cloud.digitalocean.com/droplets/{{ $provision['dropletid'] }}/destroy" type="button" class="btn btn-danger">Destroy droplet</a>
                             </div>
