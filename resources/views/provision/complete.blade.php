@@ -15,8 +15,9 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">IP</h4>
-                                <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $ip }}">{{ $ip }}</p>
+                                    <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $ip }}">{{ $ip }}</p>
                             </li>
+
                             <li class="list-group-item">
                                 <h4 class="list-group-item-heading">Domain</h4>
                                 <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $domain }}">{{ $domain }}</p>
@@ -35,7 +36,10 @@
                                 </li>
                             @endif
                         </ul>
-                        <span class="label label-warning">The root password has been deleted from our database - we can't show you this again, don't lose it!</span><br />
+
+                        @if (strlen($provision['rootPassword']) > 0)
+                            <span class="label label-warning">The root password has been deleted from our database - we can't show you this again, don't lose it!</span><br />
+                        @endif
 
                         <h3>Links</h3>
                         @forelse ($links as $link)

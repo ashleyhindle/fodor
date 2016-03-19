@@ -44,8 +44,12 @@ function updateWaitingProgress(waitingProgress) {
 }
 
 $(document).ready(function() {
-    ZeroClipboard.config( { moviePatih: "https://fodor.xyz/swf/ZeroClipboard.swf" } );
+    //ZeroClipboard.config( { swfPath: "https://fodor.xyz/swf/ZeroClipboard.swf" } );
+    ZeroClipboard.config( { swfPath: "http://fodor.dev/swf/ZeroClipboard.swf" } );
     var client = new ZeroClipboard($(".btn-copy"));
+
+    $(client.htmlBridge).tooltip({title: "copy to clipboard", placement: 'bottom'});
+
 
     client.on("ready", function(readyEvent) {
         client.on("aftercopy", function (event) {
@@ -53,9 +57,7 @@ $(document).ready(function() {
         });
     });
 
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
+    $('[data-toggle="tooltip"]').tooltip();
 
     $('#view-provisionerScript').click(function(event) {
         $('#provisionerScript').toggleClass('hidden');
