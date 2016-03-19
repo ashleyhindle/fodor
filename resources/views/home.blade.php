@@ -11,16 +11,16 @@
             <h3>Example repositories</h3>
             <ul class="list-unstyled">
                 <li>
-                    <a href="https://github.com/fodorxyz/owncloud">fodorxyz/owncloud</a> &bull; Latest OwnCloud personal cloud system
+                    <a href="{{ url('/provision/fodorxyz/owncloud') }}">fodorxyz/owncloud</a> &bull; Latest OwnCloud personal cloud system
                 </li>
                 <li>
-                    <a href="https://github.com/ashleyhindle/fodor-example">ashleyhindle/fodor-example</a> &bull; Simple nginx setup example
+                    <a href="{{ url('/provision/ashleyhindle/fodor-example') }}">ashleyhindle/fodor-example</a> &bull; Simple nginx setup example
                 </li>
                 <li>
-                    <a href="https://github.com/ashleyhindle/fodor-graylog2">ashleyhindle/fodor-graylog2</a> &bull; Graylog central logging system
+                    <a href="{{ url('/provision/ashleyhindle/fodor-graylog2') }}">ashleyhindle/fodor-graylog2</a> &bull; Graylog central logging system
                 </li>
                 <li>
-                    <a href="https://github.com/fodorxyz/pritunl">fodorxyz/pritunl</a> &bull; Enterprise vpn server based on OpenVPN
+                    <a href="{{ url('/provision/fodorxyz/pritunl') }}">fodorxyz/pritunl</a> &bull; Enterprise vpn server based on OpenVPN
                 </li>
             </ul>
 

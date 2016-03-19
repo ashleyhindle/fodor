@@ -15,6 +15,7 @@
 
                         <a href="#" class="btn btn-default btn-small" id="view-provisionerScript">View provisioner script</a>
                         <a href="#" class="btn btn-default btn-small" id="view-fodorJson">View fodor.json</a>
+                        <a href="https://github.com/{{ $repo }}" target="_blank" type="button" class="btn btn-primary">GitHub</a>
 
                         <a href="/provision/start/{{ $repo }}" class="btn btn-success">Let's do this</a>
 
