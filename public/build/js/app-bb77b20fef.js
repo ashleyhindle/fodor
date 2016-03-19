@@ -71,10 +71,12 @@ $(document).ready(function() {
     $('[data-toggle="tooltip"]').tooltip();
 
     $('#view-provisionerScript').click(function(event) {
+        event.preventDefault();
         $('#provisionerScript').toggleClass('hidden');
     });
 
     $('#view-fodorJson').click(function(event) {
+        event.preventDefault();
         $('#fodorJson').toggleClass('hidden');
     });
 

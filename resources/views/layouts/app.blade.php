@@ -68,7 +68,6 @@
 
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
-                    <!-- Authentication Links -->
                     <li><a href="mailto:ashley@fodor.xyz">Get in touch</a></li>
                     {{--
                     @if (Auth::guest())
@@ -119,6 +118,10 @@
             </li>
             <li class="pull-right">
                 <a href="https://github.com/ashleyhindle/fodor">GitHub</a>
+            </li>
+
+            <li class="pull-right">
+                <a href="https://raw.githubusercontent.com/ashleyhindle/fodor-example/master/README.md">Example markdown image</a>
             </li>
         </ul>
 
