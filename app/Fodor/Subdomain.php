@@ -15,7 +15,7 @@ class Subdomain
     {
         do {
             $subdomain = Haikunator::haikunate();
-            $taken = \App\Provision::where('subdomain', $subdomain);
+            $taken = \App\Provision::where('subdomain', $subdomain)->first();
         } while($taken !== null);
 
         return $subdomain;
