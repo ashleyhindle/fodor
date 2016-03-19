@@ -459,6 +459,7 @@ class ProvisionController extends Controller
 
         $client = new \Github\Client(); // TODO: DRY
         $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
+        // TODO: Cache fodor.json files
         $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json and branch should be a config variable
         $fodorJson = base64_decode($fodorJson['content']);
         $fodorJson = json_decode($fodorJson, true);
