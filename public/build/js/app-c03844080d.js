@@ -51,8 +51,8 @@ $(document).ready(function() {
         .on('ready', function() {
             $('#global-zeroclipboard-html-bridge').attr({
                 'data-toggle': 'tooltip',
-                'data-title': 'Copy to clipboard...',
-                'data-placement': 'right'
+                'data-title': 'click to copy',
+                'data-placement': 'left'
             });
             $('#global-zeroclipboard-html-bridge').tooltip({
                 container: 'body',
