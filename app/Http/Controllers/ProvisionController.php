@@ -87,11 +87,25 @@ class ProvisionController extends Controller
             return redirect(url('/'));
         }
 
+        if(config('fodor.enable_time_estimates')) {
+            $timeEstimate = \DB::select('select AVG(unix_timestamp(dateready)-unix_timestamp(datestarted)) as timeEstimate from provisions where repo=? and datestarted > ? and dateready is not null',
+                [
+                    $fullRepo,
+                    (new \DateTime())->sub(new \DateInterval('P6M'))->format('Y-m-d H:i:s')
+                ]
+            );
+
+            $timeEstimate = ($timeEstimate === null) ? 0 : floor($timeEstimate[0]->timeEstimate);
+        } else {
+            $timeEstimate = 0;
+        }
+
         return view('provision.view', [
             'repo' => $fullRepo,
             'description' => $fodorJson['description'],
             'fodorJson' => $fodorJsonUndecoded,
-            'provisionerScript' => $provisioner
+            'provisionerScript' => $provisioner,
+            'timeEstimate' => $timeEstimate
         ]);
     }
 

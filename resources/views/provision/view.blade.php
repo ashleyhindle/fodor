@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
-                    <div class="panel-heading">So you want to provision '<strong>{{ $repo }}</strong>'</div>
+                    <div class="panel-heading">So you want to provision '<strong>{{ $repo }}</strong>' @if (!empty($timeEstimate)) &bull; ~{{ $timeEstimate }} seconds @endif</div>
 
                     <div class="panel-body">
                         <h1>Description</h1>
