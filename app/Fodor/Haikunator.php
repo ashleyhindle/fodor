@@ -10,7 +10,7 @@ class Haikunator
         "damp", "dark", "dawn", "delicate", "divine", "dry", "dry",
         "eager", "early", "easy", "edible", "empty", "educated", "enormous", "equal", "essential", "evil",
         "falling", "fancy", "flat", "floral", "fragrant", "free", "frosty",
-        "gargantuan", "gifted", "giant", "giddy", "gliterring", "graceful", "grand", "granular", "gentle", "green",
+        "gargantuan", "gifted", "giant", "giddy", "gliterring", "graceful", "grand", "granular", "groovy", "gentle", "green",
         "hairy", "half", "handmade", "handsome", "handy", "happy", "harmless", "hasty", "healthy", "hidden", "holy", "hushy",
         "icy", "ideal", "illustrious", "impeccable", "impressive", "improbable", "incomparable", "intrepid",
         "jagged", "jaunty", "jovial", "jolly", "joyous", "joyful", "juicy", "junior", "jumbo",
@@ -43,6 +43,9 @@ class Haikunator
         "scene", "heart", "recipe", "union", "limit", "bread", "toast", "bonus",
         "lab", "mud", "mode", "poetry", "tooth", "hall", "king", "queen", "lion", "tiger",
         "penguin", "kiwi", "cake", "mouse", "rice", "coke", "hola", "salad", "hat",
+        "ace", "autumn", "animation", "backbone", "Balloon", "beach", "blockbuster", "bloom", "blossom", "brain", "branch",
+        "bells", "brook", "bubbles", "butterfly", "cake", "candy", "candle", "castle", "chocolate", "coffee", "cub",
+        "carrot", "throne", "ruby", "stream", "summit", "sun", "tuxedo", "puppy", "story", "video"
     ];
 
     /**

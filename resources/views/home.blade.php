@@ -33,7 +33,7 @@
 
             We then provide you with a Fodor subdomain pointing to the Droplet, and all needed links/information to get started with your new system.
 
-            <h2>Our base provisioniner script</h2>
+            <h2>Our base provisioner script</h2>
             This is run on every new Droplet, before the repositories provisioner is run:
             <div class="commented-code">
 #!/bin/bash
