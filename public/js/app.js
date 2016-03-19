@@ -44,17 +44,25 @@ function updateWaitingProgress(waitingProgress) {
 }
 
 $(document).ready(function() {
-    //ZeroClipboard.config( { swfPath: "https://fodor.xyz/swf/ZeroClipboard.swf" } );
-    var client = new ZeroClipboard($(".btn-copy"));
+    var $copyButton = $('.btn-copy');
+    var clip = new ZeroClipboard($copyButton);
 
-    $(client.htmlBridge).tooltip({title: "copy to clipboard", placement: 'bottom'});
-
-
-    client.on("ready", function(readyEvent) {
-        client.on("aftercopy", function (event) {
-            alert('Copied to clipboard');
+    clip
+        .on('ready', function() {
+            $('#global-zeroclipboard-html-bridge').attr({
+                'data-toggle': 'tooltip',
+                'data-title': 'Copy to clipboard...',
+                'data-placement': 'right'
+            });
+            $('#global-zeroclipboard-html-bridge').tooltip({
+                container: 'body',
+                trigger: 'hover'
+            });
+        })
+        .on('aftercopy', function() {
+            $('#global-zeroclipboard-html-bridge').tooltip('hide');
         });
-    });
+
 
     $('[data-toggle="tooltip"]').tooltip();
 
