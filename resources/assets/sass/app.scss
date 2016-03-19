@@ -58,3 +58,10 @@ div.commented-code {
   font-family: "Courier New", monospace;
   white-space: pre;
 }
+
+#provisioningLog {
+  font-size:0.9em;
+  height:400px;
+  overflow:scroll;
+  overflow-x:hidden;
+}

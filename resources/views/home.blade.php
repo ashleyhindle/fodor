@@ -38,6 +38,7 @@
             <div class="commented-code">
 #!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
+set -e # Error out on any errors
 
 echo 'root:@{{ $rootPasswordEscaped }}' \
     | chpasswd

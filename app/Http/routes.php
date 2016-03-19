@@ -35,6 +35,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/provision/provisioning/{id}/{uuid}', 'ProvisionController@provisioning')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
 
     Route::get('/provision/log/{id}/{uuid}', 'ProvisionController@log')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
+    Route::get('/provision/logDownload/{id}/{uuid}', 'ProvisionController@logDownload')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
 
     Route::get('/provision/ready/{id}/{uuid}', 'ProvisionController@ready')->where(['id' => '[0-9]+', 'uuid' => '(.*)']);
 

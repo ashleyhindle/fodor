@@ -11,6 +11,10 @@ function updateProvisionLog(provisioningLog) {
             provisioningLog.html('Awaiting SSH connection...');
         } else if ('status' in data && data['status'] == 'ready') {
             window.location.replace("/provision/ready/" + id + "/" + uuid);
+            return true;
+        } else if ('status' in data && data['status'] == 'errored') {
+            $('#erroredInfo').removeClass('hidden'); // TODO: Use a nice JS framework to handle this better.  This coupling is out of hand
+            return true; // Don't set another timeout
         } else {
             $.each(data.lines, function (key, logInfo) {
                 if (logInfo.length > 1) {
@@ -35,7 +39,7 @@ function updateWaitingProgress(waitingProgress) {
     $.getJSON("/provision/waiting/" + id + "/" + uuid + ".json", function(data) {
         if (data['status'] == 'active') { // It's finished creating
             waitingProgress.css('width', '100%');
-            location.reload();
+            return location.reload();
         }
 
         waitingProgress.css('width', (width + getRandomInt(4, 8)) + '%');

@@ -47,6 +47,8 @@
                         @empty
                             No links provided
                         @endforelse
+
+                        <a href="{{ url("/provision/logDownload/{$provision['id']}/{$provision['uuid']}") }}" type="button" class="btn btn-default">Download provisioning log</a>
                     </div>
                 </div>
             </div>

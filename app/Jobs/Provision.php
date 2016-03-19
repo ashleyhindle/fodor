@@ -73,7 +73,6 @@ class Provision extends Job implements ShouldQueue
         $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json and branch should be a config variable
         $log->addInfo("Fetched fodor.json from GitHub: {$fodorJson['content']}");
 
-
         $fodorJson = base64_decode($fodorJson['content']);
         $fodorJson = json_decode($fodorJson, true);
 
@@ -103,13 +102,18 @@ class Provision extends Job implements ShouldQueue
                 fclose($stream);
                 $log->addInfo("Transferred provisioner-combined script");
 
-                $stream = ssh2_exec($ssh, '/bin/bash ' . escapeshellarg($remoteProvisionScriptPath));
+                // TODO: Investigate setting environment variables here instead of with export
+                $stream = ssh2_exec($ssh, '(/bin/bash ' . escapeshellarg($remoteProvisionScriptPath) . '); echo -e "\n$?"');
                 stream_set_blocking($stream, true);
-                while($string = fgets($stream)) {
+                $lastString = '';
+                while(($string = fgets($stream)) !== false) {
                     $logProvisionerOutput->addInfo($string);
                     echo $string;
+                    $lastString = $string;
                 }
-                //TODO: Get exit code and tell the user what happened.  In some cases this will definitely die/fail
+
+                $log->addInfo('EXIT CODE: ' . $lastString);
+                $exitCode = (int) trim($lastString);
 
                 fclose($stream);
             } else {
@@ -128,7 +132,7 @@ class Provision extends Job implements ShouldQueue
         if (!empty($keysFromDo)) {
             foreach ($keysFromDo as $key) {
                 if ($key->name == 'fodor-' . $this->provision->uuid) {
-                    $digitalocean->key()->delete($key->id); // Remove our fodor key(s) - this removes them all though so if they're provisioning two at once it could mess it up
+                    $digitalocean->key()->delete($key->id); // Remove our fodor SSH key from the users DigitalOcean account
                     $log->addInfo("Removed SSH key: {$key->name}: {$key->id} from DigitalOcean");
                 }
             }
@@ -145,9 +149,12 @@ class Provision extends Job implements ShouldQueue
 
         $this->provision->digitalocean_token = ''; // We don't want to store tokens that can be used for nefarious purposes
         $this->provision->dateready = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
-        $this->provision->status = 'ready';
+        $this->provision->exitcode = $exitCode;
+        $this->provision->status = ($exitCode === 0) ? 'ready' : 'errored'; //TODO: Other distros or shells?
         $this->provision->save();
 
-        $log->addInfo("Set provision row's status to ready, we're done here");
+        //TODO: If it errored, an alert should be sent out for investigation
+
+        $log->addInfo("Set provision row's status to {$this->provision->status}, we're done here");
     }
 }

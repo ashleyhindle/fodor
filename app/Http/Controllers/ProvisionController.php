@@ -417,7 +417,8 @@ class ProvisionController extends Controller
         $provision->digitalocean_token = $request->session()->get('digitalocean')['token'];
         $provision->save();
 
-        $job = (new \App\Jobs\Provision($provision))->delay(1); // It doesn't accept SSH connections for a bit after being available
+        // It doesn't accept SSH connections immediately after creation, so we delay
+        $job = (new \App\Jobs\Provision($provision))->delay(1);
         $this->dispatch($job);
 
         return redirect(url('/provision/provisioning/' . $provision->id . '/' . $provision->uuid));
@@ -482,7 +483,7 @@ class ProvisionController extends Controller
         ]);
     }
 
-    public function log(Request $request, $id, $uuid) // TODO: Check user owns, all throughout this class
+    public function log(Request $request, $id, $uuid)
     {
         $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first();
         if ($provision === null) {
@@ -490,12 +491,16 @@ class ProvisionController extends Controller
             return response()->json(['status' => 'broken']);
         }
 
+        $logPath = storage_path('logs/provision/' . $uuid . '.output');
+
+        // We have finished provisioning and we've sent the full log
+        if ($provision->status == 'errored' && $request->session()->get('log-' . $uuid) == filesize($logPath)) {
+            return response()->json(['status' => 'errored']);
+        }
 
         if ($provision->status == 'ready') { // We have finished provisioning
             return response()->json(['status' => 'ready']);
         }
-
-        $logPath = storage_path('logs/provision/' . $uuid . '.output');
 
         // Storage::exists checks if it's a real file with 'is_file' which fails on vagrant for some reason
         // So we have to do it old style
@@ -513,5 +518,24 @@ class ProvisionController extends Controller
 
         $request->session()->set('log-' . $uuid, filesize($logPath));
         return response()->json(['lines' => $lines]);
+    }
+
+    public function logDownload(Request $request, $id, $uuid)
+    {
+        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first();
+        if ($provision === null) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not find id/uuid combo']);
+            return response()->json(['status' => 'broken']);
+        }
+
+        $logPath = storage_path('logs/provision/' . $uuid . '.output');
+
+        // Storage::exists checks if it's a real file with 'is_file' which fails on vagrant for some reason
+        // So we have to do it old style
+        if (file_exists(storage_path('logs/provision/' . $uuid . '.output')) === false) {
+            return App::abort(404);
+        }
+
+        return response()->download($logPath, 'fodor-provisioning-log-' . $uuid . '.log');
     }
 }
