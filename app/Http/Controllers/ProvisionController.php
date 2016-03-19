@@ -512,7 +512,7 @@ class ProvisionController extends Controller
         $fp = fopen($logPath, 'r');
         fseek($fp, $request->session()->get('log-' . $uuid));
         while (($line = fgets($fp, 4096)) !== false) {
-            preg_match('/^\[[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\] OUTPUT.INFO: (.+)$/', $line, $match);
+            preg_match('/^\[[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\] OUTPUT.INFO: (.+) \[\] \[\]$/', $line, $match);
             $lines[] = $match[1];
         }
 
