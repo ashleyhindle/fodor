@@ -54,7 +54,8 @@ Route::group(['middleware' => ['web']], function () {
 
     Route::get('/do/callback', function (Request $request) {
         if (empty($request->input('state'))) {
-            die('Invalid');
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Invalid state, what are you up to?!']);
+            return redirect('/?ohno');
         }
 
         $provider = $this->app['DigitalOceanOauthServiceProvider'];
@@ -66,7 +67,8 @@ Route::group(['middleware' => ['web']], function () {
             ]);
 
             if (!is_object($accessToken)) {
-                die('We failed to get your DO tokens, sorry'); // TODO: Show nice error page here using proper view/template
+                $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'We couldn\'t get your details and log you in!']);
+                return redirect('/?ohno');
             }
 
             $request->session()->set('digitalocean', [
@@ -77,7 +79,8 @@ Route::group(['middleware' => ['web']], function () {
             ]);
         } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
             // Failed to get the access token or user details.
-            exit($e->getMessage()); // TODO: Show nice error page here using proper view/template
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'We couldn\'t get your details and log you in because of a pesky exception!']);
+            return redirect('/?ohno');
         }
 
         if ($request->session()->has('intendedRepo')) {
