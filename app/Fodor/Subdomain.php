@@ -13,8 +13,12 @@ class Subdomain
 
     public function generateName()
     {
-        // TODO: Check appropriate table to ensure it's unique
-        return Haikunator::haikunate();
+        do {
+            $subdomain = Haikunator::haikunate();
+            $taken = \App\Provision::where('subdomain', $subdomain);
+        } while($taken !== null);
+
+        return $subdomain;
     }
 
     public function exists($name)
