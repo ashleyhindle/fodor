@@ -44,8 +44,7 @@ function updateWaitingProgress(waitingProgress) {
 }
 
 $(document).ready(function() {
-    //ZeroClipboard.config( { swfPath: "https://fodor.xyz/swf/ZeroClipboard.swf" } );
-    ZeroClipboard.config( { swfPath: "http://fodor.dev/swf/ZeroClipboard.swf" } );
+    ZeroClipboard.config( { swfPath: "https://fodor.xyz/swf/ZeroClipboard.swf" } );
     var client = new ZeroClipboard($(".btn-copy"));
 
     $(client.htmlBridge).tooltip({title: "copy to clipboard", placement: 'bottom'});
