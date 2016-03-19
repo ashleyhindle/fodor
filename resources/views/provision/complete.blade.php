@@ -41,12 +41,26 @@
                             <span class="label label-warning">The root password has been deleted from our database - we can't show you this again, don't lose it!</span><br />
                         @endif
 
+                        <div class="list-group">
+                            <a href="#" class="list-group-item active">
+                                Cras justo odio
+                            </a>
+                            <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+                            <a href="#" class="list-group-item">Morbi leo risus</a>
+                            <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+                            <a href="#" class="list-group-item">Vestibulum at eros</a>
+                        </div>
+
                         <h3>Links</h3>
+                        <div class="list-group">
                         @forelse ($links as $link)
-                            <strong>{{ $link['title'] }}: </strong><a target="_blank" href="{{ $link['url'] }}">{{ $link['url'] }}</a><br />
+                                <a target="_blank" class="list-group-item" href="{{ $link['url'] }}">
+                                    <strong>{{ $link['title'] }}: </strong>{{ $link['url'] }}
+                                </a>
                         @empty
                             No links provided
                         @endforelse
+                        </div>
 
                         <a href="{{ url("/provision/logDownload/{$provision['id']}/{$provision['uuid']}") }}" type="button" class="btn btn-default">Download provisioning log</a>
                     </div>
