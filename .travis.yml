@@ -15,7 +15,8 @@ addons:
 env:
   - DEPLOY_USER=fodor DEPLOY_HOST=fodor.xyz DEPLOY_PATH=/var/www/
 
-before_install:
+install:
+  - npm install -g npm@2
   - composer install
   - npm install
   - cp .env.example .env
