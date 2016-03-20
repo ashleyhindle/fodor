@@ -23,5 +23,5 @@ php artisan migrate --force || exit 1
 chown -R fodor:www-data ${RELEASE_PATH}
 chmod -R g+wr ${RELEASE_PATH}
 
-rm "/home/fodor/current-release"
-ln -s "${RELEASE_PATH}" "/home/fodor/current-release"
+rm "${BASEDIR}/current-release"
+ln -s "${RELEASE_PATH}" "${BASEDIR}/current-release"
