@@ -41,7 +41,8 @@ after_success:
 - tar -czf package.tgz $DATETIME
 - chmod 600 $DATETIME/tmp/fodor-travis
 - scp -i $DATETIME/tmp/fodor-travis -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-- ssh -i $DATETIME/tmp/fodor-travis -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/bin/deploy.sh ${DATETIME}"
+- scp -i $DATETIME/tmp/fodor-travis -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DATETIME/bin/deploy.sh $DEPLOY_USER@DEPLOY_HOST:$DEPLOY_PATH
+- ssh -i $DATETIME/tmp/fodor-travis -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/deploy.sh ${DATETIME}"
 - rm -rf $DATETIME/tmp
 
 before_install:
