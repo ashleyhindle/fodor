@@ -103,7 +103,7 @@ class Provision extends Job implements ShouldQueue
                 $log->addInfo("Transferred provisioner-combined script");
 
                 // TODO: Investigate setting environment variables here instead of with export
-                $stream = ssh2_exec($ssh, '(/bin/bash ' . escapeshellarg($remoteProvisionScriptPath) . '); echo -e "\n$?"');
+                $stream = ssh2_exec($ssh, '(/bin/bash ' . escapeshellarg($remoteProvisionScriptPath) . ' 2>&1); echo -e "\n$?"');
                 stream_set_blocking($stream, true);
                 $lastString = '';
                 while(($string = fgets($stream)) !== false) {

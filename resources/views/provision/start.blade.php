@@ -5,12 +5,11 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Provisioning '{{ $repo }}' - {{ $description }}</div>
+                    <div class="panel-heading">Provisioning <code>{{ $repo }}</code> - {{ $description }} - <span class="label label-info">{{ $distro }}</span></div>
 
                     <div class="panel-body">
                         <form action="{{ url('provision/doit') }}" method="POST">
                             {{ csrf_field() }}
-
 
                             <h2>Region</h2>
                             <div class="toggle-btn-grp">

@@ -209,9 +209,9 @@ class ProvisionController extends Controller
             $size = '512mb'; // TODO: Config variable for default size
         }
 
-        $distroInvalid = false;
+        $isDistroInvalid = (!in_array($fodorJson['distro'], config('digitalocean.distros')));
 
-        if (empty($fodorJson['distro']) || $distroInvalid) {
+        if (empty($fodorJson['distro']) || $isDistroInvalid) {
             $fodorJson['distro'] = 'ubuntu-14-04-x64';
         }
 

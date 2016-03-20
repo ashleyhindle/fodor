@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'distros' => [
+      'ubuntu-14-04-x64'
+    ],
     'regions' => [
       'ams2' => [
           'name' => 'Amsterdam 2'
