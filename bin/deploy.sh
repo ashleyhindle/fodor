@@ -13,7 +13,8 @@ chmod ug+wr fodor-storage/
 tar -xzf package.tgz # this creates a DATETIME (ymdhis) folder
 rm package.tgz
 
-ln -s "${BASEDIR}/fodor-storage/" "${RELEASE_PATH}/storage"
+rm -rf "${RELEASE_PATH}/storage"
+ln -s "${BASEDIR}/fodor-storage" "${RELEASE_PATH}/storage"
 
 cp /home/fodor/.env "${RELEASE_PATH}/.env"
 
