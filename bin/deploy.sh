@@ -1,7 +1,7 @@
 #!/bin/bash
 # $1 is the DATETIME folder that will be created after tar -xzf
 export BASEDIR=`dirname $0`
-export RELEASE_PATH="${0}/${1}"
+export RELEASE_PATH="${BASEDIR}/${1}"
 cd "${BASEDIR}"
 
 mkdir fodor-storage
