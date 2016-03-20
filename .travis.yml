@@ -13,9 +13,7 @@ addons:
       - sshpass
 
 env:
-  - DEPLOY_USER=fodor
-  - DEPLOY_HOST=fodor.xyz
-  - DEPLOY_PATH=/var/www/
+  - DEPLOY_USER=fodor DEPLOY_HOST=fodor.xyz DEPLOY_PATH=/var/www/
 
 before_install:
   - composer install
