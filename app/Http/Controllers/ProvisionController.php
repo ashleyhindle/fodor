@@ -270,7 +270,9 @@ class ProvisionController extends Controller
             'description' => $fodorJson['description'],
             'distro' => $fodorJson['distro'],
             'keys' => $keys,
-            'provisionid' => $provision->id
+            'provisionid' => $provision->id,
+            'id' => $provision->id,
+            'uuid' => $provision->uuid
         ]);
     }
 
@@ -284,14 +286,23 @@ class ProvisionController extends Controller
             empty($request->input('size')) ||
             empty($request->input('distro')) ||
             empty($request->input('name')) ||
+            empty($request->input('id')) ||
+            empty($request->input('uuid')) ||
             empty($request->input('region'))
         ) {
             return redirect(url('/?invalidSizeOrDistroOrNameOrRegion'));
         }
 
-        $provisionid = $request->input('provisionid');
-        $provision = \App\Provision::find($provisionid); // TODO: Check they own it
-        
+        $id = $request->input('id');
+        $uuid = $request->input('uuid');
+
+        $provision = \App\Provision::where('id', $id)->where('uuid', $uuid)->first(); // TODO: Check they own it
+        if ($provision === null) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not find id/uuid combo']);
+            return redirect('/?ohno');
+        }
+
+        $provisionid = $id;
         $name = $request->input('name');
         $repo = $name;
         $size = $request->input('size');

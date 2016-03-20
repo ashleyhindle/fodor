@@ -8,7 +8,7 @@
                     <div class="panel-heading">Provisioning <code>{{ $repo }}</code> - {{ $description }} - <span class="label label-info">{{ $distro }}</span></div>
 
                     <div class="panel-body">
-                        <form action="{{ url('provision/doit') }}" method="POST">
+                        <form action="{{ url("/provision/doit") }}" method="POST">
                             {{ csrf_field() }}
 
                             <h2>Region</h2>
@@ -38,7 +38,9 @@
                                 @endforeach
                             </div>
 
+                            <input type="hidden" name="id" value="{{ $id }}" />
                             <input type="hidden" name="provisionid" value="{{ $provisionid }}" />
+                            <input type="hidden" name="uuid" value="{{ $uuid }}" />
                             <input type="hidden" name="name" value="{{ $repo }}" />
                             <input type="hidden" name="distro" value="{{ $distro }}" />
 
