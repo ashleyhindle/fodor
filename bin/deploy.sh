@@ -6,8 +6,14 @@ cd "${BASEDIR}"
 
 mkdir fodor-storage
 chown fodor:www-data fodor-storage/
-chmod a-wrx fodor-storage/
-chmod ug+wr fodor-storage/
+
+mkdir fodor-storage/{app,framework,logs,privatekeys,publickeys}
+mkdir fodor-storage/framework/{cache,sessions,views}
+mkdir fodor-storage/app/{publickeys,privatekeys}
+
+chown -R fodor:www-data fodor-storage
+chmod -R a-wrx fodor-storage/
+chmod -R ug+wr fodor-storage/
 
 # Extract the package
 tar -xzf package.tgz # this creates a DATETIME (ymdhis) folder
