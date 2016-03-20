@@ -95,10 +95,10 @@ git clone --depth 1 $GITURL .
   <span data-toggle="tooltip" data-placement="left" title="This is shown on the provision page to the user">"description": "Describe what the user gets",</span>
   <span data-toggle="tooltip" data-placement="left" title="For discovery within Fodor.xyz">"keywords": ["fodor", "example", "nginx"],</span>
   "homepage": "https://fodor.xyz",
-  <span data-toggle="tooltip" data-placement="left" title="If you need information from users, use these inputs.  They'll be made available as environment variables to your provisioner. e.g. fakeapikey will be available as $FAKEAPIKEY">"inputs": [</span>
+  <span data-toggle="tooltip" data-placement="left" title="If you need information from users, use these inputs.  They'll be made available as environment variables to your provisioner. e.g. apikey will be available as $APIKEY">"inputs": [</span>
     {
-      "title": "Fake API Key",
-      <span data-toggle="tooltip" data-placement="left" title="This will be available as $FAKEAPIKEY to your provisioner script">"name": "fakeapikey",</span>
+      "title": "API Key",
+      <span data-toggle="tooltip" data-placement="left" title="This will be available as $APIKEY to your provisioner script">"name": "apikey",</span>
       "placeholder": "xxxx-xxxx-xxxx-xxxx",
       "type": "regex",
       "regex": "[a-zA-Z\\-0-9]+"
