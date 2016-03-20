@@ -293,6 +293,7 @@ class ProvisionController extends Controller
         $provision = \App\Provision::find($provisionid); // TODO: Check they own it
         
         $name = $request->input('name');
+        $repo = $name;
         $size = $request->input('size');
         $distro = $request->input('distro');
         $region = $request->input('region');
@@ -308,7 +309,10 @@ class ProvisionController extends Controller
             return redirect(url('/?sizeNotInConfigMustBeInvalidOrIAmOutOfDateLikeSausagesUsuallyREGION'));
         }
 
-        // TODO: If there aren't any SSH keys provided, other than ours, we need to set a root password
+        if (in_array($distro, config('digitalocean.distros')) === false) { // Invalid region
+            return redirect(url('/?distro invalid'));
+        }
+
         // DigitalOcean won't send a root password as we added fodor's ssh key
 
         // For now do it the absolutely dreadful way
@@ -322,14 +326,25 @@ class ProvisionController extends Controller
         $droplet = $digitalocean->droplet();
         $key = $digitalocean->key();
 
-        $keyCreated = $key->create('fodor-' . $provision->uuid, $publicKey); // TODO: Check result
+        try {
+            $keyCreated = $key->create('fodor-' . $provision->uuid, $publicKey); // TODO: Check result
+        } catch (Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not add SSH key to your DigitalOcean account: ' . $e->getMessage()]);
+            return redirect('/provision/start/' . $repo);
+        }
+
         $keys[] = $keyCreated->id;
 
         // TODO: Multi distro support
         $rootPassword = str_random(32); // TODO: Should we delete all rootPasswords every X hours for old (1hour?) droplets?
         $rootPasswordEscaped = addslashes($rootPassword);
 
-        $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys);
+        try {
+            $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys);
+        } catch (Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not create DigitalOcean droplet: ' . $e->getMessage()]);
+            return redirect('/provision/start/' . $repo);
+        }
 
         if (empty($created)) {
            return redirect(url('/?createdDroplet=false'));
