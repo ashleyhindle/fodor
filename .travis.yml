@@ -7,12 +7,31 @@ php:
 services:
   - mysql
 
+addons:
+  apt:
+    packages:
+      - sshpass
+
+env:
+  - DEPLOY_USER=fodor
+  - DEPLOY_HOST=fodor.xyz
+  - DEPLOY_PATH=/var/www/
+
 before_install:
   - composer install
+  - npm install
   - cp .env.example .env
   - mysql -e "create database IF NOT EXISTS fodor;" -uroot
   - mysql -e "grant all on fodor.* to 'fodor'@'127.0.0.1' identified by 'fodorsecret';" -uroot
   - mysql -e "grant all on fodor.* to 'fodor'@'localhost' identified by 'fodorsecret';" -uroot
+  - node_modules/.bin/gulp
   - php artisan migrate --force
   - php artisan key:generate
 
+after_success:
+  - export DATETIME=`date +%Y%m%d%H%M%S`
+  - mkdir $DATETIME
+  - mv * $DATETIME
+  - tar -czf package.tgz $DATETIME
+  - sshpass -e scp package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+  - sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/bin/deploy.sh ${DATETIME}"
