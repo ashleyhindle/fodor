@@ -42,6 +42,7 @@
                             <input type="hidden" name="provisionid" value="{{ $provisionid }}" />
                             <input type="hidden" name="uuid" value="{{ $uuid }}" />
                             <input type="hidden" name="name" value="{{ $repo }}" />
+                            <input type="hidden" name="repo" value="{{ $provision['repo'] }}" />
                             <input type="hidden" name="distro" value="{{ $distro }}" />
 
                             @if (count($keys) > 0)<h2>SSH Keys</h2>@endif

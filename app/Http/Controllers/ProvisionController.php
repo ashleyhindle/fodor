@@ -271,6 +271,7 @@ class ProvisionController extends Controller
             'distro' => $fodorJson['distro'],
             'keys' => $keys,
             'provisionid' => $provision->id,
+            'provision' => $provision,
             'id' => $provision->id,
             'uuid' => $provision->uuid
         ]);
@@ -288,6 +289,7 @@ class ProvisionController extends Controller
             empty($request->input('name')) ||
             empty($request->input('id')) ||
             empty($request->input('uuid')) ||
+            empty($request->input('repo')) ||
             empty($request->input('region'))
         ) {
             return redirect(url('/?invalidSizeOrDistroOrNameOrRegion'));
@@ -304,7 +306,7 @@ class ProvisionController extends Controller
 
         $provisionid = $id;
         $name = $request->input('name');
-        $repo = $name;
+        $repo = $request->input('repo');
         $size = $request->input('size');
         $distro = $request->input('distro');
         $region = $request->input('region');
@@ -339,7 +341,7 @@ class ProvisionController extends Controller
 
         try {
             $keyCreated = $key->create('fodor-' . $provision->uuid, $publicKey); // TODO: Check result
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not add SSH key to your DigitalOcean account: ' . $e->getMessage()]);
             return redirect('/provision/start/' . $repo);
         }
@@ -352,7 +354,7 @@ class ProvisionController extends Controller
 
         try {
             $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not create DigitalOcean droplet: ' . $e->getMessage()]);
             return redirect('/provision/start/' . $repo);
         }
