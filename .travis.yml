@@ -14,3 +14,5 @@ before_install:
   - mysql -e "grant all on fodor.* to 'fodor'@'127.0.0.1' identified by 'fodorsecret';" -uroot
   - mysql -e "grant all on fodor.* to 'fodor'@'localhost' identified by 'fodorsecret';" -uroot
   - php artisan migrate --force
+  - php artisan key:generate
+
