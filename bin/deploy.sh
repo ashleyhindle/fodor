@@ -13,7 +13,7 @@ mkdir fodor-storage/app/{publickeys,privatekeys}
 
 chown -R fodor:www-data fodor-storage
 chmod -R a-wrx fodor-storage/
-chmod -R ug+wr fodor-storage/
+chmod -R ug+wrx fodor-storage/
 
 # Extract the package
 tar -xzf package.tgz # this creates a DATETIME (ymdhis) folder
