@@ -11,12 +11,10 @@ cache:
 branches:
   only:
   - master
+
 services:
 - mysql
-addons:
-  apt:
-    packages:
-    - sshpass
+
 env:
 - DEPLOY_USER=fodor DEPLOY_HOST=fodor.xyz DEPLOY_PATH=/var/www/
 
