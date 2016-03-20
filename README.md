@@ -1,4 +1,4 @@
-# Fodor &bull; [![travis-build-status](https://travis-ci.org/fodorxyz/fodor.svg)](https://travis-ci.org/fodorxyz/fodor)
+# Fodor [![travis-build-status](https://travis-ci.org/fodorxyz/fodor.svg)](https://travis-ci.org/fodorxyz/fodor)
 Auto setup and provision GitHub repositories on a new DigitalOcean droplet
 
 # Use the site  
