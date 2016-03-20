@@ -14,6 +14,7 @@ addons:
     - sshpass
 env:
 - DEPLOY_USER=fodor DEPLOY_HOST=fodor.xyz DEPLOY_PATH=/var/www/
+
 install:
 - npm install -g npm@2
 - composer install
@@ -27,16 +28,16 @@ install:
 - node_modules/.bin/gulp
 - php artisan migrate --force
 - php artisan key:generate
+
 after_success:
 - export DATETIME=`date +%Y%m%d%H%M%S`
 - mkdir $DATETIME
 - mv * $DATETIME
 - tar -czf package.tgz $DATETIME
-- scp -i tmp/fodor-travis package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-- ssh -i tmp/fodor-travis $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/bin/deploy.sh ${DATETIME}"
+- scp -i $DATETIME/tmp/fodor-travis package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+- ssh -i $DATETIME/tmp/fodor-travis $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/bin/deploy.sh ${DATETIME}"
 - rm -rf tmp
 
 before_install:
 - mkdir tmp
-- openssl aes-256-cbc -K $encrypted_fabbc996a929_key -iv $encrypted_fabbc996a929_iv
-  -in fodor-travis.enc -out tmp/fodor-travis -d
+- openssl aes-256-cbc -K $encrypted_fabbc996a929_key -iv $encrypted_fabbc996a929_iv -in fodor-travis.enc -out tmp/fodor-travis -d
