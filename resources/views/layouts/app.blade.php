@@ -117,7 +117,7 @@
                 <a href="https://twitter.com/ashleyhindle">Made by @ashleyhindle</a>
             </li>
             <li class="pull-right">
-                <a href="https://github.com/ashleyhindle/fodor">GitHub</a>
+                <a href="https://github.com/fodorxyz/fodor">GitHub</a>
             </li>
 
             <li class="pull-right">
