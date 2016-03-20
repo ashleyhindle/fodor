@@ -7,7 +7,7 @@
             <h2>What is Fodor?</h2>
             <hr/>
             Auto setup and provision GitHub repositories on a new DigitalOcean droplet
-            <img src="https://img.shields.io/badge/Install%20on%20DigitalOcean-with%20Fodor.xyz-cc382c.svg"/>
+            <img src="/images/install-shield.svg"/>
 
             <h3>Example repositories</h3>
             <ul class="list-unstyled">
