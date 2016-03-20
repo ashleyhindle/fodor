@@ -32,9 +32,11 @@ after_success:
 - mkdir $DATETIME
 - mv * $DATETIME
 - tar -czf package.tgz $DATETIME
-- scp -i ~/.ssh/fodor-travis package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-- ssh -i ~/.ssh/fodor-travis $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/bin/deploy.sh ${DATETIME}"
+- scp -i tmp/fodor-travis package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+- ssh -i tmp/fodor-travis $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/bin/deploy.sh ${DATETIME}"
+- rm -rf tmp
 
 before_install:
+- mkdir tmp
 - openssl aes-256-cbc -K $encrypted_fabbc996a929_key -iv $encrypted_fabbc996a929_iv
-  -in fodor-travis.enc -out ~\/.ssh/fodor-travis -d
+  -in fodor-travis.enc -out tmp/fodor-travis -d
