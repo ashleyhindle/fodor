@@ -1,36 +1,40 @@
 language: php
 php:
-  - '5.5'
-  - '5.6'
-  - '7.0'
-
+- '5.5'
+- '5.6'
+- '7.0'
+branches:
+  only:
+  - master
 services:
-  - mysql
-
+- mysql
 addons:
   apt:
     packages:
-      - sshpass
-
+    - sshpass
 env:
-  - DEPLOY_USER=fodor DEPLOY_HOST=fodor.xyz DEPLOY_PATH=/var/www/
-
+- DEPLOY_USER=fodor DEPLOY_HOST=fodor.xyz DEPLOY_PATH=/var/www/
 install:
-  - npm install -g npm@2
-  - composer install
-  - npm install
-  - cp .env.example .env
-  - mysql -e "create database IF NOT EXISTS fodor;" -uroot
-  - mysql -e "grant all on fodor.* to 'fodor'@'127.0.0.1' identified by 'fodorsecret';" -uroot
-  - mysql -e "grant all on fodor.* to 'fodor'@'localhost' identified by 'fodorsecret';" -uroot
-  - node_modules/.bin/gulp
-  - php artisan migrate --force
-  - php artisan key:generate
-
+- npm install -g npm@2
+- composer install
+- npm install
+- cp .env.example .env
+- mysql -e "create database IF NOT EXISTS fodor;" -uroot
+- mysql -e "grant all on fodor.* to 'fodor'@'127.0.0.1' identified by 'fodorsecret';"
+  -uroot
+- mysql -e "grant all on fodor.* to 'fodor'@'localhost' identified by 'fodorsecret';"
+  -uroot
+- node_modules/.bin/gulp
+- php artisan migrate --force
+- php artisan key:generate
 after_success:
-  - export DATETIME=`date +%Y%m%d%H%M%S`
-  - mkdir $DATETIME
-  - mv * $DATETIME
-  - tar -czf package.tgz $DATETIME
-  - sshpass -e scp package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
-  - sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/bin/deploy.sh ${DATETIME}"
+- export DATETIME=`date +%Y%m%d%H%M%S`
+- mkdir $DATETIME
+- mv * $DATETIME
+- tar -czf package.tgz $DATETIME
+- scp -i ~/.ssh/fodor-travis package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
+- ssh -i ~/.ssh/fodor-travis $DEPLOY_USER@$DEPLOY_HOST "$DEPLOY_PATH/bin/deploy.sh ${DATETIME}"
+
+before_install:
+- openssl aes-256-cbc -K $encrypted_fabbc996a929_key -iv $encrypted_fabbc996a929_iv
+  -in fodor-travis.enc -out ~\/.ssh/fodor-travis -d
