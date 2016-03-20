@@ -7,7 +7,7 @@ cd "${BASEDIR}"
 mkdir fodor-storage
 chown fodor:www-data fodor-storage/
 
-mkdir fodor-storage/{app,framework,logs,privatekeys,publickeys}
+mkdir fodor-storage/{app,framework,logs}
 mkdir fodor-storage/framework/{cache,sessions,views}
 mkdir fodor-storage/app/{publickeys,privatekeys}
 
