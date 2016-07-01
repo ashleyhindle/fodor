@@ -36,7 +36,7 @@ after_success:
 - export DATETIME=`date +%Y%m%d%H%M%S`
 - mkdir $DATETIME
 - mv * $DATETIME
-- tar -czf package.tgz $DATETIME
+- tar -czf --exclude=node_modules package.tgz $DATETIME
 - chmod 600 $DATETIME/tmp/fodor-travis
 - scp -i $DATETIME/tmp/fodor-travis -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no package.tgz $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 - scp -i $DATETIME/tmp/fodor-travis -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DATETIME/bin/deploy.sh $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
