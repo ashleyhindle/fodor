@@ -17,7 +17,6 @@ chmod -R ug+wrx fodor-storage/
 
 # Extract the package
 tar -xzf package.tgz # this creates a DATETIME (ymdhis) folder
-rm package.tgz
 
 rm -rf "${RELEASE_PATH}/storage"
 ln -s "${BASEDIR}/fodor-storage" "${RELEASE_PATH}/storage"
