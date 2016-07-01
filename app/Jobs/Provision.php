@@ -80,7 +80,8 @@ class Provision extends Job implements ShouldQueue
             'installpath' => $fodorJson['installpath'],
             'name' => $this->provision->repo,
 	        'rootPasswordEscaped' => addslashes($this->provision->rootPassword),
-            'domain' => $this->provision->subdomain . '.fodor.xyz'
+            'domain' => $this->provision->subdomain . '.fodor.xyz',
+            'ipv4' => $this->provision->ipv4,
         ])->render();
 
         $provisionerScript = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);

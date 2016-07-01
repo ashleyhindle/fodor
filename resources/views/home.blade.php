@@ -152,6 +152,14 @@ git clone --depth 1 $GITURL .
                             cool-cloud-1984.fodor.xyz
                         </td>
                     </tr>
+                    <tr>
+                        <td>
+                            <code>$IPV4</code>
+                        </td>
+                        <td>
+                            188.166.9.14
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             </div>

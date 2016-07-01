@@ -8,6 +8,7 @@ export INSTALLPATH="{{ $installpath }}"
 export NAME="{{ $name }}"
 export GITURL="https://github.com/${NAME}.git"
 export DOMAIN="{{ $domain }}"
+export IPV4="{{ $ipv4 }}"
 
 apt-get -y update
 apt-get -y install git
