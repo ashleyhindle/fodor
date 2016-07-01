@@ -39,6 +39,7 @@
     <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel='stylesheet' type='text/css'>
     <!-- Styles -->
     <link href="{{ elixir('css/app.css') }}" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
 
 </head>
 <body id="app-layout">
