@@ -30,6 +30,9 @@ class HomeController extends Controller
             'rootPasswordEscaped' => '{{ $rootPasswordEscaped }}',
             'domain' => '{{ $domain }}',
             'ipv4' => '{{ $ipv4 }}',
+            'inputs' => [
+                'APIKEY' => 'xxxx-xxxx-xxxx-xxxx',
+            ]
         ]);
 
         return view('home', [

@@ -56,6 +56,13 @@
                                 <p>No SSH keys to add - we'll set you a root password</p>
                             @endforelse
 
+                            @if (count($inputs) > 0)<h2>Inputs</h2>@endif
+                            @foreach ($inputs as $input)
+                                <div class="form-group">
+                                    <label for="inputs[{{ $input['name'] }}]">{{ $input['title'] }} @if(!empty($input['notes'])) <small>{{ $input['notes'] }}</small> @endif</label>
+                                    <input type="text" class="form-control" id="{{ $input['name'] }}" name="inputs[{{ $input['name'] }}]" placeholder="{{ $input['placeholder'] }}">
+                                </div>
+                            @endforeach
                             </div>
 
                             <input type="submit" class="btn btn-default">

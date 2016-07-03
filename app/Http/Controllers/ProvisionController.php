@@ -165,7 +165,6 @@ class ProvisionController extends Controller
             return redirect(url('/'));
         }
 
-
         // Has to be less than 1mb
         try {
             $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
@@ -188,7 +187,6 @@ class ProvisionController extends Controller
 
         // We have a valid provisioner
 
-        // TODO: Check provided size is valid
         $size = '512mb'; // TODO: Config variable for default size
         $suggestedSize = false;
         $requiredSize = false;
@@ -273,7 +271,8 @@ class ProvisionController extends Controller
             'provisionid' => $provision->id,
             'provision' => $provision,
             'id' => $provision->id,
-            'uuid' => $provision->uuid
+            'uuid' => $provision->uuid,
+            'inputs' => (array_key_exists('inputs', $fodorJson)) ? $fodorJson['inputs'] : []
         ]);
     }
 
@@ -295,6 +294,7 @@ class ProvisionController extends Controller
             return redirect(url('/?invalidSizeOrDistroOrNameOrRegion'));
         }
 
+        $inputs = $request->input('inputs', []);
         $id = $request->input('id');
         $uuid = $request->input('uuid');
 
@@ -311,8 +311,9 @@ class ProvisionController extends Controller
         $distro = $request->input('distro');
         $region = $request->input('region');
         $keys = $request->input('keys', []);
-
         $keys = array_keys($keys);
+
+        $request->session()->set("inputs.{$uuid}", $inputs);
 
         if (array_key_exists($size, config('digitalocean.sizes')) === false) { // Invalid size
             return redirect(url('/?sizeNotInConfigMustBeInvalidOrIAmOutOfDateLikeSausagesUsually'));
@@ -411,7 +412,7 @@ class ProvisionController extends Controller
             // Then SSH in and provision
 
             foreach ($newDroplet->networks as $network) {
-                //TODO: Support IPv6
+                //TODO: Support IPv6, though causes issues with digitalocean apt-get timing out currently
                 if ($network->version === 4) { // we only support ipv4 for this hacked together version
                     $ip = $network->ipAddress;
 
@@ -420,12 +421,12 @@ class ProvisionController extends Controller
                     $subdomainName = $subdomain->generateName();
                     $result = $subdomain->create($subdomainName, $ip);
 
-                    //TODO: Nice error message
                     if (empty($result)) {
-                        die('Failed to create subdomain, but we created a droplet.  You shoud probably delete it, or setup your own subdomain, mmmkay? IP: ' . $ip);
+                        $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'We failed to create the DNS needed for ' . $ip . ', really sorry about that.  You should probably delete this failed attemp :(']);
+                        return redirect('/?ohno');
                     }
 
-                    $provision->status = 'active'; // TODO: Provision class should handle this, and use constants
+                    $provision->status = 'active'; // TODO: Provision class should handle this, and use constants - or just $provision->setActive() or $provision->active(true);
                     $provision->ipv4 = $ip;
                     $provision->subdomain = $subdomainName;
                     $provision->save();
@@ -456,6 +457,7 @@ class ProvisionController extends Controller
 
         $provision->digitalocean_token = $request->session()->get('digitalocean')['token'];
         $provision->save();
+        $provision->inputs = $request->session()->get("inputs.{$uuid}");
 
         // It doesn't accept SSH connections immediately after creation, so we delay
         $job = (new \App\Jobs\Provision($provision))->delay(1);

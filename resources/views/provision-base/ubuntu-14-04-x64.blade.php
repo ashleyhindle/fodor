@@ -10,6 +10,11 @@ export GITURL="https://github.com/${NAME}.git"
 export DOMAIN="{{ $domain }}"
 export IPV4="{{ $ipv4 }}"
 
+### Custom Inputs
+@foreach ($inputs as $name=>$value)
+export {{ strtoupper($name) }}={!! escapeshellarg($value) !!}
+@endforeach
+
 apt-get -y clean
 cd /var/lib/apt
 mv lists lists.old

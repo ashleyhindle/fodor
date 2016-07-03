@@ -20,6 +20,7 @@ class Provision extends Job implements ShouldQueue
     use InteractsWithQueue, SerializesModels;
 
     private $provision;
+    private $inputs;
 
     /**
      * Create a new job instance.
@@ -29,6 +30,7 @@ class Provision extends Job implements ShouldQueue
     public function __construct(\App\Provision $provision)
     {
         $this->provision = $provision;
+        $this->inputs = $this->provision->inputs;
     }
 
 
@@ -76,13 +78,18 @@ class Provision extends Job implements ShouldQueue
         $fodorJson = base64_decode($fodorJson['content']);
         $fodorJson = json_decode($fodorJson, true);
 
+        var_dump($this->inputs);
+
         $baseScript = \View::make('provision-base.ubuntu-14-04-x64',[
             'installpath' => $fodorJson['installpath'],
             'name' => $this->provision->repo,
 	        'rootPasswordEscaped' => addslashes($this->provision->rootPassword),
             'domain' => $this->provision->subdomain . '.fodor.xyz',
             'ipv4' => $this->provision->ipv4,
+            'inputs' => $this->inputs
         ])->render();
+
+        echo $baseScript;
 
         $provisionerScript = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
         $log->addInfo("Fetched provisioner script from GitHub: {$provisionerScript['content']}");
