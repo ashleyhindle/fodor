@@ -94,7 +94,7 @@
     {
         "title": "Name",
         "name": "name",
-        "type": "string"
+        <span data-toggle="tooltip" data-placement="left" title="This will allow empty strings">"type": "string"</span>
     },
     {
         "title": "Email",

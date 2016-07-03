@@ -1,6 +1,6 @@
 <?php namespace App\Fodor;
 /*
-Valid types: url, email, string, number, regex, select
+Valid types: url, email, regex, select, string, number
 
 Input array:
 {
@@ -21,6 +21,8 @@ class Input
     private $validTypes = [
         'url',
         'email',
+        'regex',
+        'select',
         'string',
         'number',
     ];
