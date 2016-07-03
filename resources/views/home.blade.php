@@ -15,7 +15,7 @@
                     <a href="{{ url('/provision/fodorxyz/owncloud') }}">fodorxyz/owncloud</a> &bull; Latest OwnCloud personal cloud system
                 </li>
                 <li>
-                    <a href="{{ url('/provision/ashleyhindle/fodor-example') }}">ashleyhindle/fodor-example</a> &bull; Simple nginx setup example
+                    <a href="{{ url('/provision/fodorxyz/gitlab-ci-multi-runner') }}">fodorxyz/gitlab-ci-multi-runner</a> &bull; Setup a GitLab CI Runner
                 </li>
                 <li>
                     <a href="{{ url('/provision/ashleyhindle/fodor-graylog2') }}">ashleyhindle/fodor-graylog2</a> &bull; Graylog central logging system
