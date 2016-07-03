@@ -34,11 +34,69 @@
 
             We then provide you with a Fodor subdomain pointing to the Droplet, and all needed links/information to get started with your new system.
 
+            <h2>Environment Variables</h2>
+            Fodor provides the following environment variables to your provisioner script, as well as the input environment variables:
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <td>
+                        Variable
+                    </td>
+                    <td>
+                        Description
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <code>$INSTALLPATH</code>
+                    </td>
+                    <td>
+                        This is taken from fodor.json
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>$NAME</code>
+                    </td>
+                    <td>
+                        This is taken from fodor.json
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>$GITURL</code>
+                    </td>
+                    <td>
+                        https://github.com/${NAME}.git
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>$DOMAIN</code>
+                    </td>
+                    <td>
+                        cool-cloud-1984.fodor.xyz
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <code>$IPV4</code>
+                    </td>
+                    <td>
+                        188.166.9.14
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!--
             <h2>Our base provisioner script</h2>
             This is run on every new Droplet, before the repositories provisioner is run:
             <div class="commented-code">
 {{ $baseScript }}
             </div>
+            -->
         </div>
 
         <div class="col-md-6">
@@ -79,17 +137,17 @@
   "homepage": "https://fodor.xyz",
   <span data-toggle="tooltip" data-placement="left" title="If you need information from users, use these inputs.  They'll be made available as environment variables to your provisioner. e.g. apikey will be available as $APIKEY">"inputs": [</span>
     {
-      "title": "API Key",
-      <span data-toggle="tooltip" data-placement="left" title="This will be available as $APIKEY to your provisioner script">"name": "apikey",</span>
-      "placeholder": "xxxx-xxxx-xxxx-xxxx",
-      "type": "regex",
-      "regex": "[a-zA-Z\\-0-9]+"
+        "title": "API Key",
+        <span data-toggle="tooltip" data-placement="left" title="This will be available as $APIKEY to your provisioner script">"name": "apikey",</span>
+        "placeholder": "xxxx-xxxx-xxxx-xxxx",
+        "type": "regex",
+        "regex": "[a-zA-Z\\-0-9]+"
     },
     {
-      "title": "Server Type",
-      "name": "type",
-      "type": "select",
-      "options": ["nginx", "apache", "iis", "lighttpd"]
+        "title": "Server Type",
+        "name": "type",
+        "type": "select",
+        "options": ["nginx", "apache", "iis", "lighttpd"]
     },
     {
         "title": "Name",
@@ -115,61 +173,6 @@
 }
                 </div>
 
-            Fodor provides the following environment variables to your provisioner script, as well as the input environment variables:
-            <table class="table table-condensed">
-                <thead>
-                <tr>
-                    <td>
-                        Variable
-                    </td>
-                    <td>
-                        Description
-                    </td>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <code>$INSTALLPATH</code>
-                        </td>
-                        <td>
-                            This is taken from fodor.json
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <code>$NAME</code>
-                        </td>
-                        <td>
-                            This is taken from fodor.json
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <code>$GITURL</code>
-                        </td>
-                        <td>
-                            https://github.com/${NAME}.git
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <code>$DOMAIN</code>
-                        </td>
-                        <td>
-                            cool-cloud-1984.fodor.xyz
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <code>$IPV4</code>
-                        </td>
-                        <td>
-                            188.166.9.14
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
             </div>
         </div>
     </div>
