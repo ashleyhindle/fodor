@@ -36,6 +36,9 @@ return [
         'tor1' => [
             'name' => 'Toronto 1'
         ],
+        'blr1' => [
+            'name' => 'Bangalore 1'
+        ]
     ],
     'sizes' => [
         '512mb' => [
