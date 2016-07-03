@@ -60,7 +60,7 @@
                             @foreach ($inputs as $input)
                                 <div class="form-group">
                                     <label for="inputs[{{ $input['name'] }}]">{{ $input['title'] }} @if(!empty($input['notes'])) <small>{{ $input['notes'] }}</small> @endif</label>
-                                    <input type="text" class="form-control" id="{{ $input['name'] }}" name="inputs[{{ $input['name'] }}]" placeholder="{{ $input['placeholder'] }}">
+                                    <input type="text" class="form-control" id="{{ $input['name'] }}" name="inputs[{{ $input['name'] }}]" @if(isset($input['placeholder'])) placeholder="{{ $input['placeholder'] }} @endif">
                                 </div>
                             @endforeach
                             </div>

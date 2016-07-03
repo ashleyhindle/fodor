@@ -41,8 +41,6 @@
             </div>
         </div>
 
-
-
         <div class="col-md-6">
             <h2>Publishing Repositories</h2>
             <hr/>
@@ -75,7 +73,7 @@
     <span data-toggle="tooltip" data-placement="left" title="Optional - which size Droplet is suggested?">"suggested": "512mb",</span>
     <span data-toggle="tooltip" data-placement="left" title="Optional - which size Droplet is required? All lower Droplet sizes will be disabled">"required": "512mb"</span>
   },
-  <span data-toggle="tooltip" data-placement="left" title="ubuntu-14-04-x64 is currently the only supported distro">"distro": "ubuntu-14-04-x64",</span>
+  <span data-toggle="tooltip" data-placement="left" title="ubuntu-14-04-x64 and docker are currently the only supported distros">"distro": "ubuntu-14-04-x64",</span>
   <span data-toggle="tooltip" data-placement="left" title="This is shown on the provision page to the user">"description": "Describe what the user gets",</span>
   <span data-toggle="tooltip" data-placement="left" title="For discovery within Fodor.xyz">"keywords": ["fodor", "example", "nginx"],</span>
   "homepage": "https://fodor.xyz",
@@ -86,12 +84,38 @@
       "placeholder": "xxxx-xxxx-xxxx-xxxx",
       "type": "regex",
       "regex": "[a-zA-Z\\-0-9]+"
-    }
+    },
+    {
+      "title": "Server Type",
+      "name": "type",
+      "type": "select",
+      "options": ["nginx", "apache", "iis", "lighttpd"]
+    },
+    {
+        "title": "Name",
+        "name": "name",
+        "type": "string"
+    },
+    {
+        "title": "Email",
+        "name": "email",
+        "type": "email"
+    },
+    {
+        "title": "URL",
+        "name": "url",
+        "type": "url"
+    },
+    {
+        "title": "Age",
+        "name": "age",
+        <span data-toggle="tooltip" data-placement="left" title="This will allow whole numbers, floats and negative numbers">"type": "number"</span>
+    },
   ]
 }
                 </div>
 
-            We also provide the following environment variables to your provisioner script:
+            Fodor provides the following environment variables to your provisioner script, as well as the input environment variables:
             <table class="table table-condensed">
                 <thead>
                 <tr>
