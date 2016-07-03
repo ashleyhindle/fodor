@@ -24,6 +24,16 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {
-        return view('home');
+        $baseScript = \View::make('provision-base.ubuntu-14-04-x64',[
+            'installpath' => '{{ $installpath }}',
+            'name' => '{{ $name }}',
+            'rootPasswordEscaped' => '{{ $rootPasswordEscaped }}',
+            'domain' => '{{ $domain }}',
+            'ipv4' => '{{ $ipv4 }}',
+        ]);
+
+        return view('home', [
+            'baseScript' => $baseScript
+        ]);
     }
 }
