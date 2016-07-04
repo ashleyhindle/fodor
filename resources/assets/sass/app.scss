@@ -6,10 +6,12 @@ $navbar-default-bg: #CF3725;
 $navbar-default-toggle-icon-bar-bg: #FFFFFF;
 $navbar-default-toggle-hover-bg: #333333;
 
-$navbar-inverse-toggle-icon-bar-bg: #333333;
+$navbar-default-link-active-color: #FFFFFF;
+$navbar-default-link-active-bg: darken($navbar-default-bg, 5%);
+
+$navbar-default-link-hover-color: #C9C9C9;
 
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-
 
 .logRow {
   padding: 1px;

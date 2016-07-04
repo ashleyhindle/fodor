@@ -224,9 +224,7 @@ class ProvisionController extends Controller
                 }
             }
         }
-
-        $account = $digitalocean->account()->getUserInformation();
-
+        
         $requiredMemory = 0;
         if (!empty($requiredSize)) {
             $requiredMemory = (array_key_exists($requiredSize, config('digitalocean.sizes'))) ? config('digitalocean.sizes')[$requiredSize]['memory'] : 0;
@@ -243,8 +241,8 @@ class ProvisionController extends Controller
         //store in DB
 
         $provision->uuid = Uuid::uuid4()->toString();
-        $provision->email = $account->email;
-        $provision->digitalocean_uuid = $account->uuid;
+        $provision->email = $request->session()->get('digitalocean')['email'];
+        $provision->digitalocean_uuid = $request->session()->get('digitalocean')['uuid'];
         $provision->size = $size; // Default, can be overriden in next step
         $provision->distro = $fodorJson['distro'];
         $provision->region = 'xxx'; // Default, can be overriden in next step

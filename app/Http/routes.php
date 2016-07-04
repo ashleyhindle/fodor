@@ -55,6 +55,10 @@ Route::group(['middleware' => ['web']], function () {
     });
 
     Route::get('/do/logout', function (Request $request) {
+        /** @var \App\Providers\DigitalOceanOauthServiceProvider $provider */
+        $provider = $this->app['DigitalOceanOauthServiceProvider'];
+        $provider->revoke($request->session()->get('digitalocean.token'));
+
         $request->session()->forget('digitalocean');
 
         return redirect('/');
@@ -90,7 +94,8 @@ Route::group(['middleware' => ['web']], function () {
                 'refreshToken' => $accessToken->getToken(),
                 'expires' => $accessToken->getExpires(),
                 'hasExpired' => $accessToken->hasExpired(),
-                'email' => $account->email
+                'email' => $account->email,
+                'uuid' => $account->uuid,
             ]);
         } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
             // Failed to get the access token or user details.
