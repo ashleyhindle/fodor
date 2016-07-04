@@ -34,12 +34,47 @@ class Input
         $this->input = $input;
     }
 
+    public function value($value)
+    {
+        $this->input['value'] = $value;
+
+        return $this;
+    }
+
+    public function getName()
+    {
+        return $this->input['name'];
+    }
+
+    public function getInput()
+    {
+        return $this->input;
+    }
+
     public function __toString()
     {
         $notes = (!empty($this->input['notes'])) ? "<small>{$this->input['notes']}</small>" : '';
         $placeholder = isset($this->input['placeholder']) ? "placeholder='{$this->input['placeholder']}'" : '';
 
         switch($this->input['type']) {
+            case 'select':
+                $value = $this->input['value'];
+                $options = array_reduce($this->input['options'], function($carry, $item) use ($value) {
+                    $selected = ($item == $value) ? ' selected' : '';
+                    $option = "<option value='{$item}' {$selected}>{$item}</option>";
+                    return $carry . $option;
+                });
+
+                $html = <<<SELECT
+<div class="form-group">
+            <label for="inputs[{$this->input['name']}]">{$this->input['title']} {$notes}</label>
+            <select class="form-control" id="{$this->input['name']}" name="inputs[{$this->input['name']}]">
+                $options
+            </select>
+        </div>
+SELECT;
+
+                break;
             case 'url':
                 $type = 'url';
                 break;
@@ -49,17 +84,14 @@ class Input
             case 'number':
                 $type = 'number';
                 break;
-            case 'select':
-                $type = 'text';
-                break;
             default:
                 $type = 'text';
         }
 
-        $html = <<<HTML
+        $html = (!empty($html)) ? $html : <<<HTML
         <div class="form-group">
             <label for="inputs[{$this->input['name']}]">{$this->input['title']} {$notes}</label>
-            <input type="{$type}" class="form-control" id="{$this->input['name']}" name="inputs[{$this->input['name']}]" {$placeholder}">
+            <input type="{$type}" class="form-control" id="{$this->input['name']}" name="inputs[{$this->input['name']}]" {$placeholder} value="{$this->input['value']}">
         </div>
 HTML;
 

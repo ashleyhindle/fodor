@@ -23,7 +23,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('/github/start', 'GitHubController@start');
     Route::get('/github/callback', 'GitHubController@callback');
 
-    Route::post('/provision/start', 'ProvisionController@start'); // Check logged into DO, check repo valid, show ssh key options
+    Route::post('/provision/start/{repo}', 'ProvisionController@start')->where('repo', '(.*)'); // Check logged into DO, check repo valid, show ssh key options
     Route::post('/provision/doit', 'ProvisionController@doit'); // Create SSH key, ask DO to create droplet
 
     // Check DO status to see when it's considered 'active' (and not new)

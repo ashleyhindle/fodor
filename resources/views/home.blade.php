@@ -167,8 +167,8 @@
     {
         "title": "Age",
         "name": "age",
-        <span data-toggle="tooltip" data-placement="left" title="This will allow whole numbers, floats and negative numbers">"type": "number"</span>
-    },
+        <span data-toggle="tooltip" data-placement="left" title="This will allow whole numbers, floats and negative numbers.  The environment variable will be a string - 27='27'">"type": "number"</span>
+    }
   ]
 }
                 </div>

@@ -1,16 +1,13 @@
-<?php
-
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use App\Fodor\Input;
 use App\Provision;
 use Illuminate\Http\Request;
 use DigitalOceanV2\Adapter\GuzzleHttpAdapter;
 use DigitalOceanV2\DigitalOceanV2;
+use Illuminate\Routing\Router as Route;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use App\Providers\CloudflareApiServiceProvider;
 use Mockery\CountValidator\Exception;
 use Ramsey\Uuid\Uuid;
 
@@ -119,7 +116,7 @@ class ProvisionController extends Controller
 
         $invalidFormat = (strpos($repo, '/') === false);
         if (empty($repo) || $invalidFormat) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid']);
+            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid: "' . $repo . '"']);
             return redirect(url('/'));
         }
 
@@ -130,7 +127,7 @@ class ProvisionController extends Controller
         }
 
         $request->session()->forget('intendedRepo');
-
+        
         $provision = new Provision();
         $provision->repo = $repo; // Before it gets contaminated
 
@@ -182,7 +179,7 @@ class ProvisionController extends Controller
         $provisioner = base64_decode($provisioner['content']);
 
         if (empty($provisioner)) {
-            $request->session()->flash(str_random(4), 'This repo\'s provisioner was in the wrong format or too large');
+            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was in the wrong format or too large']);
             return redirect(url('/'));
         }
 
@@ -230,6 +227,17 @@ class ProvisionController extends Controller
 
         $account = $digitalocean->account()->getUserInformation();
 
+        $requiredMemory = 0;
+        if (!empty($requiredSize)) {
+            $requiredMemory = (array_key_exists($requiredSize, config('digitalocean.sizes'))) ? config('digitalocean.sizes')[$requiredSize]['memory'] : 0;
+        }
+
+        $inputs = (array_key_exists('inputs', $fodorJson)) ? $fodorJson['inputs'] : [];
+        array_walk($inputs, function(&$input) {
+            $input['value'] = '';
+            $input = new Input($input);
+        });
+
         //get account email, and digitalocean_uuid
         //generate our own uuid
         //store in DB
@@ -242,26 +250,40 @@ class ProvisionController extends Controller
         $provision->region = 'xxx'; // Default, can be overriden in next step
         $provision->datestarted = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
 
-        try {
-            $saved = $provision->save();
-        } catch(Exception $e) {
-            $saved = false;
-        }
+        $validatingInputs = ($request->input('uuid') !== null) ? true : false;
 
-        if (empty($saved)) { // Failed to save
-            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Failed to save the provision data to the database, please destroy your droplet']);
-            return redirect(url('/provision/'.$provision->repo));
-        }
+        if ($validatingInputs) {
+            /**
+             * @var Input $input
+             */
+            $invalidInputs = [];
+            foreach ($inputs as $input) {
+                $value = $request->input('inputs')[$input->getName()];
+                $input->value($value);
+                $valid = $input->validate($value);
+                if ($valid === false) {
+                    $invalidInputs[] = ucwords($input->getName());
+                }
+            }
 
-        $requiredMemory = 0;
-        if (!empty($requiredSize)) {
-            $requiredMemory = (array_key_exists($requiredSize, config('digitalocean.sizes'))) ? config('digitalocean.sizes')[$requiredSize]['memory'] : 0;
-        }
+            if (count($invalidInputs) === 0) {
+                return $this->doit($request);
+            } else {
+                $request->session()->now(str_random(4), ['type' => 'warning', 'message' => 'Input value was invalid for ' . implode(', ', $invalidInputs)]);
+            }
 
-        $inputs = (array_key_exists('inputs', $fodorJson)) ? $fodorJson['inputs'] : [];
-        array_walk($inputs, function(&$input) {
-            $input = new Input($input);
-        });
+        } else {
+            try {
+                $saved = $provision->save();
+            } catch (Exception $e) {
+                $saved = false;
+            }
+
+            if (empty($saved)) { // Failed to save
+                $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Failed to save the provision data to the database, please destroy your droplet']);
+                return redirect(url('/provision/' . $provision->repo));
+            }
+        }
 
         return view('provision.start', [
             'repo' => $repo,
