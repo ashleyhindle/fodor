@@ -34,6 +34,38 @@ class Input
         $this->input = $input;
     }
 
+    public function __toString()
+    {
+        $notes = (!empty($this->input['notes'])) ? "<small>{$this->input['notes']}</small>" : '';
+        $placeholder = isset($this->input['placeholder']) ? "placeholder='{$this->input['placeholder']}'" : '';
+
+        switch($this->input['type']) {
+            case 'url':
+                $type = 'url';
+                break;
+            case 'email':
+                $type = 'email';
+                break;
+            case 'number':
+                $type = 'number';
+                break;
+            case 'select':
+                $type = 'text';
+                break;
+            default:
+                $type = 'text';
+        }
+
+        $html = <<<HTML
+        <div class="form-group">
+            <label for="inputs[{$this->input['name']}]">{$this->input['title']} {$notes}</label>
+            <input type="{$type}" class="form-control" id="{$this->input['name']}" name="inputs[{$this->input['name']}]" {$placeholder}">
+        </div>
+HTML;
+
+        return $html;
+    }
+
     public function validate($value)
     {
         switch($this->input['type']) {

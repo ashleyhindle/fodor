@@ -58,10 +58,7 @@
 
                             @if (count($inputs) > 0)<h2>Inputs</h2>@endif
                             @foreach ($inputs as $input)
-                                <div class="form-group">
-                                    <label for="inputs[{{ $input['name'] }}]">{{ $input['title'] }} @if(!empty($input['notes'])) <small>{{ $input['notes'] }}</small> @endif</label>
-                                    <input type="text" class="form-control" id="{{ $input['name'] }}" name="inputs[{{ $input['name'] }}]" @if(isset($input['placeholder'])) placeholder="{{ $input['placeholder'] }} @endif">
-                                </div>
+                                {!! $input !!}
                             @endforeach
                             </div>
 

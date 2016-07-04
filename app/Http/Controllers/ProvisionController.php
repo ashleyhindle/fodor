@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Fodor\Input;
 use App\Provision;
 use Illuminate\Http\Request;
 use DigitalOceanV2\Adapter\GuzzleHttpAdapter;
@@ -257,6 +258,11 @@ class ProvisionController extends Controller
             $requiredMemory = (array_key_exists($requiredSize, config('digitalocean.sizes'))) ? config('digitalocean.sizes')[$requiredSize]['memory'] : 0;
         }
 
+        $inputs = (array_key_exists('inputs', $fodorJson)) ? $fodorJson['inputs'] : [];
+        array_walk($inputs, function(&$input) {
+            $input = new Input($input);
+        });
+
         return view('provision.start', [
             'repo' => $repo,
             'size' => [
@@ -272,7 +278,7 @@ class ProvisionController extends Controller
             'provision' => $provision,
             'id' => $provision->id,
             'uuid' => $provision->uuid,
-            'inputs' => (array_key_exists('inputs', $fodorJson)) ? $fodorJson['inputs'] : []
+            'inputs' => $inputs
         ]);
     }
 

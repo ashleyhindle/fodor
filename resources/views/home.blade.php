@@ -10,20 +10,20 @@
             <img src="/images/install-shield.svg"/>
 
             <h3>Example repositories</h3>
-            <ul class="list-unstyled">
-                <li>
-                    <a href="{{ url('/provision/fodorxyz/owncloud') }}">fodorxyz/owncloud</a> &bull; Latest OwnCloud personal cloud system
-                </li>
-                <li>
-                    <a href="{{ url('/provision/fodorxyz/gitlab-ci-multi-runner') }}">fodorxyz/gitlab-ci-multi-runner</a> &bull; Setup a GitLab CI Runner
-                </li>
-                <li>
-                    <a href="{{ url('/provision/ashleyhindle/fodor-graylog2') }}">ashleyhindle/fodor-graylog2</a> &bull; Graylog central logging system
-                </li>
-                <li>
-                    <a href="{{ url('/provision/fodorxyz/pritunl') }}">fodorxyz/pritunl</a> &bull; Enterprise vpn server based on OpenVPN
-                </li>
-            </ul>
+            <table class="table table-striped table-condensed">
+                <tr>
+                    <td><a href="{{ url('/provision/fodorxyz/owncloud') }}">fodorxyz/owncloud</a></td><td>Latest OwnCloud personal cloud system</td>
+                </tr>
+                <tr>
+                    <td><a href="{{ url('/provision/fodorxyz/gitlab-ci-multi-runner') }}">fodorxyz/gitlab-ci-multi-runner</a></td><td>Setup a GitLab CI Runner</td>
+                </tr>
+                <tr>
+                    <td><a href="{{ url('/provision/ashleyhindle/fodor-graylog2') }}">ashleyhindle/fodor-graylog2</a></td><td>Graylog central logging system</td>
+                </tr>
+                <tr>
+                    <td><a href="{{ url('/provision/fodorxyz/pritunl') }}">fodorxyz/pritunl</a></td><td>Enterprise vpn server based on OpenVPN</td>
+                </tr>
+            </table>
 
             <h2>How does it work?</h2>
             <ol>
