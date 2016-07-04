@@ -1,5 +1,7 @@
 <?php
 use Illuminate\Http\Request;
+use DigitalOceanV2\Adapter\GuzzleHttpAdapter;
+use DigitalOceanV2\DigitalOceanV2;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,12 +54,19 @@ Route::group(['middleware' => ['web']], function () {
         return redirect($authorizationUrl);
     });
 
+    Route::get('/do/logout', function (Request $request) {
+        $request->session()->forget('digitalocean');
+
+        return redirect('/');
+    });
+
     Route::get('/do/callback', function (Request $request) {
         if (empty($request->input('state'))) {
             $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Invalid state, what are you up to?!']);
             return redirect('/?ohno');
         }
 
+        /** @var \App\Providers\DigitalOceanOauthServiceProvider $provider */
         $provider = $this->app['DigitalOceanOauthServiceProvider'];
 
         try {
@@ -71,11 +80,17 @@ Route::group(['middleware' => ['web']], function () {
                 return redirect('/?ohno');
             }
 
+            $adapter = new GuzzleHttpAdapter($accessToken->getToken());
+            $digitalocean = new DigitalOceanV2($adapter);
+
+            $account = $digitalocean->account()->getUserInformation();
+
             $request->session()->set('digitalocean', [
                 'token' => $accessToken->getToken(),
                 'refreshToken' => $accessToken->getToken(),
                 'expires' => $accessToken->getExpires(),
-                'hasExpired' => $accessToken->hasExpired()
+                'hasExpired' => $accessToken->hasExpired(),
+                'email' => $account->email
             ]);
         } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
             // Failed to get the access token or user details.
