@@ -6,7 +6,7 @@ Auto setup and provision GitHub repositories on a new DigitalOcean droplet
 
 # Make your repo Fodor friendly  
 Simply add a `fodor.json` file to the root of your repo, and a bash provisioner somewhere.  
-You can see an example `fodor.json` on [https://fodor.xyz/(https://fodor.xyz)
+You can see an example `fodor.json` on [https://fodor.xyz](https://fodor.xyz)
 
 # Todo
 
