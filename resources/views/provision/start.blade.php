@@ -45,16 +45,14 @@
                             <input type="hidden" name="repo" value="{{ $provision['repo'] }}" />
                             <input type="hidden" name="distro" value="{{ $distro }}" />
 
-                            @if (count($keys) > 0)<h2>SSH Keys</h2>@endif
+                            <h2>SSH Keys</h2>
 
                             <div class="toggle-btn-grp">
-                            @forelse ($keys as $keyId => $keyName)
+                            @foreach ($keys as $keyId => $keyName)
                                     <label onclick="" class="toggle-btn btn btn-default">
                                         <input type="checkbox" name="keys[{{$keyId}}]" value="{{$keyId}}" checked="checked"/>{{$keyName}}
                                     </label>
-                            @empty
-                                <p>No SSH keys to add - we'll set you a root password</p>
-                            @endforelse
+                            @endforeach
 
                             @if (count($inputs) > 0)<h2>Inputs</h2>@endif
                             @foreach ($inputs as $input)

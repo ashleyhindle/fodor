@@ -2,8 +2,6 @@
 export DEBIAN_FRONTEND=noninteractive
 set -e # Error out on any errors
 
-echo 'root:{{ $rootPasswordEscaped }}' | chpasswd
-
 export INSTALLPATH="{{ $installpath }}"
 export NAME="{{ $name }}"
 export GITURL="https://github.com/${NAME}.git"

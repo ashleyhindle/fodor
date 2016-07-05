@@ -217,12 +217,20 @@ class ProvisionController extends Controller
         $keysFromDo = $digitalocean->key()->getAll();
         $keys = [];
 
-        if (!empty($keysFromDo)) {
-            foreach ($keysFromDo as $key) {
-                if (strpos($key->name, 'fodor-') !== 0) {
-                    $keys[$key->id] = $key->name;
-                }
+        if (empty($keysFromDo)) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'You must have SSH keys attached to your DigitalOcean account to continue - https://cloud.digitalocean.com/settings/security']);
+            return redirect(url('/provision/' . $provision->repo));
+        }
+
+        foreach ($keysFromDo as $key) {
+            if (strpos($key->name, 'fodor-') !== 0) {
+                $keys[$key->id] = $key->name;
             }
+        }
+
+        if (empty($keys)) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'You must have SSH keys attached to your DigitalOcean account to continue - https://cloud.digitalocean.com/settings/security']);
+            return redirect(url('/provision/' . $provision->repo));
         }
         
         $requiredMemory = 0;
@@ -353,8 +361,6 @@ class ProvisionController extends Controller
             return redirect(url('/?distro invalid'));
         }
 
-        // DigitalOcean won't send a root password as we added fodor's ssh key
-
         // For now do it the absolutely dreadful way
         // TODO: Tidy up with service provider/facade/something
         // If we did have a users table it could be stored in there
@@ -375,8 +381,6 @@ class ProvisionController extends Controller
 
         $keys[] = $keyCreated->id;
 
-        $rootPassword = str_random(32); // TODO: Should we delete all rootPasswords every X hours for old (1hour?) droplets?
-
         try {
             $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys);
         } catch (\Exception $e) {
@@ -390,7 +394,6 @@ class ProvisionController extends Controller
 
         $dropletId = $created->id;
 
-        $provision->rootPassword = $rootPassword;
         $provision->region = $region;
         $provision->size = $size;
         $provision->dropletid = $dropletId;
@@ -517,11 +520,6 @@ class ProvisionController extends Controller
             return redirect('/?ohno');
         }
 
-        $provisionCloned = clone $provision;
-
-        $provision->rootPassword = ''; // Delete root password, so if we get hacked we don't give out access to people's servers
-        $provision->save();
-
         $branch = 'master';
         list($username, $repo) = explode('/', $provision->repo);
 
@@ -545,9 +543,9 @@ class ProvisionController extends Controller
 
         return view('provision.complete', [
             'links' => $links,
-            'domain' => $provisionCloned->subdomain . '.fodor.xyz',
-            'ip' => $provisionCloned->ipv4,
-            'provision' => $provisionCloned,
+            'domain' => $provision->subdomain . '.fodor.xyz',
+            'ip' => $provision->ipv4,
+            'provision' => $provision,
             'successText' => (isset($fodorJson['text']['complete'])) ? $fodorJson['text']['complete'] : ''
         ]);
     }

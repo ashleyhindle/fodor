@@ -83,7 +83,6 @@ class Provision extends Job implements ShouldQueue
         $baseScript = \View::make('provision-base.ubuntu-14-04-x64',[
             'installpath' => $fodorJson['installpath'],
             'name' => $this->provision->repo,
-	        'rootPasswordEscaped' => addslashes($this->provision->rootPassword),
             'domain' => $this->provision->subdomain . '.fodor.xyz',
             'ipv4' => $this->provision->ipv4,
             'inputs' => $this->inputs

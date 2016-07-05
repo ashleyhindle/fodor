@@ -27,7 +27,6 @@ class HomeController extends Controller
         $baseScript = \View::make('provision-base.ubuntu-14-04-x64',[
             'installpath' => '{{ $installpath }}',
             'name' => '{{ $name }}',
-            'rootPasswordEscaped' => '{{ $rootPasswordEscaped }}',
             'domain' => '{{ $domain }}',
             'ipv4' => '{{ $ipv4 }}',
             'inputs' => [

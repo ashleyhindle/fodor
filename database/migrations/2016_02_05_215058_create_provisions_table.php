@@ -32,7 +32,6 @@ class CreateProvisionsTable extends Migration
             $table->string('size')->default('512mb'); // TODO: Separate table
             $table->string('distro')->default('ubuntu-14-04-x64'); // TODO: Separate table
 
-            $table->string('rootPassword');
             $table->string('subdomain');
             $table->string('status')->default('new'); // new, active, provision, ready, off, archived
 

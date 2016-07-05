@@ -22,12 +22,6 @@
                                 <h4 class="list-group-item-heading">Domain</h4>
                                 <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $domain }}">{{ $domain }}</p>
                             </li>
-                            @if (strlen($provision['rootPassword']) > 0)
-                                <li class="list-group-item">
-                                    <h4 class="list-group-item-heading">Root Password</h4>
-                                    <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $provision['rootPassword'] }}">{{ $provision['rootPassword'] }}</p>
-                                </li>
-                            @endif
 
                             @if (!empty($successText))
                                 <li class="list-group-item">
@@ -36,10 +30,6 @@
                                 </li>
                             @endif
                         </ul>
-
-                        @if (strlen($provision['rootPassword']) > 0)
-                            <span class="label label-warning">The root password has been deleted from our database - we can't show you this again, don't lose it!</span><br />
-                        @endif
 
                         <h3>Links</h3>
                         <div class="list-group">
