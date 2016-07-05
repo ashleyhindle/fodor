@@ -107,19 +107,5 @@ server {
 }
 EOF
 
-cat << EOF > /etc/default/beanstalkd
-## Defaults for the beanstalkd init script, /etc/init.d/beanstalkd on
-## Debian systems.
-
-BEANSTALKD_LISTEN_ADDR=127.0.0.1
-BEANSTALKD_LISTEN_PORT=11300
-
-# You can use BEANSTALKD_EXTRA to pass additional options. See beanstalkd(1)
-# for a list of the available options. Uncomment the following line for
-# persistent job storage.
-BEANSTALKD_EXTRA="-b /var/lib/beanstalkd"
-EOF
-
-service beanstalkd restart
 service nginx restart
 service php5-fpm restart

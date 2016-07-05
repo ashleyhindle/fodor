@@ -13,15 +13,8 @@ export IPV4="{{ $ipv4 }}"
 export {{ strtoupper($name) }}={!! escapeshellarg($value) !!}
 @endforeach
 
-apt-get -y clean
-cd /var/lib/apt
-mv lists lists.old
-mkdir -p lists/partial
-apt-get -y clean
-apt-get -y update
-
 apt-get -y install git
 
 mkdir -p $INSTALLPATH
 cd $INSTALLPATH
-git clone --depth 1 $GITURL .
+git clone --depth=1 $GITURL .
