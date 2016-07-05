@@ -127,8 +127,8 @@
 
     <div class="row text-center">
         <h4>Sponsored by</h4>
-        <img src="/images/sponsored-by-digitalocean.png" width="300px" height="48px"/>
-        <img src="/images/sponsored-by-siftware.jpg" width="300px" height="100px"/>
+        <a href="https://m.do.co/c/c2c89916e190"><img src="/images/sponsored-by-digitalocean.png" width="300px" height="48px"/></a>
+        <a href="https://siftware.com"><img src="/images/sponsored-by-siftware.jpg" width="300px" height="100px"/></a>
     </div>
 
     <!-- JavaScripts -->
