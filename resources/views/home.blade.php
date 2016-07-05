@@ -160,6 +160,11 @@
         "type": "email"
     },
     {
+        "title": "Password",
+        "name": "password",
+        "type": "password"
+    },
+    {
         "title": "URL",
         "name": "url",
         "type": "url"

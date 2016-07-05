@@ -1,6 +1,6 @@
 <?php namespace App\Fodor;
 /*
-Valid types: url, email, regex, select, string, number
+Valid types: url, email, regex, select, string, number, password
 
 Input array:
 {
@@ -25,6 +25,7 @@ class Input
         'select',
         'string',
         'number',
+        'password',
     ];
 
     private $input;
@@ -84,6 +85,8 @@ SELECT;
             case 'number':
                 $type = 'number';
                 break;
+            case 'password':
+                $type = 'password';
             default:
                 $type = 'text';
         }
@@ -123,6 +126,8 @@ HTML;
                     Throw new \LogicException('Must provide an options array when using type select');
                 }
                 return in_array($value, $this->input['options']);
+            case 'password':
+                return strlen($value) > 0;
             case 'string':
             default:
                 return true;
