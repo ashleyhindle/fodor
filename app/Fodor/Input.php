@@ -87,6 +87,7 @@ SELECT;
                 break;
             case 'password':
                 $type = 'password';
+                break;
             default:
                 $type = 'text';
         }
