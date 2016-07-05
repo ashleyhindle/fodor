@@ -128,6 +128,7 @@
     <div class="row text-center">
         <h4>Sponsored by</h4>
         <img src="/images/sponsored-by-digitalocean.png" width="300px" height="48px"/>
+        <img src="/images/sponsored-by-siftware.jpg" width="300px" height="100px"/>
     </div>
 
     <!-- JavaScripts -->
