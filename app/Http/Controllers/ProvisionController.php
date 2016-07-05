@@ -272,12 +272,16 @@ class ProvisionController extends Controller
                 }
             }
 
-            if (count($invalidInputs) === 0) {
+            $selectedKeys = $request->input('keys');
+            $keysChosen = count($selectedKeys) > 0;
+
+            if ($keysChosen === false) {
+                $request->session()->now(str_random(4), ['type' => 'warning', 'message' => 'You must select an SSH key to add to the server']);
+            } elseif (count($invalidInputs) === 0 && $keysChosen) {
                 return $this->doit($request);
             } else {
                 $request->session()->now(str_random(4), ['type' => 'warning', 'message' => 'Input value was invalid for ' . implode(', ', $invalidInputs)]);
             }
-
         } else {
             try {
                 $saved = $provision->save();
