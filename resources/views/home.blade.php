@@ -88,6 +88,14 @@
                         188.166.9.14
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                         <span data-toggle="tooltip" data-placement="right" title="These are 15 characters long and use this range of chars: a-zA-Z0-9-_"><code>$RANDOM_PASSWORD</code></span>
+                    </td>
+                    <td>
+                        2g0iSeP-2gRTKvj
+                    </td>
+                </tr>
                 </tbody>
             </table>
             <!--
