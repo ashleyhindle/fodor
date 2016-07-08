@@ -101,7 +101,7 @@ class Provision extends Job implements ShouldQueue
 
                 $sftp = ssh2_sftp($ssh); //TODO error check and refactor all of the code we've written so far
                 $stream = fopen("ssh2.sftp://{$sftp}{$remoteProvisionScriptPath}", 'w');
-                fwrite($stream, $baseScript . PHP_EOL . $providedScript);
+                fwrite($stream, $baseScript . PHP_EOL . $providedScript . PHP_EOL . "rm -f {$remoteProvisionScriptPath}");
                 fclose($stream);
                 $this->log->addInfo("Transferred provisioner-combined script");
 

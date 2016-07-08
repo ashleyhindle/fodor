@@ -16,6 +16,7 @@ You can see an example `fodor.json` on [https://fodor.xyz](https://fodor.xyz)
 * [Owncloud - Safe home for all of your data](https://github.com/fodorxyz/owncloud)
 * [Huginn - Automated tasks/Open source IFTTT](https://github.com/fodorxyz/huginn)
 * [Pritunl - Enterprise VPN server](https://github.com/fodorxyz/pritunl)
+* [Snipe-It - A free open source IT asset/license management system built in PHP on Laravel 4.2 and Bootstrap 3. http://snipeitapp.com](https://github.com/fodorxyz/snipe-it)
 
 
 # Examples

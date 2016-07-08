@@ -329,6 +329,7 @@ class ProvisionController extends Controller
         if (empty($request->input('distro'))) {
             $errors['distro'] = true;
         }
+
         if (empty($request->input('name'))) {
             $errors['name'] = true;
         }
