@@ -256,6 +256,12 @@ class ProvisionController extends Controller
         $provision->region = 'xxx'; // Default, can be overriden in next step
         $provision->datestarted = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
 
+        try {
+            $saved = $provision->save();
+        } catch (Exception $e) {
+            $saved = false;
+        }
+        
         $validatingInputs = ($request->input('uuid') !== null) ? true : false;
 
         if ($validatingInputs) {
@@ -283,12 +289,6 @@ class ProvisionController extends Controller
                 $request->session()->now(str_random(4), ['type' => 'warning', 'message' => 'Input value was invalid for ' . implode(', ', $invalidInputs)]);
             }
         } else {
-            try {
-                $saved = $provision->save();
-            } catch (Exception $e) {
-                $saved = false;
-            }
-
             if (empty($saved)) { // Failed to save
                 $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Failed to save the provision data to the database, please destroy your droplet']);
                 return redirect(url('/provision/' . $provision->repo));
@@ -320,16 +320,32 @@ class ProvisionController extends Controller
             return redirect(url('/?loginToDigitalOceanFirstSilly'));
         }
 
-        if (
-            empty($request->input('size')) ||
-            empty($request->input('distro')) ||
-            empty($request->input('name')) ||
-            empty($request->input('id')) ||
-            empty($request->input('uuid')) ||
+        $errors = [];
+
+        if (empty($request->input('size'))) {
+            $errors['size'] = true;
+        }
+
+        if (empty($request->input('distro'))) {
+            $errors['distro'] = true;
+        }
+        if (empty($request->input('name'))) {
+            $errors['name'] = true;
+        }
+
+        if(empty($request->input('id'))) {
+            $errors['id'] = true;
+        }
+
+        if (!empty($errors)) {
+            var_dump($errors);
+            exit;
+        }
+        if (empty($request->input('uuid')) ||
             empty($request->input('repo')) ||
             empty($request->input('region'))
         ) {
-            return redirect(url('/?invalidSizeOrDistroOrNameOrRegion'));
+            return redirect(url('/?invalidSizeOrDistroOrNameOrRegion2'));
         }
 
         $inputs = $request->input('inputs', []);
