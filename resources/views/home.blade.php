@@ -15,6 +15,9 @@
                     <td><a href="{{ url('/provision/fodorxyz/mattermost') }}">fodorxyz/mattermost</a></td><td>Mattermost - Self-hosted Slack-Alternative</td>
                 </tr>
                 <tr>
+                    <td><a href="{{ url('/provision/fodorxyz/wekan') }}">fodorxyz/wekan</a></td><td>Wekan - Self-hosted Kanban Board - Trello-Alternative</td>
+                </tr>
+                <tr>
                     <td><a href="{{ url('/provision/fodorxyz/owncloud') }}">fodorxyz/owncloud</a></td><td>Latest OwnCloud personal cloud system</td>
                 </tr>
                 <tr>
