@@ -12,6 +12,9 @@
             <h3>Example repositories</h3>
             <table class="table table-striped table-condensed">
                 <tr>
+                    <td><a href="{{ url('/provision/fodorxyz/mattermost') }}">fodorxyz/mattermost</a></td><td>Mattermost - Self-hosted Slack-Alternative</td>
+                </tr>
+                <tr>
                     <td><a href="{{ url('/provision/fodorxyz/owncloud') }}">fodorxyz/owncloud</a></td><td>Latest OwnCloud personal cloud system</td>
                 </tr>
                 <tr>
