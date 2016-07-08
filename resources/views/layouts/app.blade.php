@@ -55,7 +55,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Fodor
+                    Fodor <small>&bull; Take control of your services and data</small>
                 </a>
             </div>
 
