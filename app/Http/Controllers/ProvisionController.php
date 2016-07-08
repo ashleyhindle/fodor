@@ -256,15 +256,11 @@ class ProvisionController extends Controller
         $provision->region = 'xxx'; // Default, can be overriden in next step
         $provision->datestarted = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
 
-        try {
-            $saved = $provision->save();
-        } catch (Exception $e) {
-            $saved = false;
-        }
-
         $validatingInputs = ($request->input('uuid') !== null) ? true : false;
 
         if ($validatingInputs) {
+            $provision = \App\Provision::where('id', $request->input('provisionid'))->where('uuid', $request->input('uuid'))->first();
+            
             /**
              * @var Input $input
              */
@@ -289,6 +285,12 @@ class ProvisionController extends Controller
                 $request->session()->now(str_random(4), ['type' => 'warning', 'message' => 'Input value was invalid for ' . implode(', ', $invalidInputs)]);
             }
         } else {
+            try {
+                $saved = $provision->save();
+            } catch (Exception $e) {
+                $saved = false;
+            }
+
             if (empty($saved)) { // Failed to save
                 $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Failed to save the provision data to the database, please destroy your droplet']);
                 return redirect(url('/provision/' . $provision->repo));
