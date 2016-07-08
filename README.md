@@ -10,6 +10,8 @@ You can see an example `fodor.json` on [https://fodor.xyz](https://fodor.xyz)
 
 # Current Fodor's
 
+* [Mattermost - Self-hosted Slack-Alternative](https://github.com/fodorxyz/mattermost)
+* [Wekan - Self-hosted Kanban board - Trello-Alternative](https://github.com/fodorxyz/wekan)
 * [GitLab CI Multi Runner - Shell Executor](https://github.com/fodorxyz/gitlab-ci-multi-runner)
 * [Graylog2 - Centralised log management](https://github.com/fodorxyz/graylog2)
 * [Mailhog - SMTP testing](https://github.com/fodorxyz/mailhog)
