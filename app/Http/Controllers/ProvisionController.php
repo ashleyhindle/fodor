@@ -261,7 +261,7 @@ class ProvisionController extends Controller
         } catch (Exception $e) {
             $saved = false;
         }
-        
+
         $validatingInputs = ($request->input('uuid') !== null) ? true : false;
 
         if ($validatingInputs) {
@@ -337,11 +337,8 @@ class ProvisionController extends Controller
             $errors['id'] = true;
         }
 
-        if (!empty($errors)) {
-            var_dump($errors);
-            exit;
-        }
-        if (empty($request->input('uuid')) ||
+        if (!empty($errors) ||
+            empty($request->input('uuid')) ||
             empty($request->input('repo')) ||
             empty($request->input('region'))
         ) {
