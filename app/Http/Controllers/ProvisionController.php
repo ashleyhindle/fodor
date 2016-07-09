@@ -128,7 +128,7 @@ class ProvisionController extends Controller
             return '';
         }
 
-        if (in_array($parts['scheme'], ['http', 'https']) === false) { // we only support http and https
+        if (in_array($parts['scheme'], ['https']) === false) { // we only support https
             return '';
         }
 
