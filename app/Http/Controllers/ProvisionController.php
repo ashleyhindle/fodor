@@ -101,7 +101,7 @@ class ProvisionController extends Controller
         return view('provision.view', [
             'repo' => $fullRepo,
             'description' => $fodorJson['description'],
-            'screenshotUrl' => (array_key_exists('screenshot', $fodorJson)) ? $fodorJson['screenshot'] : '',
+            'imageUrl' => (array_key_exists('image', $fodorJson)) ? $fodorJson['image'] : '',
             'homepage' => (array_key_exists('homepage', $fodorJson)) ? $fodorJson['homepage'] : '',
             'fodorJson' => $fodorJsonUndecoded,
             'provisionerScript' => $provisioner,
