@@ -13,5 +13,6 @@ var elixir = require('laravel-elixir');
 
 elixir(function(mix) {
     mix.sass('app.scss');
-    mix.version(['public/js/app.js', 'public/css/app.css']);
+    mix.copy('node_modules/clipboard/dist/clipboard.min.js', 'public/js/');
+    mix.version(['public/js/clipboard.min.js', 'public/js/app.js', 'public/css/app.css']);
 });

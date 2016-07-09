@@ -48,27 +48,12 @@ function updateWaitingProgress(waitingProgress) {
 }
 
 $(document).ready(function() {
-    var $copyButton = $('.btn-copy');
-    var clip = new ZeroClipboard($copyButton);
-
-    clip
-        .on('ready', function() {
-            $('#global-zeroclipboard-html-bridge').attr({
-                'data-toggle': 'tooltip',
-                'data-title': 'click to copy',
-                'data-placement': 'left'
-            });
-            $('#global-zeroclipboard-html-bridge').tooltip({
-                container: 'body',
-                trigger: 'hover'
-            });
-        })
-        .on('aftercopy', function() {
-            $('#global-zeroclipboard-html-bridge').tooltip('hide');
-        });
-
+    new Clipboard('.btn-copy');
 
     $('[data-toggle="tooltip"]').tooltip();
+    $('.btn-copy').tooltip({
+        title: 'Click to copy'
+    });
 
     $('#view-provisionerScript').click(function(event) {
         event.preventDefault();

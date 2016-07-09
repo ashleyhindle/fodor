@@ -67,3 +67,25 @@ div.commented-code {
   overflow:scroll;
   overflow-x:hidden;
 }
+
+.btn-copy {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  color: #767676;
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #e1e1e8;
+  border-radius: 0 4px 0 4px;
+  border-top: 0;
+  border-right: 0;
+}
+
+.btn-copy:hover {
+  background-color: #CF3725;
+  color: #FFFFFF;
+}

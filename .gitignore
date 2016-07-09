@@ -7,3 +7,5 @@ Homestead.json
 .vagrant
 storage/logs/*.log
 storage/logs/provision/
+public/js/clipboard.min.js
+public/build/

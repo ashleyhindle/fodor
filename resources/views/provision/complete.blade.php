@@ -14,13 +14,19 @@
 
                         <ul class="list-group">
                             <li class="list-group-item">
-                                <h4 class="list-group-item-heading">IP</h4>
-                                    <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $ip }}">{{ $ip }}</p>
+                                <h4 class="list-group-item-heading">
+                                    IP
+                                    <div data-clipboard-text="{{ $ip }}" class="pull-right btn-copy" aria-hidden="true">Copy</div>
+                                </h4>
+                                <p class="list-group-item-text">{{ $ip }}</p>
                             </li>
 
                             <li class="list-group-item">
-                                <h4 class="list-group-item-heading">Domain</h4>
-                                <p class="list-group-item-text btn-copy" data-clipboard-text="{{ $domain }}">{{ $domain }}</p>
+                                <h4 class="list-group-item-heading">
+                                    Domain
+                                    <div data-clipboard-text="{{ $domain }}" class="pull-right btn-copy" aria-hidden="true">Copy</div>
+                                </h4>
+                                <p class="list-group-item-text">{{ $domain }}</p>
                             </li>
 
                             @if (!empty($successText))
