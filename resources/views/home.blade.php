@@ -24,7 +24,7 @@
                     <td><a href="{{ url('/provision/fodorxyz/gitlab-ci-multi-runner') }}">fodorxyz/gitlab-ci-multi-runner</a></td><td>Setup a GitLab CI Runner</td>
                 </tr>
                 <tr>
-                    <td><a href="{{ url('/provision/ashleyhindle/fodor-graylog2') }}">ashleyhindle/fodor-graylog2</a></td><td>Graylog central logging system</td>
+                    <td><a href="{{ url('/provision/fodorxyz/graylog2') }}">fodorxyz/graylog2</a></td><td>Graylog central logging system</td>
                 </tr>
                 <tr>
                     <td><a href="{{ url('/provision/fodorxyz/pritunl') }}">fodorxyz/pritunl</a></td><td>Enterprise vpn server based on OpenVPN</td>
