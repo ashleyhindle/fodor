@@ -59,7 +59,8 @@ Route::group(['middleware' => ['web']], function () {
         $provider = $this->app['DigitalOceanOauthServiceProvider'];
         $provider->revoke($request->session()->get('digitalocean.token'));
 
-        $request->session()->forget('digitalocean');
+
+        $request->session()->flush(); // Forget _everything_
 
         return redirect('/');
     });

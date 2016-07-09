@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use DigitalOceanV2\Adapter\GuzzleHttpAdapter;
 use DigitalOceanV2\DigitalOceanV2;
 
+use Illuminate\Support\Facades\Redis;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -133,9 +134,10 @@ class Provision extends Job implements ShouldQueue
 
     public function tidyUp()
     {
+        $redisKey = config('rediskeys.digitalocean_token') . $this->provision->uuid;
         $sshKeys = new \App\Fodor\Ssh\Keys($this->provision->uuid);
 
-        $adapter = new GuzzleHttpAdapter($this->provision->digitalocean_token);
+        $adapter = new GuzzleHttpAdapter(Redis::get($redisKey));
         $digitalocean = new DigitalOceanV2($adapter);
 
         // ## REMOVE SSH KEYS FROM DIGITALOCEAN AND OUR LOCAL FILESYSTEM ##
@@ -160,7 +162,8 @@ class Provision extends Job implements ShouldQueue
             }
         }
 
-        $this->provision->digitalocean_token = ''; // We don't want to store tokens that can be used for nefarious purposes
+        Redis::del($redisKey);
+
         $this->provision->dateready = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
         $this->provision->exitcode = $this->exitCode;
         $this->provision->status = ($this->exitCode === 0) ? 'ready' : 'errored'; //TODO: Other distros or shells?

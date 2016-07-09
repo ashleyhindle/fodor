@@ -8,6 +8,7 @@ use DigitalOceanV2\DigitalOceanV2;
 use Illuminate\Routing\Router as Route;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Redis;
 use Mockery\CountValidator\Exception;
 use Ramsey\Uuid\Uuid;
 
@@ -530,11 +531,12 @@ class ProvisionController extends Controller
             return redirect('/?ohno');
         }
 
-        // We add it here so it's not in the database for a long time.  Though potentially if this is secure enough (maybe we should encrypt it)
-        //  then we can use this in future for allowing people to manage the Fodor droplets from Fodor? Delete/update TODO/CONSIDER
+        $redisKey = config('rediskeys.digitalocean_token') . $uuid;
+        Redis::set($redisKey, $request->session()->get('digitalocean')['token']);
 
-        $provision->digitalocean_token = $request->session()->get('digitalocean')['token'];
-        $provision->save();
+        // This expire is a backup in case the provision job fails, and doesn't delete the key explicitly at the end
+        Redis::expire($redisKey, (60 * 60)); // 60 minutes - if a provision job takes longer than this we won't be able to delete our SSH keys from the users DO account
+
         $provision->inputs = $request->session()->get("inputs.{$uuid}");
 
         // It doesn't accept SSH connections immediately after creation, so we delay
