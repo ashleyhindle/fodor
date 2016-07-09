@@ -104,7 +104,13 @@ HTML;
 
     public function validate($value)
     {
-        switch($this->input['type']) {
+        // Only allow the regex validator for string, password and regex
+        $typeIsAllowedRegex = in_array($this->input['type'], ['string', 'password', 'regex']);
+        
+        // Override the type for validation, if they've passed a regex to validate against
+        $type = (isset($this->input['regex']) && $typeIsAllowedRegex) ? 'regex' : $this->input['type'];
+
+        switch($type) {
             case 'url':
                 return filter_var($value, FILTER_VALIDATE_URL) !== false; // Doesn't work with international chars
             case 'number':

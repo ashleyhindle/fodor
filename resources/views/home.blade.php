@@ -29,6 +29,9 @@
                 <tr>
                     <td><a href="{{ url('/provision/fodorxyz/pritunl') }}">fodorxyz/pritunl</a></td><td>Enterprise vpn server based on OpenVPN</td>
                 </tr>
+                <tr>
+                    <td><a href="{{ url('/provision/fodorxyz/snipe-it') }}">fodorxyz/snipe-it</a></td><td>Free open source IT asset/license management system</td>
+                </tr>
             </table>
 
             <h2>How does it work?</h2>
@@ -166,7 +169,7 @@
     {
         "title": "Name",
         "name": "name",
-        <span data-toggle="tooltip" data-placement="left" title="This will allow empty strings">"type": "string"</span>
+        <span data-toggle="tooltip" data-placement="left" title="This will allow empty strings, you can also pass an extra 'regex' key for validation">"type": "string"</span>
     },
     {
         "title": "Email",
@@ -176,7 +179,7 @@
     {
         "title": "Password",
         "name": "password",
-        "type": "password"
+        <span data-toggle="tooltip" data-placement="left" title="This will not allow empty strings, you can also pass an extra 'regex' key for validation">"type": "password"</span>
     },
     {
         "title": "URL",
