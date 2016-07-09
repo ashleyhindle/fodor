@@ -496,7 +496,7 @@ class ProvisionController extends Controller
 
                     $client = new \Cloudflare\Api(env('CLOUDFLARE_API_EMAIL'), env('CLOUDFLARE_API_KEY'));
                     $subdomain = new \App\Fodor\Subdomain($client);
-                    $subdomainName = $subdomain->generateName();
+                    $subdomainName = $subdomain->generateName($provision->id);
                     $result = $subdomain->create($subdomainName, $ip);
 
                     if (empty($result)) {

@@ -11,10 +11,10 @@ class Subdomain
         $this->cloudflare = $cloudflareApi;
     }
 
-    public function generateName()
+    public function generateName($suffix='')
     {
         do {
-            $subdomain = Haikunator::haikunate();
+            $subdomain = Haikunator::haikunate(['suffix' => $suffix]);
             $taken = \App\Provision::where('subdomain', $subdomain)->first();
         } while($taken !== null);
 

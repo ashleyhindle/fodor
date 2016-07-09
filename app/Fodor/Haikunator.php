@@ -60,6 +60,7 @@ class Haikunator
             "tokenLength" => 4,
             "tokenHex" => false,
             "tokenChars" => "0123456789",
+            "suffix" => "",
         ];
 
         $params = array_merge($defaults, $params);
@@ -76,7 +77,7 @@ class Haikunator
             $token .= $params["tokenChars"][mt_rand(0, strlen($params["tokenChars"]) - 1)];
         }
 
-        $sections = [$adjective, $noun, $token];
+        $sections = [$adjective, $noun, $token, $params['suffix']];
         return implode($params["delimiter"], array_filter($sections));
     }
 
