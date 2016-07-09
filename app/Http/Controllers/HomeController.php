@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Redis;
 use Ramsey\Uuid\Uuid;
 use App\Http\Requests;
 use Illuminate\Http\Request;
@@ -35,7 +36,7 @@ class HomeController extends Controller
         ]);
 
         return view('home', [
-            'baseScript' => $baseScript
+            'baseScript' => $baseScript,
         ]);
     }
 }
