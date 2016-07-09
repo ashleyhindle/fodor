@@ -1,6 +1,7 @@
 #!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
 set -e # Error out on any errors
+set -x # Echo the commands used
 
 gen_password(){
     cat /dev/urandom | tr -dc 'a-zA-Z0-9-_' | fold -w 15 | head -n1
