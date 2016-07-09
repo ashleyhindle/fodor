@@ -99,7 +99,7 @@
                 </tr>
                 <tr>
                     <td>
-                         <span data-toggle="tooltip" data-placement="right" title="These are 15 characters long and use this range of chars: a-zA-Z0-9-_"><code>$RANDOM_PASSWORD</code></span>
+                         <span data-toggle="tooltip" data-placement="right" title="These are 15 characters long and use this range of chars: a-zA-Z0-9-_.  You can generate new passwords by using: $(gen_password)"><code>$RANDOM_PASSWORD</code></span>
                     </td>
                     <td>
                         2g0iSeP-2gRTKvj
