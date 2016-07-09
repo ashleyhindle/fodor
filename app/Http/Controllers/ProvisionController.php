@@ -101,6 +101,8 @@ class ProvisionController extends Controller
         return view('provision.view', [
             'repo' => $fullRepo,
             'description' => $fodorJson['description'],
+            'screenshotUrl' => (array_key_exists('screenshot', $fodorJson)) ? $fodorJson['screenshot'] : '',
+            'homepage' => (array_key_exists('homepage', $fodorJson)) ? $fodorJson['homepage'] : '',
             'fodorJson' => $fodorJsonUndecoded,
             'provisionerScript' => $provisioner,
             'timeEstimate' => $timeEstimate
@@ -260,7 +262,7 @@ class ProvisionController extends Controller
 
         if ($validatingInputs) {
             $provision = \App\Provision::where('id', $request->input('provisionid'))->where('uuid', $request->input('uuid'))->first();
-            
+
             /**
              * @var Input $input
              */
