@@ -152,7 +152,7 @@
   <span data-toggle="tooltip" data-placement="left" title="This is shown on the provision page to the user">"description": "Describe what the user gets",</span>
   <span data-toggle="tooltip" data-placement="left" title="For discovery within Fodor.xyz">"keywords": ["fodor", "example", "nginx"],</span>
   "homepage": "https://fodor.xyz",
-  <span data-toggle="tooltip" data-placement="left" title="If you need information from users, use these inputs.  They'll be made available as environment variables to your provisioner. e.g. apikey will be available as $APIKEY">"inputs": [</span>
+  <span data-toggle="tooltip" data-placement="left" title="If you need information from users, use these inputs.  They'll be made available as environment variables to your provisioner. e.g. apikey will be available as $APIKEY.   All inputs support the 'notes' key to provide extra information for the user">"inputs": [</span>
     {
         "title": "API Key",
         <span data-toggle="tooltip" data-placement="left" title="This will be available as $APIKEY to your provisioner script">"name": "apikey",</span>
@@ -179,6 +179,7 @@
     {
         "title": "Password",
         "name": "password",
+        "notes": "Must be more than 8 characters",
         <span data-toggle="tooltip" data-placement="left" title="This will not allow empty strings, you can also pass an extra 'regex' key for validation">"type": "password"</span>
     },
     {
