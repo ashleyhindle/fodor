@@ -54,9 +54,8 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Fodor <small>&bull; Take control of your services and data</small>
-                </a>
+                <a class="navbar-brand" href="{{ url('/') }}">Fodor</a>
+                    <span class="navbar-text"><small>Take control of your services and data</small></span>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
