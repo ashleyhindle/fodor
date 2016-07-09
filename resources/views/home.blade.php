@@ -6,7 +6,7 @@
         <div class="col-md-6">
             <h2>What is Fodor?</h2>
             <hr/>
-            Auto setup and provision GitHub repositories on a new DigitalOcean droplet
+            Auto setup and provision GitHub repositories on new DigitalOcean droplets
             <img src="/images/install-shield.svg"/>
 
             <h3>Example repositories</h3>
