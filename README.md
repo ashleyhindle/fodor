@@ -24,4 +24,3 @@ You can see an example `fodor.json` on [https://fodor.xyz](https://fodor.xyz)
 # Examples
 * [Example NGINX setup](https://github.com/ashleyhindle/fodor-example)
 * [Test Fodor Inputs](https://github.com/ashleyhindle/fodor-input-test)
-
