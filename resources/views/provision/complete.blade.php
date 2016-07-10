@@ -49,7 +49,7 @@
                         </div>
 
                         <a href="{{ url("/provision/logDownload/{$provision['id']}/{$provision['uuid']}") }}" type="button" class="btn btn-default">Download provisioning log</a>
-                        <a href="https://twitter.com/intent/tweet?text=I've just setup+{{ $repo }}+on @DigitalOcean at https://fodor.xyz/provision/{{ $repo }} with @fodorxyz - couldn't have been easier!" target="_blank" type="button" class="btn btn-info">Tweet</a>
+                        <a href="https://twitter.com/intent/tweet?text=I've just setup+{{ $provision['repo'] }}+on @DigitalOcean at https://fodor.xyz/provision/{{ $repo }} with @fodorxyz - couldn't have been easier!" target="_blank" type="button" class="btn btn-info">Tweet</a>
                     </div>
                 </div>
             </div>
