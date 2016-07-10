@@ -150,7 +150,7 @@
   <span data-toggle="tooltip" data-placement="left" title="ubuntu-14-04-x64 and docker are currently the only supported distros">"distro": "ubuntu-14-04-x64",</span>
   <span data-toggle="tooltip" data-placement="left" title="This is shown on the provision page to the user">"description": "Describe what the user gets",</span>
   <span data-toggle="tooltip" data-placement="left" title="For discovery within Fodor.xyz">"keywords": ["fodor", "example", "nginx"],</span>
-  "homepage": "https://fodor.xyz",
+  <span data-toggle="tooltip" data-placement="left" title="HTTPs only">"homepage":</span> "https://fodor.xyz",
   <span data-toggle="tooltip" data-placement="left" title="Full HTTPs only URL to an image to display - usually a screenshot - .jpg, .png, .gif">"image":</span> "https://fodor.xyz/images/screenshot.png",
   <span data-toggle="tooltip" data-placement="left" title="If you need information from users, use these inputs.  They'll be made available as environment variables to your provisioner. e.g. apikey will be available as $APIKEY.   All inputs support the 'notes' key to provide extra information for the user">"inputs": [</span>
     {
