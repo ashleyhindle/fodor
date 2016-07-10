@@ -120,20 +120,16 @@
             <h2>Publishing Repositories</h2>
             <hr/>
 
-            <ul>
-            <li>
-                Your provision URL (to share or add to README.md) will be: https://fodor.xyz/provision/<code>username/reponame</code>
-            </li>
-            <li>
+            <p>
+                Your provision URL (to share or add to README.md) will be: https://fodor.xyz/provision/<code>username/reponame</code><br />
                 We currently only support the <code>master</code> branch
-            </li>
-            </ul>
+            </p>
 
             Add a <code>fodor.json</code> file to the root of your repo:</li>
             <div class="commented-code">
 {
   <span data-toggle="tooltip" data-placement="left" title="This should be your repo name, we'll prepend https://github.com/ to it for cloning">"name": "username/reponame",</span>
-  <span data-toggle="tooltip" data-placement="left" title="Where on the server we'll git clone to">"installpath": "/var/www/fodor-example/",</span>
+  <span data-toggle="tooltip" data-placement="left" title="Where on the server we'll git clone your repository to">"installpath": "/var/www/fodor-example/",</span>
   <span data-toggle="tooltip" data-placement="left" title="Where is your bash provisioner file? Relative to repo root">"provisioner": "provisioner.sh",</span>
   "text": {
     "complete": "User/Pass: fodor/fodor :)"

@@ -86,9 +86,9 @@ class Provision extends Job implements ShouldQueue
         ])->render();
 
         $provisionerScript = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
-        $this->log->addInfo("Fetched provisioner script from GitHub: {$provisionerScript['content']}");
-
         $providedScript = base64_decode($provisionerScript['content']);
+        $this->log->addInfo("Fetched provisioner script from GitHub: {$provisionerScript['content']}\n\n{$providedScript}");
+
         $remoteProvisionScriptPath = '/tmp/fodor-provision-script-' . $this->provision->uuid;
 
         if($ssh = ssh2_connect($this->provision->ipv4, 22, [], [
@@ -102,7 +102,8 @@ class Provision extends Job implements ShouldQueue
 
                 $sftp = ssh2_sftp($ssh); //TODO error check and refactor all of the code we've written so far
                 $stream = fopen("ssh2.sftp://{$sftp}{$remoteProvisionScriptPath}", 'w');
-                fwrite($stream, $baseScript . PHP_EOL . $providedScript . PHP_EOL . "rm -f {$remoteProvisionScriptPath}");
+                $fullScript = $baseScript . PHP_EOL . $providedScript . PHP_EOL;
+                fwrite($stream, $fullScript);
                 fclose($stream);
                 $this->log->addInfo("Transferred provisioner-combined script");
 
