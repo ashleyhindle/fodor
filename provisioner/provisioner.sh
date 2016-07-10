@@ -109,3 +109,4 @@ EOF
 
 service nginx restart
 service php5-fpm restart
+service beanstalkd restart
