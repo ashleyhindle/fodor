@@ -18,6 +18,9 @@
                     <td><a href="{{ url('/provision/fodorxyz/wekan') }}">fodorxyz/wekan</a></td><td>Wekan - Self-hosted Kanban Board - Trello-Alternative</td>
                 </tr>
                 <tr>
+                    <td><a href="{{ url('/provision/fodorxyz/huginn') }}">fodorxyz/huginn</a></td><td>Huginn - Self-hosted IFTTT</td>
+                </tr>
+                <tr>
                     <td><a href="{{ url('/provision/fodorxyz/owncloud') }}">fodorxyz/owncloud</a></td><td>Latest OwnCloud personal cloud system</td>
                 </tr>
                 <tr>
@@ -30,7 +33,7 @@
                     <td><a href="{{ url('/provision/fodorxyz/pritunl') }}">fodorxyz/pritunl</a></td><td>Enterprise vpn server based on OpenVPN</td>
                 </tr>
                 <tr>
-                    <td><a href="{{ url('/provision/fodorxyz/snipe-it') }}">fodorxyz/snipe-it</a></td><td>Free open source IT asset/license management system</td>
+                    <td><a href="{{ url('/provision/fodorxyz/snipe-it') }}">fodorxyz/snipe-it</a></td><td>Open source IT asset/license management system</td>
                 </tr>
             </table>
 
