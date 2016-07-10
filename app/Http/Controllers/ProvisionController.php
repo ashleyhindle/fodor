@@ -540,7 +540,7 @@ class ProvisionController extends Controller
         $provision->inputs = $request->session()->get("inputs.{$uuid}");
 
         // It doesn't accept SSH connections immediately after creation, so we delay
-        $job = (new \App\Jobs\Provision($provision))->delay(1);
+        $job = (new \App\Jobs\Provision($provision))->delay(5);
         $this->dispatch($job);
 
         return redirect(url('/provision/provisioning/' . $provision->id . '/' . $provision->uuid));

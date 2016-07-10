@@ -127,6 +127,7 @@ class Provision extends Job implements ShouldQueue
             }
         } else {
             $this->log->addError("Failed to connect to SSH");
+            $this->release(2); // Delay x seconds to retry as SSH isn't ready yet
             exit(1);
         }
 
