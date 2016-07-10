@@ -102,28 +102,28 @@ class ProvisionController extends Controller
         return view('provision.view', [
             'repo' => $fullRepo,
             'description' => $fodorJson['description'],
-            'imageUrl' => $this->getImageUrl($fodorJson),
-            'homepage' => (array_key_exists('homepage', $fodorJson)) ? $fodorJson['homepage'] : '',
+            'imageUrl' => $this->getValidUrl($fodorJson, 'image'),
+            'homepage' => $this->getValidUrl($fodorJson, 'homepage'),
             'fodorJson' => $fodorJsonUndecoded,
             'provisionerScript' => $provisioner,
             'timeEstimate' => $timeEstimate
         ]);
     }
 
-    private function getImageUrl($json)
+    private function getValidUrl($json, $key)
     {
-        $urlProvided = (array_key_exists('image', $json));
+        $urlProvided = (array_key_exists($key, $json));
         if ($urlProvided === false) {
             return '';
         }
 
-        $imageUrl = $json['image'];
+        $url = $json[$key];
 
-        if (filter_var($imageUrl, FILTER_VALIDATE_URL) === false) {
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             return '';
         }
 
-        $parts = parse_url($imageUrl);
+        $parts = parse_url($url);
 
         if ($parts === false) { // Seriously messed up URL
             return '';
