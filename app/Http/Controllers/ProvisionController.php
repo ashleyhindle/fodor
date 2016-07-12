@@ -133,6 +133,8 @@ class ProvisionController extends Controller
             return '';
         }
 
+        $parts['path'] = (!isset($parts['path'])) ? $parts['path'] : '';
+
         // Don't add in user, pass, query params, or fragment
         return "{$parts['scheme']}://{$parts['host']}{$parts['path']}";
     }
