@@ -2,6 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Fodor\Config;
+use App\Fodor\Github;
+use App\Fodor\Repo;
 use App\Jobs\Job;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -66,28 +69,41 @@ class Provision extends Job implements ShouldQueue
         $this->provision->save();
         $this->log->addInfo("Set status to provision");
 
-        $branch = 'master';
-        list($username, $repo) = explode('/', $this->provision->repo);
+        $repo = new Repo($this->provision->repo);
+        $branch = $repo->getBranch();
+        $username = $repo->getUsername();
 
         $client = new \Github\Client();
         $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
-        $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json and branch should be a config variable
-        $this->log->addInfo("Fetched fodor.json from GitHub: {$fodorJson['content']}");
+        $github = new Github($client, $repo);
 
-        $fodorJson = base64_decode($fodorJson['content']);
-        $fodorJson = json_decode($fodorJson, true);
-        
+        $json = $github->getFodorJson();
+        $this->log->addInfo("Fetched fodor.json from GitHub: {$json}");
+
+        $fodorJson = new Config($json);
+
+        try {
+            $fodorJson->valid();
+        } catch (\Exception $e) {
+            $this->log->addError('Fodor.json invalid');
+        }
+
         $baseScript = \View::make('provision-base.ubuntu-14-04-x64',[
-            'installpath' => $fodorJson['installpath'],
+            'installpath' => $fodorJson->installpath,
             'name' => $this->provision->repo,
             'domain' => $this->provision->subdomain . '.fodor.xyz',
             'ipv4' => $this->provision->ipv4,
             'inputs' => $this->inputs
         ])->render();
 
-        $provisionerScript = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
-        $providedScript = base64_decode($provisionerScript['content']);
-        $this->log->addInfo("Fetched provisioner script from GitHub: {$provisionerScript['content']}\n\n{$providedScript}");
+        // Has to be less than 1mb
+        $providedScript = $github->getFileContents($fodorJson->provisioner);
+
+        if (empty($providedScript)) {
+            $this->log->addError('Provisioner invalid');
+        }
+
+        $this->log->addInfo("Fetched provisioner script from GitHub: {$providedScript}");
 
         $remoteProvisionScriptPath = '/tmp/fodor-provision-script-' . $this->provision->uuid;
 

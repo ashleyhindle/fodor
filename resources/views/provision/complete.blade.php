@@ -40,9 +40,9 @@
                         <h3>Links</h3>
                         <div class="list-group">
                         @forelse ($links as $link)
-                                <a target="_blank" class="list-group-item" href="{{ $link['url'] }}">
+                                <span data-toggle="tooltip" data-placement="top" title="Opens in a new tab"><a target="_blank" class="list-group-item" title="{{ $link['title'] }}" href="{{ $link['url'] }}">
                                     <strong>{{ $link['title'] }}: </strong>{{ $link['url'] }}
-                                </a>
+                                </a></span>
                         @empty
                             No links provided
                         @endforelse
