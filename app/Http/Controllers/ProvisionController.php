@@ -1,90 +1,73 @@
 <?php namespace App\Http\Controllers;
 
+use app\Exceptions\InvalidRepoException;
+use App\Fodor\Config;
+use App\Fodor\Github;
 use App\Fodor\Input;
+use App\Fodor\Repo;
 use App\Provision;
 use Illuminate\Http\Request;
 use DigitalOceanV2\Adapter\GuzzleHttpAdapter;
 use DigitalOceanV2\DigitalOceanV2;
-use Illuminate\Routing\Router as Route;
 
 use App\Http\Requests;
 use Illuminate\Support\Facades\Redis;
-use Mockery\CountValidator\Exception;
 use Ramsey\Uuid\Uuid;
 
 
 class ProvisionController extends Controller
 {
 
+    private function getGithubClient()
+    {
+        $client = new \Github\Client();
+        $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
+
+        return $client;
+    }
+
     public function view(Request $request, $repo=false)
     {
-        if (empty($repo)) {
-            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'No repo provided']);
+        try {
+            $repo = new Repo($repo);
+        } catch (\Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => $e->getMessage()]);
             return redirect('/?ohno');
         }
 
-        $fullRepo = $repo;
+        $fullRepo = $repo->getName();
 
-        $invalidFormat = (strpos($repo, '/') === false);
+        $request->session()->set('intendedRepo', $repo->getName());
 
-        if (empty($repo) || $invalidFormat) {
-            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'The repo name "' . $repo . '" is invalid']);
-            return redirect(url('/'));
-        }
+        $github = new Github($this->getGithubClient(), $repo);
 
-        $request->session()->set('intendedRepo', $repo);
+        $json = $github->getFodorJson(); // TODO: Consider: should this be $repo->getFodorConfig() or getConfig or getFodorJson, and pass Github into Repo?
 
-        $branch = 'master';
-        list($username, $repo) = explode('/', $repo);
-
-        $client = new \Github\Client();
-        $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
-        try {
-            $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
-        } catch (\Exception $e) {
+        if (empty($json)) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo or repo\'s fodor.json is non-existent']);
             return redirect(url('/'));
         }
 
-        $fodorJson = base64_decode($fodorJson['content']);
-        $fodorJsonUndecoded = $fodorJson;
+        $fodorJson = new Config($json);
 
-        $fodorJson = json_decode($fodorJson, true);
-
-        if (is_null($fodorJson) || $fodorJson === false) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
-            return redirect(url('/'));
+        try {
+            $fodorJson->valid();
+        } catch (InvalidRepoException $e) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => $e->getMessage()]);
+            return redirect('/?ohno');
         }
 
-        if (empty($fodorJson['provisioner'])) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
-            return redirect(url('/'));
-        }
-
-        if (empty($fodorJson['description'])) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
-            return redirect(url('/'));
-        }
+        $fodorJsonUndecoded = $fodorJson->getJson(); // string of json
 
         // Has to be less than 1mb
-        try {
-            $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
-        } catch (\Exception $e) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
-            return redirect(url('/'));
-        }
+        $provisioner = $github->getFileContents($fodorJson->provisioner);
 
         if (empty($provisioner)) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
-            return redirect(url('/'));
+            return redirect(url('/?ohno'));
         }
 
-        $provisioner = base64_decode($provisioner['content']);
-
-        if (empty($provisioner)) {
-            $request->session()->flash(str_random(4), 'This repo\'s provisioner was in the wrong format or too large');
-            return redirect(url('/'));
-        }
+        $timeEstimate = 0;
 
         if(config('fodor.enable_time_estimates')) {
             $timeEstimate = \DB::select('select AVG(unix_timestamp(dateready)-unix_timestamp(datestarted)) as timeEstimate from provisions where repo=? and datestarted > ? and dateready is not null',
@@ -95,13 +78,11 @@ class ProvisionController extends Controller
             );
 
             $timeEstimate = ($timeEstimate === null) ? 0 : floor($timeEstimate[0]->timeEstimate);
-        } else {
-            $timeEstimate = 0;
         }
 
         return view('provision.view', [
             'repo' => $fullRepo,
-            'description' => $fodorJson['description'],
+            'description' => $fodorJson->description,
             'imageUrl' => $this->getValidUrl($fodorJson, 'image'),
             'homepage' => $this->getValidUrl($fodorJson, 'homepage'),
             'fodorJson' => $fodorJsonUndecoded,
@@ -110,14 +91,15 @@ class ProvisionController extends Controller
         ]);
     }
 
-    private function getValidUrl($json, $key)
+    private function getValidUrl(Config $json, $key)
     {
-        $urlProvided = (array_key_exists($key, $json));
+        $urlProvided = (is_null($json->$key) === false);
+
         if ($urlProvided === false) {
             return '';
         }
 
-        $url = $json[$key];
+        $url = $json->$key;
 
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             return '';
@@ -141,15 +123,11 @@ class ProvisionController extends Controller
 
     public function start(Request $request, $repo=false)
     {
-        if (empty($repo)) {
-            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'No repo provided']);
+        try {
+            $repo = new Repo($repo);
+        } catch (\Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => $e->getMessage()]);
             return redirect('/?ohno');
-        }
-
-        $invalidFormat = (strpos($repo, '/') === false);
-        if (empty($repo) || $invalidFormat) {
-            $request->session()->flash('status', ['type' => 'warning', 'message' => 'This repo is invalid: "' . $repo . '"']);
-            return redirect(url('/'));
         }
 
         $request->session()->set('intendedRepo', $repo);
@@ -161,58 +139,34 @@ class ProvisionController extends Controller
         $request->session()->forget('intendedRepo');
         
         $provision = new Provision();
-        $provision->repo = $repo; // Before it gets contaminated
+        $provision->repo = $repo->getName(); // Before it gets contaminated
 
-        $branch = 'master';
-        list($username, $repo) = explode('/', $repo);
+        $github = new Github($this->getGithubClient(), $repo);
 
-        $client = new \Github\Client();
-        $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
+        $json = $github->getFodorJson();
 
-        try {
-            $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json should be a config variable
-        } catch (\Exception $e) {
+        if (empty($json)) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo or repo\'s fodor.json is non-existent']);
             return redirect(url('/'));
         }
 
-        $fodorJson = base64_decode($fodorJson['content']);
-        $fodorJson = json_decode($fodorJson, true);
+        $fodorJson = new Config($json);
 
-
-        if (is_null($fodorJson) || $fodorJson === false) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json is invalid']);
-            return redirect(url('/'));
+        try {
+            $fodorJson->valid();
+        } catch (\Exception $e) {
+            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => $e->getMessage()]);
+            return redirect('/?ohno');
         }
 
-        if (empty($fodorJson['provisioner'])) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a provisioner']);
-            return redirect(url('/'));
-        }
-
-        if (empty($fodorJson['description'])) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s fodor.json doesn\'t provide a description']);
-            return redirect(url('/'));
-        }
+        $fodorJsonUndecoded = $fodorJson->getJson(); // string of json
 
         // Has to be less than 1mb
-        try {
-            $provisioner = $client->api('repo')->contents()->show($username, $repo, $fodorJson['provisioner'], $branch);
-        } catch (\Exception $e) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
-            return redirect(url('/'));
-        }
+        $provisioner = $github->getFileContents($fodorJson->provisioner);
 
         if (empty($provisioner)) {
             $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was invalid or empty']);
-            return redirect(url('/'));
-        }
-
-        $provisioner = base64_decode($provisioner['content']);
-
-        if (empty($provisioner)) {
-            $request->session()->flash(str_random(4), ['type' => 'warning', 'message' => 'This repo\'s provisioner was in the wrong format or too large']);
-            return redirect(url('/'));
+            return redirect(url('/?ohno'));
         }
 
         // We have a valid provisioner
@@ -221,15 +175,15 @@ class ProvisionController extends Controller
         $suggestedSize = false;
         $requiredSize = false;
 
-        if (array_key_exists('required', $fodorJson['size']) === true) {
-            $size = $fodorJson['size']['required'];
+        if (array_key_exists('required', $fodorJson->size) === true) {
+            $size = $fodorJson->size['required'];
             $requiredSize = $size;
         }
 
         // Suggested size overrides the default and required size
 
-        if (array_key_exists('suggested', $fodorJson['size']) === true) {
-            $size = $fodorJson['size']['suggested'];
+        if (array_key_exists('suggested', $fodorJson->size) === true) {
+            $size = $fodorJson->size['suggested'];
             $suggestedSize = $size;
         }
 
@@ -237,10 +191,10 @@ class ProvisionController extends Controller
             $size = '512mb'; // TODO: Config variable for default size
         }
 
-        $isDistroInvalid = (!in_array($fodorJson['distro'], config('digitalocean.distros')));
+        $isDistroInvalid = (!in_array($fodorJson->distro, config('digitalocean.distros')));
 
-        if (empty($fodorJson['distro']) || $isDistroInvalid) {
-            $fodorJson['distro'] = 'ubuntu-14-04-x64';
+        if (empty($fodorJson->distro) || $isDistroInvalid) {
+            $fodorJson->distro = 'ubuntu-14-04-x64';
         }
 
         $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
@@ -270,7 +224,7 @@ class ProvisionController extends Controller
             $requiredMemory = (array_key_exists($requiredSize, config('digitalocean.sizes'))) ? config('digitalocean.sizes')[$requiredSize]['memory'] : 0;
         }
 
-        $inputs = (array_key_exists('inputs', $fodorJson)) ? $fodorJson['inputs'] : [];
+        $inputs = (is_null($fodorJson->inputs) === false) ? $fodorJson->inputs : [];
         array_walk($inputs, function(&$input) {
             $input['value'] = '';
             $input = new Input($input);
@@ -284,7 +238,7 @@ class ProvisionController extends Controller
         $provision->email = $request->session()->get('digitalocean')['email'];
         $provision->digitalocean_uuid = $request->session()->get('digitalocean')['uuid'];
         $provision->size = $size; // Default, can be overriden in next step
-        $provision->distro = $fodorJson['distro'];
+        $provision->distro = $fodorJson->distro;
         $provision->region = 'xxx'; // Default, can be overriden in next step
         $provision->datestarted = (new \DateTime('now', new \DateTimeZone('UTC')))->format('c');
 
@@ -319,7 +273,7 @@ class ProvisionController extends Controller
         } else {
             try {
                 $saved = $provision->save();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $saved = false;
             }
 
@@ -330,15 +284,15 @@ class ProvisionController extends Controller
         }
 
         return view('provision.start', [
-            'repo' => $repo,
+            'repo' => $repo->getRepoName(),
             'size' => [
                 'default' => $size,
                 'suggested' => $suggestedSize,
                 'required' => $requiredSize
             ],
             'requiredMemory' => $requiredMemory,
-            'description' => $fodorJson['description'],
-            'distro' => $fodorJson['distro'],
+            'description' => $fodorJson->description,
+            'distro' => $fodorJson->distro,
             'keys' => $keys,
             'provisionid' => $provision->id,
             'provision' => $provision,
@@ -434,7 +388,8 @@ class ProvisionController extends Controller
         $keys[] = $keyCreated->id;
 
         try {
-            $created = $droplet->create('fodor-' . $name . '-' . $provision->uuid, $region, $size, $distro, false, false, false, $keys);
+            $hostname = 'fodor-' . $name . '-' . $provision->uuid;
+            $created = $droplet->create($hostname, $region, $size, $distro, false, false, false, $keys);
         } catch (\Exception $e) {
             $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'Could not create DigitalOcean droplet: ' . $e->getMessage()]);
             return redirect('/provision/start/' . $repo);
@@ -573,20 +528,15 @@ class ProvisionController extends Controller
             return redirect('/?ohno');
         }
 
-        $branch = 'master';
-        list($username, $repo) = explode('/', $provision->repo);
+        $repo = new Repo($provision->repo);
+        $github = new Github($this->getGithubClient(), $repo);
 
-        $client = new \Github\Client(); // TODO: DRY
-        $client->authenticate(env('GITHUB_API_TOKEN'), false, \Github\Client::AUTH_HTTP_TOKEN);
-        // TODO: Cache fodor.json files
-        $fodorJson = $client->api('repo')->contents()->show($username, $repo, 'fodor.json', $branch); // TODO: fodor.json and branch should be a config variable
-        $fodorJson = base64_decode($fodorJson['content']);
-        $fodorJson = json_decode($fodorJson, true);
+        $fodorJson = new Config($github->getFodorJson());
 
         $links = [];
 
-        if (array_key_exists('links', $fodorJson)) {
-            foreach($fodorJson['links'] as $link) {
+        if (!is_null($fodorJson->links)) {
+            foreach($fodorJson->links as $link) {
                 $links[] = [
                     'title' => $link['title'],
                     'url' => str_replace('{{DOMAIN}}', $provision->subdomain . '.fodor.xyz', $link['url'])
@@ -599,7 +549,7 @@ class ProvisionController extends Controller
             'domain' => $provision->subdomain . '.fodor.xyz',
             'ip' => $provision->ipv4,
             'provision' => $provision,
-            'successText' => (isset($fodorJson['text']['complete'])) ? $fodorJson['text']['complete'] : ''
+            'successText' => (isset($fodorJson->text['complete'])) ? $fodorJson->text['complete'] : ''
         ]);
     }
 
