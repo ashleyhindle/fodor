@@ -45,7 +45,7 @@
                             <input type="hidden" name="repo" value="{{ $provision['repo'] }}" />
                             <input type="hidden" name="distro" value="{{ $distro }}" />
 
-                            <h2>SSH Keys</h2>
+                            <h2>SSH Keys @if($keysCached) <small>From our cache, if these are out of date please try again in a few minutes</small>@endif</h2>
 
                             <div class="toggle-btn-grp">
                             @foreach ($keys as $keyId => $keyName)

@@ -11,6 +11,7 @@ use DigitalOceanV2\Adapter\GuzzleHttpAdapter;
 use DigitalOceanV2\DigitalOceanV2;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Ramsey\Uuid\Uuid;
 
@@ -200,23 +201,33 @@ class ProvisionController extends Controller
         $adapter = new GuzzleHttpAdapter($request->session()->get('digitalocean')['token']);
         $digitalocean = new DigitalOceanV2($adapter);
 
-        $keysFromDo = $digitalocean->key()->getAll();
-        $keys = [];
+        $keysCached = false;
+        $cacheKey = sha1($request->session()->get('digitalocean')['token'] . '-sshkeys');
 
-        if (empty($keysFromDo)) {
-            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'You must have SSH keys attached to your DigitalOcean account to continue - https://cloud.digitalocean.com/settings/security']);
-            return redirect(url('/provision/' . $provision->repo));
-        }
-
-        foreach ($keysFromDo as $key) {
-            if (strpos($key->name, 'fodor-') !== 0) {
-                $keys[$key->id] = $key->name;
-            }
-        }
+        $keys = Cache::get($cacheKey, []);
 
         if (empty($keys)) {
-            $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'You must have SSH keys attached to your DigitalOcean account to continue - https://cloud.digitalocean.com/settings/security']);
-            return redirect(url('/provision/' . $provision->repo));
+            $keysFromDo = $digitalocean->key()->getAll();
+
+            if (empty($keysFromDo)) {
+                $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'You must have SSH keys attached to your DigitalOcean account to continue - https://cloud.digitalocean.com/settings/security']);
+                return redirect(url('/provision/' . $provision->repo));
+            }
+
+            foreach ($keysFromDo as $key) {
+                if (strpos($key->name, 'fodor-') !== 0) {
+                    $keys[$key->id] = $key->name;
+                }
+            }
+
+            if (empty($keys)) {
+                $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => 'You must have SSH keys attached to your DigitalOcean account to continue - https://cloud.digitalocean.com/settings/security']);
+                return redirect(url('/provision/' . $provision->repo));
+            }
+
+            Cache::put($cacheKey, $keys, 5); // Cache SSH keys for 5 minutes
+        } else {
+            $keysCached = true;
         }
         
         $requiredMemory = 0;
@@ -298,7 +309,8 @@ class ProvisionController extends Controller
             'provision' => $provision,
             'id' => $provision->id,
             'uuid' => $provision->uuid,
-            'inputs' => $inputs
+            'inputs' => $inputs,
+            'keysCached' => $keysCached
         ]);
     }
 
