@@ -48,6 +48,4 @@ class Config
     {
         return (array_key_exists($name, $this->data)) ? true : false;
     }
-
-
 }
