@@ -1,6 +1,4 @@
-<?php
-
-use App\Fodor\Config;
+<?php use App\Fodor\Config;
 
 class ConfigTest extends TestCase
 {
