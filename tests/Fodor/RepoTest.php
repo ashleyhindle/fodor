@@ -14,6 +14,13 @@ class RepoTest extends TestCase
     }
 
     /** @test */
+    public function it_gives_full_name_with___toString()
+    {
+        $repo = new Repo('ashleyhindle/rocks');
+        $this->assertEquals('ashleyhindle/rocks', $repo);
+    }
+
+    /** @test */
     public function it_exceptions_with_invalid_format_repo_name()
     {
         $this->setExpectedException(\app\Exceptions\InvalidRepoException::class);

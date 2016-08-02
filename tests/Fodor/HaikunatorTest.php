@@ -16,4 +16,13 @@ class HaikunatorTest extends TestCase
 
         $this->assertNotEquals($result1, $result2);
     }
+
+    public function testResultMatchesRegexBasedOnParams()
+    {
+        $result = Haikunator::haikunate(['delimiter' => '@', 'tokenLength' => 19, 'tokenChars' => 'z', 'suffix' => 'oops']);
+        $this->assertRegExp('/[a-z]+@[a-z]+@z{19}@oops/', $result);
+
+        $result = Haikunator::haikunate(['delimiter' => '(', 'tokenLength' => 3, 'tokenChars' => 'zoo', 'suffix' => 'fodor']);
+        $this->assertRegExp('/[a-z]+\([a-z]+\([zo]{3}\(fodor/', $result);
+    }
 }
