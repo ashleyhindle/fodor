@@ -45,5 +45,3 @@ after_success:
 before_install:
 - mkdir tmp
 - openssl aes-256-cbc -K $encrypted_fabbc996a929_key -iv $encrypted_fabbc996a929_iv -in fodor-travis.enc -out tmp/fodor-travis -d
-- openssl aes-256-cbc -K $encrypted_fabbc996a929_key -iv $encrypted_fabbc996a929_iv -in .env.enc -out .env -d
-
