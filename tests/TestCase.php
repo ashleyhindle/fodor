@@ -20,6 +20,8 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
+        \Illuminate\Support\Facades\Config::set('fodor.enable_time_estimates', false);
+
         return $app;
     }
 }
