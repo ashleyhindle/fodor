@@ -22,6 +22,7 @@ install:
 - npm install -g npm@2
 - composer install
 - npm install
+- cp .env.example .env
 - mysql -e "create database IF NOT EXISTS fodor;" -uroot
 - mysql -e "grant all on fodor.* to 'fodor'@'127.0.0.1' identified by 'fodorsecret';"
   -uroot
