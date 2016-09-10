@@ -1,22 +1,22 @@
 <?php namespace App\Fodor;
 
-use Cloudflare\Zone\Dns;
-use \App\Fodor\Haikunator;
-
 class Subdomain
 {
-    private $cloudflare;
+    private $dns;
 
-    public function __construct(\Cloudflare\Api $cloudflareApi) {
-        $this->cloudflare = $cloudflareApi;
+    public function __construct(\Cloudflare\Zone\Dns $dns) {
+        $this->dns = $dns;
+    }
+
+    public function subdomainAvailable($subdomain) {
+        return \App\Provision::where('subdomain', $subdomain)->first() === null;
     }
 
     public function generateName($suffix='')
     {
         do {
             $subdomain = Haikunator::haikunate(['suffix' => $suffix]);
-            $taken = \App\Provision::where('subdomain', $subdomain)->first();
-        } while($taken !== null);
+        } while(! $this->subdomainAvailable($subdomain));
 
         return $subdomain;
     }
@@ -26,8 +26,7 @@ class Subdomain
             return false;
         }
 
-        $dns = new Dns($this->cloudflare);
-        $result = $dns->createRecord(env('CLOUDFLARE_API_ZONE_ID'), 'A', $name . '.fodor.xyz', $ip, 1);
+        $result = $this->dns->createRecord(env('CLOUDFLARE_API_ZONE_ID'), 'A', $name . '.fodor.xyz', $ip, 1);
 
         if (empty($result)) {
             return false;

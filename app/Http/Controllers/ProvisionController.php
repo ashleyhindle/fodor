@@ -465,7 +465,8 @@ class ProvisionController extends Controller
                     $ip = $network->ipAddress;
 
                     $client = new \Cloudflare\Api(env('CLOUDFLARE_API_EMAIL'), env('CLOUDFLARE_API_KEY'));
-                    $subdomain = new \App\Fodor\Subdomain($client);
+                    $dns = new \Cloudflare\Zone\Dns($client);
+                    $subdomain = new \App\Fodor\Subdomain($dns);
                     $subdomainName = $subdomain->generateName($provision->id);
                     $result = $subdomain->create($subdomainName, $ip);
 
