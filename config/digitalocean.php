@@ -3,6 +3,7 @@
 return [
     'distros' => [
         'ubuntu-14-04-x64',
+        'ubuntu-16-04-x64',
         'docker'
     ],
     'regions' => [

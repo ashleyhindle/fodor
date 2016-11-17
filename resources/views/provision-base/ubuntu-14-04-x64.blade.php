@@ -23,6 +23,7 @@ export {{ strtoupper($name) }}={!! escapeshellarg($value) !!}
 ## Don't use the DigitalOcean mirrors - they're so extraordinarily slow sometimes
 sed -i "s/mirrors.digitalocean/archive\.ubuntu/g" /etc/apt/sources.list
 apt-get update
+apt-get -y upgrade
 
 apt-get -y install git
 
