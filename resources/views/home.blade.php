@@ -147,7 +147,7 @@
     <span data-toggle="tooltip" data-placement="left" title="Optional - which size Droplet is suggested?">"suggested": "512mb",</span>
     <span data-toggle="tooltip" data-placement="left" title="Optional - which size Droplet is required? All lower Droplet sizes will be disabled">"required": "512mb"</span>
   },
-  <span data-toggle="tooltip" data-placement="left" title="ubuntu-14-04-x64 and docker are currently the only supported distros">"distro": "ubuntu-14-04-x64",</span>
+  <span data-toggle="tooltip" data-placement="left" title="ubuntu-14-04-x64, ubuntu-16-04-x64 and docker are currently the only supported distros">"distro": "ubuntu-14-04-x64",</span>
   <span data-toggle="tooltip" data-placement="left" title="This is shown on the provision page to the user">"description": "Describe what the user gets",</span>
   <span data-toggle="tooltip" data-placement="left" title="For discovery within Fodor.xyz">"keywords": ["fodor", "example", "nginx"],</span>
   <span data-toggle="tooltip" data-placement="left" title="HTTPs only">"homepage":</span> "https://fodor.xyz",
