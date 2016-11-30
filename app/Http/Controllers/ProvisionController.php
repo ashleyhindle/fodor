@@ -557,12 +557,15 @@ class ProvisionController extends Controller
             }
         }
 
+        $replacements = [
+            '{{DOMAIN}}' => $provision->subdomain . '.fodor.xyz'
+        ];
         return view('provision.complete', [
             'links' => $links,
             'domain' => $provision->subdomain . '.fodor.xyz',
             'ip' => $provision->ipv4,
             'provision' => $provision,
-            'successText' => (isset($fodorJson->text['complete'])) ? $fodorJson->text['complete'] : ''
+            'successText' => $fodorJson->getText('complete', $replacements)
         ]);
     }
 
