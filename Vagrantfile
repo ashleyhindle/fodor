@@ -7,6 +7,8 @@
 # you're doing.
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
+  #
+  # config.vm.box =
   config.vm.network "private_network", ip: "192.168.22.2"
 
   config.vm.synced_folder "./", "/vagrant", id: "vagrant-root",
@@ -37,6 +39,8 @@ Vagrant.configure(2) do |config|
 
     sudo php5enmod mcrypt
 
+    # TODO: This cat fails, presumably because supervisor isn't installed - and I shouldn't stop writing code
+    # Willy nilly
     cat << EOF > /etc/supervisor/conf.d/fodor-provisioner-worker.conf 
 	[program:fodor-provision-worker]
 	process_name=%(program_name)s_%(process_num)02d
@@ -49,38 +53,8 @@ Vagrant.configure(2) do |config|
 	stdout_logfile=/vagrant/storage/logs/%(program_name)s_%(process_num)02d.log
 EOF
 
-    cat << EOF > /etc/nginx/sites-enabled/fodor.conf
-server {
-        listen   80 default_server;
-
-        root /vagrant/public/;
-        index index.php;
-
-        location / {
-            # URLs to attempt, including pretty ones.
-            try_files \$uri \$uri/ /index.php?\$query_string;
-        }
-
-        # Remove trailing slash to please routing system.
-        if (!-d \$request_filename) {
-            rewrite     ^/(.+)/\$ /\$1 permanent;
-        }
-
-        # PHP FPM configuration.
-        location ~* \.php\$ {
-                fastcgi_pass                    unix:/var/run/php5-fpm.sock;
-                fastcgi_index                   index.php;
-                fastcgi_split_path_info         ^(.+\.php)(.*)$;
-                include                         /etc/nginx/fastcgi_params;
-                fastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;
-        }
-
-        # We don't need .ht files with nginx.
-        location ~ /\.ht {
-                deny all;
-        }
-}
-EOF
+    rm /etc/nginx/sites-enabled/default
+    cp /vagrant/provisioner/nginx-vhost.conf /etc/nginx/sites-enabled/fodor.conf
 
     sudo service nginx restart
     sudo service php5-fpm restart
