@@ -60,4 +60,69 @@ class ConfigTest extends TestCase
         $result = (new Config($json))->heyIDontExist;
         $this->assertFalse(isset($result));
     }
+
+    /** @test */
+    public function it_replaces_domain_with_non_empty_domain()
+    {
+        $json = '{
+            "text": {
+                "complete": "Complete Text {{DOMAIN}} end"
+            }
+        }';
+
+        $domain = 'fluffy-cloud-4853-182.fodor.xyz';
+        $expected = "Complete Text {$domain} end";
+
+        $result = (new Config($json))->getText(
+            'complete',
+            ['{{DOMAIN}}' => $domain]
+        );
+
+        $this->assertEquals(
+            $result,
+            $expected,
+            'Fodor config did not replace domain like I wanted it to, how rude!'
+        );
+    }
+
+    /** @test */
+    public function it_returns_an_empty_string_on_get_text_with_invalid_key()
+    {
+        $json = '{
+            "text": {
+                "complete": "Complete Text {{DOMAIN}} end"
+            }
+        }';
+
+        $result = (new Config($json))->getText(
+            'burger-house',
+            ['{{DOMAIN}}' => 'notempty.xyz']
+        );
+
+        $this->assertEquals(
+            $result,
+            '',
+            'Fodor config did not return empty string with invalid key'
+        );
+    }
+
+    /** @test */
+    public function it_returns_correclt_when_get_text_with_valid_key_and_no_replacements()
+    {
+        $completeText = 'Complete Text {{DOMAIN}} end';
+
+        $json = '{
+            "text": {
+                "complete": "' . $completeText . '"
+            }
+        }';
+
+        $result = (new Config($json))->getText('complete');
+
+        $this->assertEquals(
+            $result,
+            $completeText,
+            'Fodor config did not return the same string with no replacements'
+        );
+    }
 }

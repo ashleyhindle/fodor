@@ -22,6 +22,25 @@ class Config
         return $this->json;
     }
 
+    /**
+     * @param string $key
+     * @param array $replacements - key value array
+     *
+     * @return string
+     */
+    public function getText($key = 'complete', array $replacements = [])
+    {
+        if (! array_key_exists($key, $this->data['text'])) {
+            return '';
+        }
+
+        return str_replace(
+            array_keys($replacements),
+            array_values($replacements),
+            $this->data['text'][$key]
+        );
+    }
+
     public function valid()
     {
         if (is_null($this->data) || $this->data === false) {
