@@ -9,3 +9,4 @@ storage/logs/*.log
 storage/logs/provision/
 public/js/clipboard.min.js
 public/build/
+.DS_Store
