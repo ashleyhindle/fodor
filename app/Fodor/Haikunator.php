@@ -43,7 +43,7 @@ class Haikunator
         "scene", "heart", "recipe", "union", "limit", "bread", "toast", "bonus",
         "lab", "mud", "mode", "poetry", "tooth", "hall", "king", "queen", "lion", "tiger",
         "penguin", "kiwi", "cake", "mouse", "rice", "coke", "hola", "salad", "hat",
-        "ace", "autumn", "animation", "backbone", "Balloon", "beach", "blockbuster", "bloom", "blossom", "brain", "branch",
+        "ace", "autumn", "animation", "backbone", "balloon", "beach", "blockbuster", "bloom", "blossom", "brain", "branch",
         "bells", "brook", "bubbles", "butterfly", "cake", "candy", "candle", "castle", "chocolate", "coffee", "cub",
         "carrot", "throne", "ruby", "stream", "summit", "sun", "tuxedo", "puppy", "story", "video"
     ];
