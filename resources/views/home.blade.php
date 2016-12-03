@@ -134,7 +134,7 @@
   <span data-toggle="tooltip" data-placement="left" title="This should be your repo name, we'll prepend https://github.com/ to it for cloning">"name": "username/reponame",</span>
   <span data-toggle="tooltip" data-placement="left" title="Where on the server we'll git clone your repository to">"installpath": "/var/www/fodor-example/",</span>
   <span data-toggle="tooltip" data-placement="left" title="Where is your bash provisioner file? Relative to repo root">"provisioner": "provisioner.sh",</span>
-  <span data-toggle="tooltip" data-placement="left" title="All texts support the @{{DOMAIN}} replacement">text": {</span>
+  <span data-toggle="tooltip" data-placement="left" title="All texts support the @{{DOMAIN}} replacement">"text": {</span>
       <span data-toggle="tooltip" data-placement="left" title="This text will be shown on provision success">"complete": "User/Pass: fodor/fodor :)"</span>,
       <span data-toggle="tooltip" data-placement="left" title="This text will be shown on provision failure">"failed": "Sorry about that, destroy the droplet and try again"</span>
   },
