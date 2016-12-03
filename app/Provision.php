@@ -8,4 +8,9 @@ class Provision extends Model
 {
     public $timestamps = false;
     public $inputs = [];
+
+    public function domain()
+    {
+        return $this->subdomain . '.fodor.xyz';
+    }
 }
