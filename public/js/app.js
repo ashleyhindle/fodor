@@ -14,6 +14,7 @@ function updateProvisionLog(provisioningLog) {
             return true;
         } else if ('status' in data && data['status'] == 'errored') {
             $('#erroredInfo').removeClass('hidden'); // TODO: Use a nice JS framework to handle this better.  This coupling is out of hand
+            $('h2:first').hide();
             return true; // Don't set another timeout
         } else {
             $.each(data.lines, function (key, logInfo) {

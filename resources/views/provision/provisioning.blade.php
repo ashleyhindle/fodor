@@ -11,7 +11,16 @@
                         <h2>Running scripts on your fresh server...</h2>
 
                         <div id="erroredInfo" class="hidden">
-                            <div class="alert alert-danger" role="alert">The provisioning script has very likely failed</div>
+                            <h2>The provisioning script has very likely failed</h2>
+
+                            <div class="alert alert-danger" role="alert">
+                            @if (!empty($failedText))
+                                    <strong>From the maintainer:</strong><br />
+                                    {{ $failedText }}
+                            @else
+                                Sorry it looks like provisioning has failed, here are some handy options:
+                            @endif
+                            </div>
 
                             <h3>Options</h3>
                             <div class="btn-group" role="group">

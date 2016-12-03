@@ -526,10 +526,21 @@ class ProvisionController extends Controller
 
         $request->session()->set('log-' . $uuid, 0);
 
+        $replacements = [
+            '{{DOMAIN}}' => $provision->domain()
+        ];
+
+        $repo = new Repo($provision->repo);
+        $github = new Github($this->getGithubClient(), $repo);
+
+        $json = $github->getFodorJson();
+        $fodorJson = new Config($json);
+
         return view('provision.provisioning', [
             'id' => $id,
             'uuid' => $uuid,
-            'provision' => $provision
+            'provision' => $provision,
+            'failedText' => $fodorJson->getText('failed', $replacements)
         ]);
     }
 
@@ -558,8 +569,9 @@ class ProvisionController extends Controller
         }
 
         $replacements = [
-            '{{DOMAIN}}' => $provision->subdomain . '.fodor.xyz'
+            '{{DOMAIN}}' => $provision->domain()
         ];
+
         return view('provision.complete', [
             'links' => $links,
             'domain' => $provision->subdomain . '.fodor.xyz',
