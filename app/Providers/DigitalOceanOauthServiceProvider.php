@@ -27,7 +27,7 @@ class DigitalOceanOauthServiceProvider extends ServiceProvider
             return new \App\Fodor\DigitalOceanLeagueOAuthProvider([
                 'clientId'                  => getenv('DIGITALOCEAN_CLIENT_ID'),    // The client ID assigned to you by the provider
                 'clientSecret'              => getenv('DIGITALOCEAN_CLIENT_SECRET'),   // The client password assigned to you by the provider
-                'redirectUri'               => 'https://fodor.xyz/do/callback',
+                'redirectUri'               => env('DIGITALOCEAN_REDIRECT_URI', 'https://fodor.xyz/do/callback'),
                 'urlAuthorize'              => 'https://cloud.digitalocean.com/v1/oauth/authorize',
                 'urlAccessToken'            => 'https://cloud.digitalocean.com/v1/oauth/token',
                 'urlRevoke'                 => 'https://cloud.digitalocean.com/v1/oauth/revoke',
