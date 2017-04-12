@@ -53,7 +53,7 @@ class ProvisionController extends Controller
 
         try {
             $fodorJson->valid();
-        } catch (InvalidRepoException $e) {
+        } catch (\Exception $e) {
             $request->session()->flash(str_random(4), ['type' => 'danger', 'message' => $e->getMessage()]);
             return redirect('/?ohno');
         }
