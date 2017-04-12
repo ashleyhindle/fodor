@@ -124,11 +124,11 @@
             </li>
         </ul>
 
-    <div class="row text-center">
+    <!--<div class="row text-center">
         <h4>Sponsored by</h4>
         <a href="https://m.do.co/c/c2c89916e190"><img src="/images/sponsored-by-digitalocean.png" width="300px" height="48px"/></a>
         <a href="https://siftware.com"><img src="/images/sponsored-by-siftware.jpg" width="300px" height="100px"/></a>
-    </div>
+    </div>-->
 
     <!-- JavaScripts -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
