@@ -95,7 +95,7 @@ SELECT;
         $html = (!empty($html)) ? $html : <<<HTML
         <div class="form-group">
             <label for="inputs[{$this->input['name']}]">{$this->input['title']} {$notes}</label>
-            <input type="{$type}" class="form-control" id="{$this->input['name']}" name="inputs[{$this->input['name']}]" {$placeholder} value="{$this->input['value']}">
+            <input type="{$type}" class="form-control" id="{$this->input['name']}" name="inputs[{$this->input['name']}]" {$placeholder} value="{$this->input['value']}" autocomplete="off">
         </div>
 HTML;
 
