@@ -26,6 +26,9 @@ cp /home/fodor/.env "${RELEASE_PATH}/.env"
 cd ${RELEASE_PATH}
 php artisan migrate --force || exit 1
 
+php artisan view:clear
+php artisan cache:clear
+
 chown -R fodor:www-data ${RELEASE_PATH}
 chmod -R g+wr ${RELEASE_PATH}
 
