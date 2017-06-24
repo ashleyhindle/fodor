@@ -133,7 +133,7 @@
     <!-- JavaScripts -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="{{ elixir('js/clipboard.min.js') }}"></script>
+    <script src="/js/clipboard.min.js"></script>
     <script src="{{ elixir('js/app.js') }}"></script>
 
     <script>
