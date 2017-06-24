@@ -139,11 +139,12 @@ class Provision extends Job implements ShouldQueue
                 fclose($stream);
             } else {
                 $this->log->addError("Failed to authenticate to SSH");
+                $this->release(3);
                 exit(1);
             }
         } else {
             $this->log->addError("Failed to connect to SSH");
-            $this->release(2); // Delay x seconds to retry as SSH isn't ready yet
+            $this->release(3); // Delay x seconds to retry as SSH isn't ready yet
             exit(1);
         }
 
@@ -190,5 +191,10 @@ class Provision extends Job implements ShouldQueue
         //TODO: If it errored, an alert should be sent out for investigation
 
         $this->log->addInfo("Set provision row's status to {$this->provision->status}, we're done here");
+    }
+
+    public function failed()
+    {
+        $this->tidyUp();
     }
 }
